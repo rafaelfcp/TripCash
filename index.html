@@ -255,7 +255,7 @@
     <div class="topbar-row">
       <div>
         <div class="trip-label">Controle de Viagem</div>
-        <div class="trip-name" id="trip-name">—</div>
+        <div class="trip-name" id="trip-name" style="cursor:pointer" title="Clique para renomear" onclick="editarViagem()">—</div>
         <div class="viagem-selector" id="viagem-list"></div>
       </div>
       <div class="budget-box">
@@ -445,6 +445,18 @@ async function novaViagem() {
   viagemId = data.id;
   renderViagemSelector();
   await loadGastos();
+}
+
+async function editarViagem() {
+  const v = viagens.find(x => x.id === viagemId); if(!v) return;
+  const nome = prompt('Nome da viagem:', v.nome);
+  if(!nome || nome === v.nome) return;
+  v.nome = nome;
+  document.getElementById('trip-name').textContent = nome;
+  renderViagemSelector();
+  toast('Nome atualizado ✓');
+  const { error } = await sb.from('viagens').update({ nome }).eq('id', viagemId);
+  if(error) toast('Erro ao sincronizar ⚠️');
 }
 
 // ── GASTOS ────────────────────────────────────────────

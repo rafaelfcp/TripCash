@@ -698,27 +698,56 @@ document.getElementById('btn-submit').addEventListener('click', async () => {
   if(!descricao || !valor || !categoria) return;
 
   if(editingId) {
+    // Atualização otimista — reflete na UI imediatamente
+    const idx = gastos.findIndex(x => x.id === editingId);
+    if(idx !== -1) {
+      gastos[idx] = { ...gastos[idx], descricao, valor, observacao, data, categoria };
+      render();
+    }
+    modalBg.classList.remove('open');
+    toast('Gasto atualizado ✓');
+    // Sincroniza com Supabase em background
     const { error } = await sb.from('gastos')
       .update({ descricao, valor, observacao, data, categoria })
       .eq('id', editingId);
-    if(error){ toast('Erro ao editar'); return; }
-    toast('Gasto atualizado ✓');
+    if(error){ toast('Erro ao sincronizar ⚠️'); await loadGastos(); }
   } else {
-    const { error } = await sb.from('gastos')
-      .insert({ viagem_id: viagemId, descricao, valor, observacao, data, categoria });
-    if(error){ toast('Erro ao salvar'); return; }
+    // Insere otimisticamente com ID temporário
+    const tempId = 'temp_' + Date.now();
+    const novoGasto = { id: tempId, viagem_id: viagemId, descricao, valor, observacao, data, categoria };
+    gastos.unshift(novoGasto);
+    render();
+    modalBg.classList.remove('open');
     toast('Gasto adicionado ✓');
+    // Persiste no Supabase e substitui o ID temporário
+    const { data: inserted, error } = await sb.from('gastos')
+      .insert({ viagem_id: viagemId, descricao, valor, observacao, data, categoria })
+      .select().single();
+    if(error){
+      gastos = gastos.filter(g => g.id !== tempId);
+      render();
+      toast('Erro ao salvar ⚠️');
+    } else {
+      const i = gastos.findIndex(g => g.id === tempId);
+      if(i !== -1) gastos[i] = inserted;
+    }
   }
-  modalBg.classList.remove('open');
-  await loadGastos();
 });
 
 window.deleteGasto = async function(id) {
   if(!confirm('Excluir este lançamento?')) return;
-  const { error } = await sb.from('gastos').delete().eq('id', id);
-  if(error){ toast('Erro ao excluir'); return; }
+  // Remove da UI imediatamente
+  const backup = [...gastos];
+  gastos = gastos.filter(g => g.id !== id);
+  render();
   toast('Excluído ✓');
-  await loadGastos();
+  // Persiste no Supabase em background
+  const { error } = await sb.from('gastos').delete().eq('id', id);
+  if(error){
+    gastos = backup; // reverte se falhar
+    render();
+    toast('Erro ao excluir ⚠️');
+  }
 };
 
 // ── TABS ──────────────────────────────────────────────
@@ -747,10 +776,13 @@ document.getElementById('budget-display').addEventListener('click', async () => 
   const v = viagens.find(x=>x.id===viagemId); if(!v) return;
   const novo = parseFloat(prompt('Novo orçamento (R$):', v.orcamento) || v.orcamento);
   if(isNaN(novo) || novo < 0) return;
-  await sb.from('viagens').update({ orcamento: novo }).eq('id', viagemId);
+  // Reflete na UI imediatamente
   v.orcamento = novo;
   renderTopbar();
   toast('Orçamento atualizado ✓');
+  // Persiste em background
+  const { error } = await sb.from('viagens').update({ orcamento: novo }).eq('id', viagemId);
+  if(error) toast('Erro ao sincronizar orçamento ⚠️');
 });
 
 // ── TOAST ─────────────────────────────────────────────

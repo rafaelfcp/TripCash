@@ -130,6 +130,40 @@
     .edit-btn-row { display:flex; gap:10px; margin-top:4px; }
     .btn-cancel { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:var(--muted); font-size:14px; padding:12px; cursor:pointer; }
 
+    /* ROTEIRO */
+    .dia-card    { background:var(--surface); border:1px solid var(--border); border-radius:14px; margin-bottom:14px; overflow:hidden; }
+    .dia-header  { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; cursor:pointer; }
+    .dia-badge   { background:var(--teal); color:var(--bg); border-radius:99px; font-size:10px; font-weight:700; padding:3px 10px; flex-shrink:0; }
+    .dia-titulo  { font-size:15px; flex:1; margin:0 10px; }
+    .dia-data    { font-size:11px; color:var(--muted); }
+    .dia-body    { padding:0 16px 14px; border-top:1px solid var(--border); }
+    .dia-desc    { font-size:12px; color:var(--muted); padding:10px 0 8px; }
+    .parada-item { display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
+    .parada-item:last-child { border-bottom:none; }
+    .parada-linha{ display:flex; flex-direction:column; align-items:center; gap:0; }
+    .parada-dot  { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+    .parada-line { width:2px; flex:1; min-height:16px; background:var(--border); margin-top:3px; }
+    .parada-info { flex:1; }
+    .parada-nome { font-size:14px; font-weight:500; }
+    .parada-meta { font-size:11px; color:var(--muted); margin-top:2px; display:flex; gap:8px; flex-wrap:wrap; }
+    .parada-obs  { font-size:11px; color:var(--muted); margin-top:4px; font-style:italic; }
+    .parada-actions { display:flex; gap:4px; flex-shrink:0; }
+    .dia-actions { display:flex; gap:6px; justify-content:flex-end; margin-top:6px; }
+    .btn-sm      { background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--muted); font-size:12px; padding:5px 12px; cursor:pointer; }
+    .btn-sm:active { opacity:.7; }
+    .roteiro-empty { text-align:center; padding:48px 0; color:#333; }
+
+    /* MODAL DIA */
+    .dia-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:300; align-items:flex-end; justify-content:center; }
+    .dia-modal-bg.open { display:flex; }
+    .dia-modal    { background:var(--surface); border-radius:20px 20px 0 0; padding:20px 20px calc(var(--safe-bot) + 24px); width:100%; max-width:480px; animation:slideUp .3s ease; }
+
+    /* MODAL PARADA */
+    .par-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:400; align-items:flex-end; justify-content:center; }
+    .par-modal-bg.open { display:flex; }
+    .par-modal    { background:var(--surface); border-radius:20px 20px 0 0; padding:20px 20px calc(var(--safe-bot) + 24px); width:100%; max-width:480px; animation:slideUp .3s ease; max-height:90vh; overflow-y:auto; }
+    .tipo-pills   { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+
     /* TOAST */
     .toast { position:fixed; bottom:calc(var(--safe-bot) + 100px); left:50%; transform:translateX(-50%) translateY(20px); background:var(--surface); border:1px solid var(--border); border-radius:99px; padding:10px 20px; font-size:13px; opacity:0; transition:all .3s; pointer-events:none; z-index:500; white-space:nowrap; }
     .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
@@ -173,6 +207,7 @@
   <div class="tabs">
     <div class="tab active" data-tab="dashboard">📊 Dashboard</div>
     <div class="tab"        data-tab="lancamentos">📋 Lançamentos</div>
+    <div class="tab"        data-tab="roteiro">🗺️ Roteiro</div>
   </div>
 
   <!-- DASHBOARD -->
@@ -204,7 +239,66 @@
     <div id="gastos-list"></div>
   </div>
 
+  <!-- ROTEIRO -->
+  <div class="content" id="tab-roteiro" style="display:none">
+    <div id="roteiro-list"></div>
+  </div>
+
   <button class="fab hidden" id="fab">＋ Adicionar Gasto</button>
+</div>
+
+<!-- MODAL DIA -->
+<div class="dia-modal-bg" id="dia-modal-bg">
+  <div class="dia-modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="dia-modal-title">Novo Dia</div>
+    <label class="field-label">TÍTULO DO DIA</label>
+    <input class="field-input" id="d-titulo" type="text" placeholder="Ex: Lisboa — chegada" autocomplete="off"/>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <label class="field-label">Nº DO DIA</label>
+        <input class="field-input" id="d-numero" type="number" min="1" placeholder="1"/>
+      </div>
+      <div>
+        <label class="field-label">DATA</label>
+        <input class="field-input" id="d-data" type="date" style="color-scheme:dark"/>
+      </div>
+    </div>
+    <label class="field-label">DESCRIÇÃO (opcional)</label>
+    <input class="field-input" id="d-desc" type="text" placeholder="Resumo do dia..." autocomplete="off"/>
+    <div style="display:flex;gap:10px">
+      <button class="btn-cancel" onclick="fecharDiaModal()">Cancelar</button>
+      <button class="btn-submit" style="flex:2" id="d-submit">Salvar Dia</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PARADA -->
+<div class="par-modal-bg" id="par-modal-bg">
+  <div class="par-modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="par-modal-title">Nova Parada</div>
+    <label class="field-label">NOME DO LOCAL</label>
+    <input class="field-input" id="p-nome" type="text" placeholder="Ex: Torre de Belém" autocomplete="off"/>
+    <label class="field-label">TIPO</label>
+    <div class="tipo-pills" id="tipo-pills"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <label class="field-label">HORÁRIO</label>
+        <input class="field-input" id="p-horario" type="time"/>
+      </div>
+      <div>
+        <label class="field-label">ENDEREÇO</label>
+        <input class="field-input" id="p-end" type="text" placeholder="Opcional" autocomplete="off"/>
+      </div>
+    </div>
+    <label class="field-label">OBSERVAÇÃO</label>
+    <input class="field-input" id="p-obs" type="text" placeholder="Reserva, ingresso, dica..." autocomplete="off"/>
+    <div style="display:flex;gap:10px">
+      <button class="btn-cancel" onclick="fecharParModal()">Cancelar</button>
+      <button class="btn-submit" style="flex:2" id="p-submit">Salvar Parada</button>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL GASTO -->
@@ -238,7 +332,7 @@
     <div class="modal-handle"></div>
     <div class="cat-modal-header">
       <div class="cat-modal-title" id="cat-modal-title"></div>
-      <button class="btn-icon" style="font-size:20px;color:var(--muted)" onclick="fecharCatModal()">✕</button>
+      <button class="btn-icon" id="cat-modal-close" style="font-size:20px;color:var(--muted)">✕</button>
     </div>
     <div class="cat-modal-total" id="cat-modal-total"></div>
     <div class="cat-modal-list" id="cat-modal-list"></div>
@@ -396,7 +490,7 @@ function renderDashboard() {
     d.innerHTML=`<div class="ico">${c.emoji}</div>
       <div class="lbl">${c.label}</div>
       <div class="val" style="color:${c.total?c.cor:'#333'}">${c.total?BRL(c.total):'—'}</div>`;
-    d.onclick=()=>abrirCatModal(c.id);
+    d.addEventListener('click', ()=>abrirCatModal(c.id));
     grid.appendChild(d);
   });
 
@@ -495,6 +589,7 @@ function abrirCatModal(catId) {
 function fecharCatModal() {
   document.getElementById('cat-modal-bg').classList.remove('open');
 }
+document.getElementById('cat-modal-close').addEventListener('click', fecharCatModal);
 document.getElementById('cat-modal-bg').addEventListener('click', e=>{
   if(e.target===document.getElementById('cat-modal-bg')) fecharCatModal();
 });
@@ -635,6 +730,217 @@ document.getElementById('budget-display').addEventListener('click',async()=>{
   await sb.from('viagens').update({orcamento:novo}).eq('id',viagemId);
 });
 
+// ── ROTEIRO ──────────────────────────────────────────
+const TIPOS = [
+  { id:'hotel',       label:'Hotel',       emoji:'🏨', cor:'#FF6B6B' },
+  { id:'restaurante', label:'Restaurante', emoji:'🍽️', cor:'#FFE66D' },
+  { id:'atração',     label:'Atração',     emoji:'🎡', cor:'#4ECDC4' },
+  { id:'transporte',  label:'Transporte',  emoji:'✈️', cor:'#A8E6CF' },
+  { id:'compras',     label:'Compras',     emoji:'🛍️', cor:'#FF8B94' },
+  { id:'outro',       label:'Outro',       emoji:'📍', cor:'#C3B1E1' },
+];
+
+let roteiroDias=[], roteiroParadas=[], diaEditId=null, paraEditId=null, diaAtualId=null, diasAbertos={};
+
+async function loadRoteiro() {
+  const { data: dias } = await sb.from('roteiro_dias').select('*').eq('viagem_id', viagemId).order('numero');
+  roteiroDias = dias || [];
+  const ids = roteiroDias.map(d=>d.id);
+  if(ids.length) {
+    const { data: pars } = await sb.from('roteiro_paradas').select('*').in('dia_id', ids).order('ordem');
+    roteiroParadas = pars || [];
+  } else { roteiroParadas=[]; }
+  renderRoteiro();
+}
+
+function renderRoteiro() {
+  const el = document.getElementById('roteiro-list');
+  if(!roteiroDias.length) {
+    el.innerHTML=`<div class="roteiro-empty">
+      <div style="font-size:40px;margin-bottom:12px">🗺️</div>
+      <div style="font-size:14px;margin-bottom:20px">Nenhum dia no roteiro ainda</div>
+      <button class="btn-primary" style="width:auto;padding:12px 28px" onclick="abrirDiaModal()">+ Adicionar Dia</button>
+    </div>`;
+    return;
+  }
+  el.innerHTML='';
+
+  // botão add dia no topo
+  const addBtn = document.createElement('button');
+  addBtn.className='btn-sm'; addBtn.style.cssText='width:100%;margin-bottom:14px;padding:10px;color:var(--teal);border-color:var(--teal)';
+  addBtn.textContent='+ Adicionar Dia'; addBtn.onclick=()=>abrirDiaModal();
+  el.appendChild(addBtn);
+
+  roteiroDias.forEach(dia=>{
+    const paradas = roteiroParadas.filter(p=>p.dia_id===dia.id).sort((a,b)=>a.ordem-b.ordem);
+    const aberto  = diasAbertos[dia.id] !== false; // default aberto
+
+    const card = document.createElement('div');
+    card.className='dia-card';
+
+    const dtFmt = dia.data ? new Date(dia.data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}) : '';
+
+    card.innerHTML=`
+      <div class="dia-header" id="dh-${dia.id}">
+        <span class="dia-badge">Dia ${dia.numero}</span>
+        <span class="dia-titulo">${dia.titulo}</span>
+        <span class="dia-data">${dtFmt}</span>
+        <span style="margin-left:8px;color:var(--muted);font-size:12px">${aberto?'▲':'▼'}</span>
+      </div>
+      <div class="dia-body" id="db-${dia.id}" style="display:${aberto?'block':'none'}">
+        ${dia.descricao?`<div class="dia-desc">${dia.descricao}</div>`:''}
+        <div id="paradas-${dia.id}">
+          ${renderParadasHTML(paradas, dia.id)}
+        </div>
+        <div class="dia-actions">
+          <button class="btn-sm" onclick="abrirParModal('${dia.id}')">+ Parada</button>
+          <button class="btn-sm" onclick="abrirDiaModal('${dia.id}')">✏️ Dia</button>
+          <button class="btn-sm" style="color:var(--red)" onclick="deletarDia('${dia.id}')">🗑️</button>
+        </div>
+      </div>`;
+
+    card.querySelector(`#dh-${dia.id}`).addEventListener('click', ()=>{
+      diasAbertos[dia.id] = !aberto;
+      renderRoteiro();
+    });
+    el.appendChild(card);
+  });
+}
+
+function renderParadasHTML(paradas, diaId) {
+  if(!paradas.length) return `<div style="font-size:12px;color:#333;padding:8px 0">Nenhuma parada — toque em "+ Parada"</div>`;
+  return paradas.map((p,i)=>{
+    const t = TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
+    const haNext = i < paradas.length-1;
+    return `<div class="parada-item">
+      <div class="parada-linha">
+        <div class="parada-dot" style="background:color-mix(in srgb,${t.cor} 20%,transparent);border:2px solid ${t.cor}">${t.emoji}</div>
+        ${haNext?`<div class="parada-line"></div>`:''}
+      </div>
+      <div class="parada-info">
+        <div class="parada-nome">${p.nome}</div>
+        <div class="parada-meta">
+          ${p.horario?`<span>⏰ ${p.horario}</span>`:''}
+          ${p.endereco?`<span>📍 ${p.endereco}</span>`:''}
+        </div>
+        ${p.observacao?`<div class="parada-obs">💬 ${p.observacao}</div>`:''}
+      </div>
+      <div class="parada-actions">
+        <button class="btn-icon" onclick="abrirParModal('${diaId}','${p.id}')">✏️</button>
+        <button class="btn-icon" onclick="deletarParada('${p.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── MODAL DIA ─────────────────────────────────────────
+function abrirDiaModal(id=null) {
+  diaEditId=id;
+  const dia = id ? roteiroDias.find(d=>d.id===id) : null;
+  document.getElementById('dia-modal-title').textContent = dia?'Editar Dia':'Novo Dia';
+  document.getElementById('d-titulo').value  = dia?.titulo||'';
+  document.getElementById('d-numero').value  = dia?.numero || (roteiroDias.length+1);
+  document.getElementById('d-data').value    = dia?.data||'';
+  document.getElementById('d-desc').value    = dia?.descricao||'';
+  document.getElementById('dia-modal-bg').classList.add('open');
+  setTimeout(()=>document.getElementById('d-titulo').focus(),100);
+}
+function fecharDiaModal() { document.getElementById('dia-modal-bg').classList.remove('open'); }
+document.getElementById('dia-modal-bg').addEventListener('click',e=>{ if(e.target===document.getElementById('dia-modal-bg')) fecharDiaModal(); });
+
+document.getElementById('d-submit').addEventListener('click', async()=>{
+  const titulo = document.getElementById('d-titulo').value.trim();
+  const numero = parseInt(document.getElementById('d-numero').value)||1;
+  const data   = document.getElementById('d-data').value||null;
+  const descricao = document.getElementById('d-desc').value.trim()||null;
+  if(!titulo) return;
+  fecharDiaModal();
+
+  if(diaEditId) {
+    const idx=roteiroDias.findIndex(d=>d.id===diaEditId);
+    if(idx!==-1) roteiroDias[idx]={...roteiroDias[idx],titulo,numero,data,descricao};
+    renderRoteiro(); toast('Dia atualizado ✓');
+    await sb.from('roteiro_dias').update({titulo,numero,data,descricao}).eq('id',diaEditId);
+  } else {
+    const tempId='temp_'+Date.now();
+    roteiroDias.push({id:tempId,viagem_id:viagemId,titulo,numero,data,descricao});
+    roteiroDias.sort((a,b)=>a.numero-b.numero);
+    renderRoteiro(); toast('Dia adicionado ✓');
+    const {data:ins,error}=await sb.from('roteiro_dias').insert({viagem_id:viagemId,titulo,numero,data,descricao}).select().single();
+    if(error){ roteiroDias=roteiroDias.filter(d=>d.id!==tempId); renderRoteiro(); toast('Erro ⚠️'); }
+    else { const i=roteiroDias.findIndex(d=>d.id===tempId); if(i!==-1) roteiroDias[i]=ins; renderRoteiro(); }
+  }
+});
+
+async function deletarDia(id) {
+  if(!confirm('Excluir este dia e todas as paradas?')) return;
+  roteiroDias=roteiroDias.filter(d=>d.id!==id);
+  roteiroParadas=roteiroParadas.filter(p=>p.dia_id!==id);
+  renderRoteiro(); toast('Dia excluído ✓');
+  await sb.from('roteiro_dias').delete().eq('id',id);
+}
+
+// ── MODAL PARADA ──────────────────────────────────────
+// build tipo pills
+const tipoPillsEl=document.getElementById('tipo-pills');
+TIPOS.forEach(t=>{
+  const p=document.createElement('div');
+  p.className='pill'; p.dataset.id=t.id;
+  p.style.setProperty('--pill-color',t.cor);
+  p.innerHTML=`${t.emoji} ${t.label}`;
+  p.onclick=()=>{ document.querySelectorAll('#tipo-pills .pill').forEach(x=>x.classList.remove('active')); p.classList.add('active'); };
+  tipoPillsEl.appendChild(p);
+});
+document.querySelector('#tipo-pills .pill').classList.add('active');
+
+function abrirParModal(diaId, paraId=null) {
+  diaAtualId=diaId; paraEditId=paraId;
+  const par = paraId ? roteiroParadas.find(p=>p.id===paraId) : null;
+  document.getElementById('par-modal-title').textContent = par?'Editar Parada':'Nova Parada';
+  document.getElementById('p-nome').value    = par?.nome||'';
+  document.getElementById('p-horario').value = par?.horario||'';
+  document.getElementById('p-end').value     = par?.endereco||'';
+  document.getElementById('p-obs').value     = par?.observacao||'';
+  const tipoId = par?.tipo||'atração';
+  document.querySelectorAll('#tipo-pills .pill').forEach(p=>p.classList.toggle('active',p.dataset.id===tipoId));
+  document.getElementById('par-modal-bg').classList.add('open');
+  setTimeout(()=>document.getElementById('p-nome').focus(),100);
+}
+function fecharParModal() { document.getElementById('par-modal-bg').classList.remove('open'); }
+document.getElementById('par-modal-bg').addEventListener('click',e=>{ if(e.target===document.getElementById('par-modal-bg')) fecharParModal(); });
+
+document.getElementById('p-submit').addEventListener('click', async()=>{
+  const nome      = document.getElementById('p-nome').value.trim();
+  const horario   = document.getElementById('p-horario').value||null;
+  const endereco  = document.getElementById('p-end').value.trim()||null;
+  const observacao= document.getElementById('p-obs').value.trim()||null;
+  const tipo      = document.querySelector('#tipo-pills .pill.active')?.dataset.id||'outro';
+  if(!nome) return;
+  const ordemMax  = roteiroParadas.filter(p=>p.dia_id===diaAtualId).length+1;
+  fecharParModal();
+
+  if(paraEditId) {
+    const idx=roteiroParadas.findIndex(p=>p.id===paraEditId);
+    if(idx!==-1) roteiroParadas[idx]={...roteiroParadas[idx],nome,horario,endereco,observacao,tipo};
+    renderRoteiro(); toast('Parada atualizada ✓');
+    await sb.from('roteiro_paradas').update({nome,horario,endereco,observacao,tipo}).eq('id',paraEditId);
+  } else {
+    const tempId='temp_'+Date.now();
+    roteiroParadas.push({id:tempId,dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,ordem:ordemMax});
+    renderRoteiro(); toast('Parada adicionada ✓');
+    const {data:ins,error}=await sb.from('roteiro_paradas').insert({dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,ordem:ordemMax}).select().single();
+    if(error){ roteiroParadas=roteiroParadas.filter(p=>p.id!==tempId); renderRoteiro(); toast('Erro ⚠️'); }
+    else { const i=roteiroParadas.findIndex(p=>p.id===tempId); if(i!==-1) roteiroParadas[i]=ins; renderRoteiro(); }
+  }
+});
+
+async function deletarParada(id) {
+  if(!confirm('Excluir esta parada?')) return;
+  roteiroParadas=roteiroParadas.filter(p=>p.id!==id);
+  renderRoteiro(); toast('Parada excluída ✓');
+  await sb.from('roteiro_paradas').delete().eq('id',id);
+}
+
 // ── TABS ─────────────────────────────────────────────
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
@@ -643,7 +949,9 @@ document.querySelectorAll('.tab').forEach(tab=>{
     const id=tab.dataset.tab;
     document.getElementById('tab-dashboard').style.display   = id==='dashboard'  ?'':'none';
     document.getElementById('tab-lancamentos').style.display = id==='lancamentos'?'':'none';
+    document.getElementById('tab-roteiro').style.display     = id==='roteiro'    ?'':'none';
     document.getElementById('fab').classList.toggle('hidden', id!=='lancamentos');
+    if(id==='roteiro') loadRoteiro();
   });
 });
 

@@ -637,14 +637,14 @@ $('budget-val').addEventListener('click',async()=>{
 });
 
 // ── ROTEIRO ───────────────────────────────────────────
-async function loadRoteiro(){
+async function loadRoteiro(render=true){
   const{data:dias}=await sb.from('roteiro_dias').select('*').eq('viagem_id',vid).order('numero');
   rDias=dias||[];
   if(rDias.length){
     const{data:pars}=await sb.from('roteiro_paradas').select('*').in('dia_id',rDias.map(d=>d.id)).order('ordem');
     rParadas=pars||[];
   }else rParadas=[];
-  renderRoteiro();
+  if(render) renderRoteiro();
 }
 
 function renderRoteiro(){
@@ -753,29 +753,37 @@ function renderRoteiro(){
 }
 
 async function moverParada(diaId, idx, dir){
-  const paradas=rParadas.filter(p=>p.dia_id===diaId).sort((a,b)=>a.ordem-b.ordem);
-  const novoIdx=idx+dir;
-  if(novoIdx<0||novoIdx>=paradas.length)return;
+  // pega paradas do dia ordenadas
+  const idxGlobal = p => rParadas.findIndex(x=>x.id===p.id);
+  const paradas = rParadas.filter(p=>p.dia_id===diaId).sort((a,b)=>a.ordem-b.ordem);
+  const novoIdx = idx+dir;
+  if(novoIdx<0||novoIdx>=paradas.length) return;
 
-  // troca ordens na memória
-  const a=paradas[idx], b=paradas[novoIdx];
-  const tmpOrdem=a.ordem;
-  a.ordem=b.ordem; b.ordem=tmpOrdem;
+  const a = paradas[idx];
+  const b = paradas[novoIdx];
 
-  // re-indexa para garantir sequência sem gaps
-  paradas.sort((x,y)=>x.ordem-y.ordem).forEach((p,i)=>p.ordem=i+1);
+  // troca ordens
+  const tmpOrdem = a.ordem;
+  a.ordem = b.ordem;
+  b.ordem = tmpOrdem;
+
+  // atualiza diretamente no array global por referência de id
+  const ia = idxGlobal(a);
+  const ib = idxGlobal(b);
+  if(ia!==-1) rParadas[ia].ordem = a.ordem;
+  if(ib!==-1) rParadas[ib].ordem = b.ordem;
 
   renderRoteiro();
 
-  // persiste no banco — atualiza os dois registros trocados
-  const [ra,rb]=await Promise.all([
+  // persiste no banco
+  const [ra,rb] = await Promise.all([
     sb.from('roteiro_paradas').update({ordem:a.ordem}).eq('id',a.id),
     sb.from('roteiro_paradas').update({ordem:b.ordem}).eq('id',b.id),
   ]);
   if(ra.error||rb.error){
     toast('Erro ao salvar ordem ⚠️');
-    await loadRoteiro(); // reverte do banco
-  }else{
+    await loadRoteiro();
+  } else {
     toast('Ordem atualizada ✓');
   }
 }
@@ -877,9 +885,11 @@ async function delParada(id){
 
 // ── MAPA / ROTA ───────────────────────────────────────
 async function initMapa(){
-  if(!rDias.length)await loadRoteiro();
+  // sempre recarrega roteiro ao abrir o mapa
+  await loadRoteiro();
   renderMapaDias();
-  if(rDias.length)renderRotaDia(rDias[0]);
+  if(rDias.length) renderRotaDia(rDias[0]);
+  else $('mapa-content').innerHTML='<div class="mapa-empty">🗺️<br><br>Nenhum dia no roteiro ainda</div>';
 }
 
 function renderMapaDias(){

@@ -165,7 +165,14 @@
     .par-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:400; align-items:flex-end; justify-content:center; }
     .par-modal-bg.open { display:flex; }
     .par-modal    { background:var(--surface); border-radius:20px 20px 0 0; padding:20px 20px calc(var(--safe-bot) + 24px); width:100%; max-width:480px; animation:slideUp .3s ease; max-height:90vh; overflow-y:auto; }
-    .tipo-pills   { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+    .tipo-pills   { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:14px; }
+    .tipo-pills .pill { justify-content:center; padding:8px 4px; font-size:12px; }
+    .realizado-toggle { display:flex; align-items:center; justify-content:space-between; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px; margin-bottom:14px; cursor:pointer; }
+    .realizado-toggle span { font-size:14px; }
+    .toggle-switch { width:42px; height:24px; background:var(--border); border-radius:99px; position:relative; transition:background .2s; flex-shrink:0; }
+    .toggle-switch.on { background:var(--teal); }
+    .toggle-switch::after { content:''; position:absolute; width:18px; height:18px; background:#fff; border-radius:50%; top:3px; left:3px; transition:left .2s; }
+    .toggle-switch.on::after { left:21px; }
 
     /* TOAST */
     .toast { position:fixed; bottom:calc(var(--safe-bot) + 100px); left:50%; transform:translateX(-50%) translateY(20px); background:var(--surface); border:1px solid var(--border); border-radius:99px; padding:10px 20px; font-size:13px; opacity:0; transition:all .3s; pointer-events:none; z-index:500; white-space:nowrap; }
@@ -297,6 +304,10 @@
     </div>
     <label class="field-label">OBSERVAÇÃO</label>
     <input class="field-input" id="p-obs" type="text" placeholder="Reserva, ingresso, dica..." autocomplete="off"/>
+    <div class="realizado-toggle" id="realizado-toggle" onclick="toggleRealizadoModal()">
+      <span>✅ Marcar como realizado</span>
+      <div class="toggle-switch" id="realizado-switch"></div>
+    </div>
     <div style="display:flex;gap:10px">
       <button class="btn-cancel" onclick="fecharParModal()">Cancelar</button>
       <button class="btn-submit" style="flex:2" id="p-submit">Salvar Parada</button>
@@ -410,6 +421,7 @@ function renderViagemSelector() {
 
 async function novaViagem() {
   const nome = prompt('Nome da viagem:');
+  const realizado = realizadoModal;
   if(!nome) return;
   const orc = parseFloat(prompt('Orçamento (R$):') || '0');
   const { data, error } = await sb.from('viagens').insert({nome,orcamento:orc}).select().single();
@@ -897,6 +909,12 @@ TIPOS.forEach(t=>{
 });
 document.querySelector('#tipo-pills .pill').classList.add('active');
 
+let realizadoModal = false;
+function toggleRealizadoModal() {
+  realizadoModal = !realizadoModal;
+  document.getElementById('realizado-switch').classList.toggle('on', realizadoModal);
+}
+
 function abrirParModal(diaId, paraId=null) {
   diaAtualId=diaId; paraEditId=paraId;
   const par = paraId ? roteiroParadas.find(p=>p.id===paraId) : null;
@@ -907,7 +925,8 @@ function abrirParModal(diaId, paraId=null) {
   document.getElementById('p-obs').value     = par?.observacao||'';
   const tipoId = par?.tipo||'atração';
   document.querySelectorAll('#tipo-pills .pill').forEach(p=>p.classList.toggle('active',p.dataset.id===tipoId));
-  document.getElementById('par-modal-bg').classList.add('open');
+  realizadoModal = par?.realizado || false;
+  document.getElementById('realizado-switch').classList.toggle('on', realizadoModal);
   setTimeout(()=>document.getElementById('p-nome').focus(),100);
 }
 function fecharParModal() { document.getElementById('par-modal-bg').classList.remove('open'); }
@@ -925,14 +944,14 @@ document.getElementById('p-submit').addEventListener('click', async()=>{
 
   if(paraEditId) {
     const idx=roteiroParadas.findIndex(p=>p.id===paraEditId);
-    if(idx!==-1) roteiroParadas[idx]={...roteiroParadas[idx],nome,horario,endereco,observacao,tipo};
+    if(idx!==-1) roteiroParadas[idx]={...roteiroParadas[idx],nome,horario,endereco,observacao,tipo,realizado};
     renderRoteiro(); toast('Parada atualizada ✓');
-    await sb.from('roteiro_paradas').update({nome,horario,endereco,observacao,tipo}).eq('id',paraEditId);
+    await sb.from('roteiro_paradas').update({nome,horario,endereco,observacao,tipo,realizado}).eq('id',paraEditId);
   } else {
     const tempId='temp_'+Date.now();
-    roteiroParadas.push({id:tempId,dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,ordem:ordemMax});
+    roteiroParadas.push({id:tempId,dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,realizado,ordem:ordemMax});
     renderRoteiro(); toast('Parada adicionada ✓');
-    const {data:ins,error}=await sb.from('roteiro_paradas').insert({dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,ordem:ordemMax}).select().single();
+    const {data:ins,error}=await sb.from('roteiro_paradas').insert({dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,realizado,ordem:ordemMax}).select().single();
     if(error){ roteiroParadas=roteiroParadas.filter(p=>p.id!==tempId); renderRoteiro(); toast('Erro ⚠️'); }
     else { const i=roteiroParadas.findIndex(p=>p.id===tempId); if(i!==-1) roteiroParadas[i]=ins; renderRoteiro(); }
   }

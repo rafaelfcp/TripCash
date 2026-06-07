@@ -147,7 +147,10 @@
     .parada-nome { font-size:14px; font-weight:500; }
     .parada-meta { font-size:11px; color:var(--muted); margin-top:2px; display:flex; gap:8px; flex-wrap:wrap; }
     .parada-obs  { font-size:11px; color:var(--muted); margin-top:4px; font-style:italic; }
-    .parada-actions { display:flex; gap:4px; flex-shrink:0; }
+    .parada-actions { display:flex; gap:4px; flex-shrink:0; align-items:center; }
+    .check-btn { width:26px; height:26px; border-radius:50%; border:2px solid var(--border); background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; transition:all .2s; flex-shrink:0; }
+    .check-btn.done { background:var(--teal); border-color:var(--teal); }
+    .parada-nome.done { text-decoration:line-through; opacity:.5; }
     .dia-actions { display:flex; gap:6px; justify-content:flex-end; margin-top:6px; }
     .btn-sm      { background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--muted); font-size:12px; padding:5px 12px; cursor:pointer; }
     .btn-sm:active { opacity:.7; }
@@ -818,7 +821,7 @@ function renderParadasHTML(paradas, diaId) {
         ${haNext?`<div class="parada-line"></div>`:''}
       </div>
       <div class="parada-info">
-        <div class="parada-nome">${p.nome}</div>
+        <div class="parada-nome${p.realizado?' done':''}">${p.nome}</div>
         <div class="parada-meta">
           ${p.horario?`<span>⏰ ${p.horario}</span>`:''}
           ${p.endereco?`<span>📍 ${p.endereco}</span>`:''}
@@ -826,6 +829,7 @@ function renderParadasHTML(paradas, diaId) {
         ${p.observacao?`<div class="parada-obs">💬 ${p.observacao}</div>`:''}
       </div>
       <div class="parada-actions">
+        <button class="check-btn${p.realizado?' done':''}" onclick="toggleRealizado('${p.id}',${p.realizado})" title="${p.realizado?'Marcar como pendente':'Marcar como realizado'}">${p.realizado?'✓':''}</button>
         <button class="btn-icon" onclick="abrirParModal('${diaId}','${p.id}')">✏️</button>
         <button class="btn-icon" onclick="deletarParada('${p.id}')">🗑️</button>
       </div>
@@ -933,6 +937,14 @@ document.getElementById('p-submit').addEventListener('click', async()=>{
     else { const i=roteiroParadas.findIndex(p=>p.id===tempId); if(i!==-1) roteiroParadas[i]=ins; renderRoteiro(); }
   }
 });
+
+async function toggleRealizado(id, atual) {
+  const novo = !atual;
+  const idx = roteiroParadas.findIndex(p=>p.id===id);
+  if(idx!==-1) roteiroParadas[idx].realizado = novo;
+  renderRoteiro();
+  await sb.from('roteiro_paradas').update({ realizado: novo }).eq('id', id);
+}
 
 async function deletarParada(id) {
   if(!confirm('Excluir esta parada?')) return;

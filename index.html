@@ -24,7 +24,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 #shell{position:fixed;inset:0;display:flex;flex-direction:column}
 
 /* ── TOPBAR ── */
-#topbar{flex-shrink:0;padding:calc(var(--st)+12px) 16px 0;background:var(--bg)}
+#topbar{flex-shrink:0;padding:calc(var(--st)+20px) 16px 0;background:var(--bg)}
 .tb-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .trip-lbl{font-size:10px;letter-spacing:3px;color:var(--teal);text-transform:uppercase;margin-bottom:2px}
 .trip-nm{font-size:20px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;line-height:1.2}
@@ -45,8 +45,8 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .tab.on{background:var(--teal);border-color:var(--teal);color:var(--bg);font-weight:700}
 
 /* ── PAGES ── */
-#pages{flex:1;overflow:hidden;position:relative}
-.pg{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px calc(var(--sb)+80px);display:none}
+#pages{flex:1;overflow:hidden;position:relative;min-height:0}
+.pg{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:12px 16px calc(var(--sb)+80px);display:none}
 .pg.on{display:block}
 
 /* ── DASHBOARD ── */
@@ -111,7 +111,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 /* ── MAPA PAGE ── */
 #mapa-pg{position:fixed;inset:0;display:none;flex-direction:column;background:var(--bg);z-index:99}
 #mapa-pg.on{display:flex}
-.m-top{flex-shrink:0;padding:calc(var(--st)+14px) 16px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--bor)}
+.m-top{flex-shrink:0;padding:calc(var(--st)+20px) 16px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--bor)}
 .m-dias{flex-shrink:0;display:flex;gap:6px;padding:10px 16px;overflow-x:auto;border-bottom:1px solid var(--bor)}
 .m-dias::-webkit-scrollbar{display:none}
 .m-btn{flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;font-size:11px;padding:7px 14px;cursor:pointer;color:var(--mut);white-space:nowrap;user-select:none}

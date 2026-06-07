@@ -17,45 +17,32 @@
       --safe-bot:env(safe-area-inset-bottom,0px);
     }
     html,body { height:100%; background:var(--bg); color:var(--text); font-family:-apple-system,'SF Pro Text',Georgia,serif; }
-
-    /* APP */
-    #app { display:none; flex-direction:column; height:100vh; overflow:hidden; }
-    #app.ready { display:flex; }
-
-    /* TOPBAR */
+    #app { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
     .topbar { padding:calc(var(--safe-top) + 14px) 20px 0; background:var(--bg); flex-shrink:0; }
     .topbar-row { display:flex; justify-content:space-between; align-items:flex-start; }
     .trip-label { font-size:11px; letter-spacing:3px; color:var(--teal); text-transform:uppercase; margin-bottom:3px; }
     .trip-name  { font-size:22px; font-weight:normal; cursor:pointer; display:flex; align-items:center; gap:8px; }
-    .trip-name:hover { opacity:.8; }
-    .edit-icon  { font-size:14px; opacity:.5; }
     .budget-box { text-align:right; flex-shrink:0; }
     .budget-lbl { font-size:10px; color:var(--muted); margin-bottom:2px; }
     .budget-val { font-size:16px; cursor:pointer; }
     .prog-wrap  { margin-top:14px; background:var(--surface); border-radius:99px; height:8px; overflow:hidden; }
-    .prog-bar   { height:100%; border-radius:99px; transition:width .6s ease, background .4s; }
+    .prog-bar   { height:100%; border-radius:99px; transition:width .6s ease,background .4s; }
     .prog-info  { display:flex; justify-content:space-between; margin-top:7px; font-size:12px; color:var(--muted); }
     .prog-info strong { color:var(--text); }
-
-    /* TABS */
+    .viagem-selector { display:flex; align-items:center; gap:8px; margin-top:8px; flex-wrap:wrap; }
+    .viagem-chip { background:var(--surface); border:1px solid var(--border); border-radius:99px; font-size:12px; padding:4px 12px; cursor:pointer; color:var(--muted); }
+    .viagem-chip.active { border-color:var(--teal); color:var(--teal); }
+    .viagem-chip.add    { color:var(--teal); border-style:dashed; }
     .tabs { display:flex; gap:4px; padding:14px 20px 0; flex-shrink:0; }
-    .tab  { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:99px; color:var(--muted); font-size:13px; padding:8px 4px; cursor:pointer; text-align:center; transition:all .2s; }
+    .tab  { flex:1; background:var(--surface); border:1px solid var(--border); border-radius:99px; color:var(--muted); font-size:12px; padding:8px 2px; cursor:pointer; text-align:center; transition:all .2s; }
     .tab.active { background:var(--teal); border-color:var(--teal); color:var(--bg); font-weight:600; }
-
-    /* CONTENT */
     .content { flex:1; overflow-y:auto; padding:16px 20px 120px; -webkit-overflow-scrolling:touch; }
-
-    /* CAT GRID */
+    .section-title { font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:10px; }
     .cat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:20px; }
-    .cat-card  { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 8px; text-align:center; cursor:pointer; transition:all .2s; }
-    .cat-card:active { transform:scale(.96); }
-    .cat-card.active { border-color:var(--active-color,var(--teal)); background:color-mix(in srgb,var(--active-color,var(--teal)) 15%,transparent); }
+    .cat-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:12px 8px; text-align:center; cursor:pointer; transition:all .2s; }
     .cat-card .ico { font-size:22px; }
     .cat-card .lbl { font-size:9px; color:var(--muted); margin-top:3px; text-transform:uppercase; letter-spacing:1px; }
     .cat-card .val { font-size:12px; margin-top:3px; font-weight:600; }
-
-    /* CHART */
-    .section-title { font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; margin-bottom:10px; }
     .bar-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
     .bar-row .name { font-size:12px; width:90px; flex-shrink:0; }
     .bar-track { flex:1; background:var(--surface); border-radius:99px; height:8px; overflow:hidden; }
@@ -70,11 +57,9 @@
     .stat-lbl  { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
     .stat-val  { font-size:18px; font-weight:600; }
     .stat-sub  { font-size:11px; color:var(--muted); margin-top:3px; }
-
-    /* LIST */
     .list-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
     .filter-tag  { font-size:11px; color:var(--teal); cursor:pointer; }
-    .gasto-item  { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--item-color,var(--teal)); border-radius:10px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; animation:slideIn .25s ease; }
+    .gasto-item  { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--item-color,var(--teal)); border-radius:10px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
     .gasto-left  { display:flex; align-items:center; gap:10px; }
     .gasto-ico   { font-size:22px; }
     .gasto-desc  { font-size:14px; }
@@ -84,126 +69,100 @@
     .gasto-actions { display:flex; gap:6px; }
     .btn-icon    { background:none; border:none; font-size:16px; cursor:pointer; padding:2px; line-height:1; }
     .empty       { text-align:center; padding:48px 0; color:#333; }
-
-    /* VIAGEM SELECTOR */
-    .viagem-selector { display:flex; align-items:center; gap:8px; margin-top:8px; flex-wrap:wrap; }
-    .viagem-chip { background:var(--surface); border:1px solid var(--border); border-radius:99px; font-size:12px; padding:4px 12px; cursor:pointer; transition:all .15s; color:var(--muted); }
-    .viagem-chip.active { border-color:var(--teal); color:var(--teal); }
-    .viagem-chip.add    { color:var(--teal); border-style:dashed; }
-
-    /* FAB */
     .fab { position:fixed; bottom:calc(var(--safe-bot) + 24px); left:50%; transform:translateX(-50%); background:var(--teal); border:none; border-radius:99px; color:var(--bg); font-size:15px; font-weight:600; padding:14px 32px; cursor:pointer; box-shadow:0 4px 24px rgba(78,205,196,.4); display:flex; align-items:center; gap:8px; white-space:nowrap; z-index:100; }
     .fab.hidden { display:none; }
-    .fab:active { opacity:.85; }
 
-    /* MODAL GASTO */
-    .modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:200; align-items:flex-end; justify-content:center; }
+    /* MODAIS */
+    .modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:200; align-items:flex-end; justify-content:center; }
     .modal-bg.open { display:flex; }
-    .modal { background:var(--surface); border-radius:20px 20px 0 0; padding:20px 20px calc(var(--safe-bot) + 28px); width:100%; max-width:480px; animation:slideUp .3s ease; }
+    .modal { background:var(--surface); border-radius:20px 20px 0 0; padding:20px 20px calc(var(--safe-bot) + 24px); width:100%; max-width:480px; max-height:90vh; overflow-y:auto; animation:slideUp .3s ease; }
     .modal-handle { width:36px; height:4px; background:var(--border); border-radius:99px; margin:0 auto 18px; }
     .modal-title  { font-size:17px; font-weight:normal; margin-bottom:16px; }
     .field-label  { font-size:11px; letter-spacing:1.5px; color:var(--muted); display:block; margin-bottom:5px; }
     .field-input  { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:15px; padding:11px 13px; margin-bottom:13px; outline:none; font-family:inherit; }
     .field-input:focus { border-color:var(--teal); }
-    .cat-pills { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
-    .pill { background:var(--bg); border:1px solid var(--border); border-radius:99px; color:var(--text); padding:5px 12px; font-size:12px; cursor:pointer; display:flex; gap:4px; align-items:center; transition:all .15s; }
+    .cat-pills, .tipo-pills { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+    .tipo-pills { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:14px; }
+    .pill { background:var(--bg); border:1px solid var(--border); border-radius:99px; color:var(--text); padding:5px 12px; font-size:12px; cursor:pointer; display:flex; gap:4px; align-items:center; justify-content:center; transition:all .15s; }
     .pill.active { border-color:var(--pill-color); background:color-mix(in srgb,var(--pill-color) 20%,transparent); }
-    .btn-submit { width:100%; background:var(--teal); border:none; border-radius:10px; color:var(--bg); font-size:15px; padding:14px; cursor:pointer; font-weight:600; }
-    .btn-submit:disabled { background:#1A2A2A; color:#2A4A4A; cursor:default; }
-
-    /* MODAL CATEGORIA */
-    .cat-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:300; align-items:flex-end; justify-content:center; }
-    .cat-modal-bg.open { display:flex; }
-    .cat-modal { background:var(--surface); border-radius:20px 20px 0 0; padding:20px 20px calc(var(--safe-bot) + 20px); width:100%; max-width:480px; animation:slideUp .3s ease; max-height:80vh; display:flex; flex-direction:column; }
-    .cat-modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-shrink:0; }
-    .cat-modal-title  { font-size:17px; display:flex; align-items:center; gap:8px; }
-    .cat-modal-total  { font-size:13px; color:var(--muted); margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--border); flex-shrink:0; }
-    .cat-modal-list   { overflow-y:auto; flex:1; }
-    .cat-modal-item   { background:var(--bg); border:1px solid var(--border); border-left:3px solid var(--item-color,var(--teal)); border-radius:10px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-    .cat-modal-empty  { text-align:center; padding:32px; color:#333; font-size:14px; }
-
-    /* MODAL EDITAR VIAGEM */
-    .edit-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:400; align-items:center; justify-content:center; padding:20px; }
-    .edit-modal-bg.open { display:flex; }
-    .edit-modal { background:var(--surface); border-radius:16px; padding:24px; width:100%; max-width:380px; animation:fadeIn .25s ease; }
-    .edit-modal h3 { font-size:16px; font-weight:normal; margin-bottom:18px; }
-    .edit-btn-row { display:flex; gap:10px; margin-top:4px; }
+    .btn-row { display:flex; gap:10px; }
     .btn-cancel { flex:1; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:var(--muted); font-size:14px; padding:12px; cursor:pointer; }
+    .btn-submit { flex:2; background:var(--teal); border:none; border-radius:10px; color:var(--bg); font-size:15px; padding:13px; cursor:pointer; font-weight:600; }
+    .btn-submit:disabled { background:#1A2A2A; color:#2A4A4A; cursor:default; }
 
     /* ROTEIRO */
     .dia-card    { background:var(--surface); border:1px solid var(--border); border-radius:14px; margin-bottom:14px; overflow:hidden; }
-    .dia-header  { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; cursor:pointer; }
+    .dia-header  { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; cursor:pointer; gap:8px; }
     .dia-badge   { background:var(--teal); color:var(--bg); border-radius:99px; font-size:10px; font-weight:700; padding:3px 10px; flex-shrink:0; }
-    .dia-titulo  { font-size:15px; flex:1; margin:0 10px; }
-    .dia-data    { font-size:11px; color:var(--muted); }
+    .dia-titulo  { font-size:15px; flex:1; }
+    .dia-data    { font-size:11px; color:var(--muted); flex-shrink:0; }
+    .dia-chevron { font-size:11px; color:var(--muted); flex-shrink:0; }
     .dia-body    { padding:0 16px 14px; border-top:1px solid var(--border); }
     .dia-desc    { font-size:12px; color:var(--muted); padding:10px 0 8px; }
     .parada-item { display:flex; gap:10px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--border); }
     .parada-item:last-child { border-bottom:none; }
-    .parada-linha{ display:flex; flex-direction:column; align-items:center; gap:0; }
-    .parada-dot  { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
-    .parada-line { width:2px; flex:1; min-height:16px; background:var(--border); margin-top:3px; }
-    .parada-info { flex:1; }
+    .parada-linha { display:flex; flex-direction:column; align-items:center; }
+    .parada-dot  { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+    .parada-line { width:2px; flex:1; min-height:14px; background:var(--border); margin-top:3px; }
+    .parada-info { flex:1; min-width:0; }
     .parada-nome { font-size:14px; font-weight:500; }
-    .parada-meta { font-size:11px; color:var(--muted); margin-top:2px; display:flex; gap:8px; flex-wrap:wrap; }
+    .parada-nome.done { text-decoration:line-through; opacity:.45; }
+    .parada-meta { font-size:11px; color:var(--muted); margin-top:3px; display:flex; gap:8px; flex-wrap:wrap; }
     .parada-obs  { font-size:11px; color:var(--muted); margin-top:4px; font-style:italic; }
-    .parada-actions { display:flex; gap:4px; flex-shrink:0; align-items:center; }
-    .check-btn { width:26px; height:26px; border-radius:50%; border:2px solid var(--border); background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; transition:all .2s; flex-shrink:0; }
-    .check-btn.done { background:var(--teal); border-color:var(--teal); }
-    .parada-nome.done { text-decoration:line-through; opacity:.5; }
-    .dia-actions { display:flex; gap:6px; justify-content:flex-end; margin-top:6px; }
-    .btn-sm      { background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--muted); font-size:12px; padding:5px 12px; cursor:pointer; }
-    .btn-sm:active { opacity:.7; }
+    .parada-btns { display:flex; gap:4px; align-items:center; flex-shrink:0; }
+    .check-btn   { width:26px; height:26px; border-radius:50%; border:2px solid var(--border); background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px; transition:all .2s; flex-shrink:0; }
+    .check-btn.done { background:var(--teal); border-color:var(--teal); color:var(--bg); }
+    .dia-actions { display:flex; gap:6px; justify-content:flex-end; margin-top:10px; padding-top:8px; border-top:1px solid var(--border); }
+    .btn-sm      { background:var(--bg); border:1px solid var(--border); border-radius:8px; color:var(--muted); font-size:12px; padding:6px 12px; cursor:pointer; }
     .roteiro-empty { text-align:center; padding:48px 0; color:#333; }
-
-    /* MODAL DIA */
-    .dia-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:300; align-items:flex-end; justify-content:center; }
-    .dia-modal-bg.open { display:flex; }
-    .dia-modal    { background:var(--surface); border-radius:20px 20px 0 0; padding:20px 20px calc(var(--safe-bot) + 24px); width:100%; max-width:480px; animation:slideUp .3s ease; }
-
-    /* MODAL PARADA */
-    .par-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.75); z-index:400; align-items:flex-end; justify-content:center; }
-    .par-modal-bg.open { display:flex; }
-    .par-modal    { background:var(--surface); border-radius:20px 20px 0 0; padding:20px 20px calc(var(--safe-bot) + 24px); width:100%; max-width:480px; animation:slideUp .3s ease; max-height:90vh; overflow-y:auto; }
-    .tipo-pills   { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:14px; }
-    .tipo-pills .pill { justify-content:center; padding:8px 4px; font-size:12px; }
     .realizado-toggle { display:flex; align-items:center; justify-content:space-between; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:12px 14px; margin-bottom:14px; cursor:pointer; }
-    .realizado-toggle span { font-size:14px; }
-    .toggle-switch { width:42px; height:24px; background:var(--border); border-radius:99px; position:relative; transition:background .2s; flex-shrink:0; }
-    .toggle-switch.on { background:var(--teal); }
-    .toggle-switch::after { content:''; position:absolute; width:18px; height:18px; background:#fff; border-radius:50%; top:3px; left:3px; transition:left .2s; }
-    .toggle-switch.on::after { left:21px; }
+    .toggle-sw { width:42px; height:24px; background:var(--border); border-radius:99px; position:relative; transition:background .2s; flex-shrink:0; }
+    .toggle-sw.on { background:var(--teal); }
+    .toggle-sw::after { content:''; position:absolute; width:18px; height:18px; background:#fff; border-radius:50%; top:3px; left:3px; transition:left .2s; }
+    .toggle-sw.on::after { left:21px; }
 
-    /* TOAST */
-    .toast { position:fixed; bottom:calc(var(--safe-bot) + 100px); left:50%; transform:translateX(-50%) translateY(20px); background:var(--surface); border:1px solid var(--border); border-radius:99px; padding:10px 20px; font-size:13px; opacity:0; transition:all .3s; pointer-events:none; z-index:500; white-space:nowrap; }
+    /* POPUP CATEGORIA */
+    .cat-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:300; align-items:flex-end; justify-content:center; }
+    .cat-modal-bg.open { display:flex; }
+    .cat-modal { background:var(--surface); border-radius:20px 20px 0 0; padding:20px 20px calc(var(--safe-bot)+20px); width:100%; max-width:480px; animation:slideUp .3s ease; max-height:80vh; display:flex; flex-direction:column; }
+    .cat-modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .cat-modal-total  { font-size:13px; color:var(--muted); margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--border); }
+    .cat-modal-list   { overflow-y:auto; flex:1; }
+    .cat-modal-item   { background:var(--bg); border:1px solid var(--border); border-left:3px solid var(--item-color,var(--teal)); border-radius:10px; padding:12px 14px; display:flex; justify-content:space-between; margin-bottom:8px; }
+
+    /* EDIT VIAGEM */
+    .center-modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:400; align-items:center; justify-content:center; padding:20px; }
+    .center-modal-bg.open { display:flex; }
+    .center-modal { background:var(--surface); border-radius:16px; padding:24px; width:100%; max-width:380px; animation:fadeIn .25s ease; }
+    .center-modal h3 { font-size:16px; font-weight:normal; margin-bottom:18px; }
+
+    .toast { position:fixed; bottom:calc(var(--safe-bot)+100px); left:50%; transform:translateX(-50%) translateY(20px); background:var(--surface); border:1px solid var(--border); border-radius:99px; padding:10px 20px; font-size:13px; opacity:0; transition:all .3s; pointer-events:none; z-index:999; white-space:nowrap; }
     .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
-    @keyframes slideIn { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:none} }
     @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
     @keyframes fadeIn  { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:none} }
+    @keyframes slideIn { from{opacity:0;transform:translateX(-6px)} to{opacity:1;transform:none} }
     ::-webkit-scrollbar { width:4px; }
     ::-webkit-scrollbar-thumb { background:var(--border); border-radius:99px; }
     input[type="number"]::-webkit-inner-spin-button { -webkit-appearance:none; }
   </style>
 </head>
 <body>
-
 <div id="app">
 
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="topbar-row">
       <div>
         <div class="trip-label">Controle de Viagem</div>
-        <div class="trip-name" id="trip-name" onclick="abrirEditarViagem()">
+        <div class="trip-name" id="trip-name-el">
           <span id="trip-name-text">—</span>
-          <span class="edit-icon">✏️</span>
+          <span style="font-size:14px;opacity:.5">✏️</span>
         </div>
         <div class="viagem-selector" id="viagem-list"></div>
       </div>
       <div class="budget-box">
         <div class="budget-lbl">Orçamento</div>
-        <div class="budget-val" id="budget-display" title="Clique para editar">—</div>
+        <div class="budget-val" id="budget-display">—</div>
       </div>
     </div>
     <div class="prog-wrap"><div class="prog-bar" id="prog-bar" style="width:0%"></div></div>
@@ -213,14 +172,12 @@
     </div>
   </div>
 
-  <!-- TABS -->
   <div class="tabs">
     <div class="tab active" data-tab="dashboard">📊 Dashboard</div>
-    <div class="tab"        data-tab="lancamentos">📋 Lançamentos</div>
-    <div class="tab"        data-tab="roteiro">🗺️ Roteiro</div>
+    <div class="tab" data-tab="lancamentos">📋 Lançamentos</div>
+    <div class="tab" data-tab="roteiro">🗺️ Roteiro</div>
   </div>
 
-  <!-- DASHBOARD -->
   <div class="content" id="tab-dashboard">
     <div style="margin-bottom:20px">
       <div class="section-title">por categoria — toque para detalhar</div>
@@ -240,28 +197,51 @@
     </div>
   </div>
 
-  <!-- LANÇAMENTOS -->
   <div class="content" id="tab-lancamentos" style="display:none">
     <div class="list-header">
       <span id="list-count" style="font-size:12px;color:var(--muted)"></span>
-      <span class="filter-tag" id="filter-clear" style="display:none" onclick="limparFiltro()">Limpar filtro ×</span>
+      <span class="filter-tag" id="filter-clear" style="display:none">Limpar filtro ×</span>
     </div>
     <div id="gastos-list"></div>
   </div>
 
-  <!-- ROTEIRO -->
   <div class="content" id="tab-roteiro" style="display:none">
-    <div id="roteiro-list"></div>
+    <div id="roteiro-container"></div>
   </div>
 
   <button class="fab hidden" id="fab">＋ Adicionar Gasto</button>
 </div>
 
-<!-- MODAL DIA -->
-<div class="dia-modal-bg" id="dia-modal-bg">
-  <div class="dia-modal">
+<!-- MODAL GASTO -->
+<div class="modal-bg" id="modal-gasto-bg">
+  <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="dia-modal-title">Novo Dia</div>
+    <div class="modal-title" id="modal-gasto-title">Novo Gasto</div>
+    <label class="field-label">DESCRIÇÃO</label>
+    <input class="field-input" id="f-desc" type="text" placeholder="Ex: Almoço no centro..." autocomplete="off"/>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <label class="field-label">VALOR (R$)</label>
+        <input class="field-input" id="f-valor" type="number" min="0.01" step="0.01" placeholder="0,00" style="color:var(--yellow);font-weight:700"/>
+      </div>
+      <div>
+        <label class="field-label">DATA</label>
+        <input class="field-input" id="f-data" type="date" style="color-scheme:dark"/>
+      </div>
+    </div>
+    <label class="field-label">OBSERVAÇÃO (opcional)</label>
+    <input class="field-input" id="f-obs" type="text" placeholder="Detalhes adicionais..." autocomplete="off"/>
+    <label class="field-label">CATEGORIA</label>
+    <div class="cat-pills" id="cat-pills"></div>
+    <button class="btn-submit" id="btn-submit-gasto" style="width:100%" disabled>Salvar</button>
+  </div>
+</div>
+
+<!-- MODAL DIA -->
+<div class="modal-bg" id="modal-dia-bg">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-dia-title">Novo Dia</div>
     <label class="field-label">TÍTULO DO DIA</label>
     <input class="field-input" id="d-titulo" type="text" placeholder="Ex: Lisboa — chegada" autocomplete="off"/>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -276,18 +256,18 @@
     </div>
     <label class="field-label">DESCRIÇÃO (opcional)</label>
     <input class="field-input" id="d-desc" type="text" placeholder="Resumo do dia..." autocomplete="off"/>
-    <div style="display:flex;gap:10px">
-      <button class="btn-cancel" onclick="fecharDiaModal()">Cancelar</button>
-      <button class="btn-submit" style="flex:2" id="d-submit">Salvar Dia</button>
+    <div class="btn-row">
+      <button class="btn-cancel" id="btn-cancel-dia">Cancelar</button>
+      <button class="btn-submit" id="btn-submit-dia">Salvar Dia</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL PARADA -->
-<div class="par-modal-bg" id="par-modal-bg">
-  <div class="par-modal">
+<div class="modal-bg" id="modal-par-bg">
+  <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-title" id="par-modal-title">Nova Parada</div>
+    <div class="modal-title" id="modal-par-title">Nova Parada</div>
     <label class="field-label">NOME DO LOCAL</label>
     <input class="field-input" id="p-nome" type="text" placeholder="Ex: Torre de Belém" autocomplete="off"/>
     <label class="field-label">TIPO</label>
@@ -304,48 +284,23 @@
     </div>
     <label class="field-label">OBSERVAÇÃO</label>
     <input class="field-input" id="p-obs" type="text" placeholder="Reserva, ingresso, dica..." autocomplete="off"/>
-    <div class="realizado-toggle" id="realizado-toggle" onclick="toggleRealizadoModal()">
-      <span>✅ Marcar como realizado</span>
-      <div class="toggle-switch" id="realizado-switch"></div>
+    <div class="realizado-toggle" id="realizado-toggle">
+      <span style="font-size:14px">✅ Marcar como realizado</span>
+      <div class="toggle-sw" id="realizado-sw"></div>
     </div>
-    <div style="display:flex;gap:10px">
-      <button class="btn-cancel" onclick="fecharParModal()">Cancelar</button>
-      <button class="btn-submit" style="flex:2" id="p-submit">Salvar Parada</button>
+    <div class="btn-row">
+      <button class="btn-cancel" id="btn-cancel-par">Cancelar</button>
+      <button class="btn-submit" id="btn-submit-par">Salvar Parada</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL GASTO -->
-<div class="modal-bg" id="modal-bg">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title" id="modal-title">Novo Gasto</div>
-    <label class="field-label">DESCRIÇÃO</label>
-    <input class="field-input" id="f-desc" type="text" placeholder="Ex: Almoço no centro..." autocomplete="off" />
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div>
-        <label class="field-label">VALOR (R$)</label>
-        <input class="field-input" id="f-valor" type="number" min="0.01" step="0.01" placeholder="0,00" style="color:var(--yellow);font-weight:700" />
-      </div>
-      <div>
-        <label class="field-label">DATA</label>
-        <input class="field-input" id="f-data" type="date" style="color-scheme:dark" />
-      </div>
-    </div>
-    <label class="field-label">OBSERVAÇÃO (opcional)</label>
-    <input class="field-input" id="f-obs" type="text" placeholder="Detalhes adicionais..." autocomplete="off" />
-    <label class="field-label">CATEGORIA</label>
-    <div class="cat-pills" id="cat-pills"></div>
-    <button class="btn-submit" id="btn-submit" disabled>Salvar</button>
-  </div>
-</div>
-
-<!-- MODAL CATEGORIA (popup detalhe) -->
+<!-- POPUP CATEGORIA -->
 <div class="cat-modal-bg" id="cat-modal-bg">
   <div class="cat-modal">
     <div class="modal-handle"></div>
     <div class="cat-modal-header">
-      <div class="cat-modal-title" id="cat-modal-title"></div>
+      <div id="cat-modal-title" style="font-size:17px;display:flex;align-items:center;gap:8px"></div>
       <button class="btn-icon" id="cat-modal-close" style="font-size:20px;color:var(--muted)">✕</button>
     </div>
     <div class="cat-modal-total" id="cat-modal-total"></div>
@@ -353,25 +308,25 @@
   </div>
 </div>
 
-<!-- MODAL EDITAR VIAGEM -->
-<div class="edit-modal-bg" id="edit-modal-bg">
-  <div class="edit-modal">
+<!-- EDIT VIAGEM -->
+<div class="center-modal-bg" id="edit-viagem-bg">
+  <div class="center-modal">
     <h3>✏️ Editar Viagem</h3>
-    <label class="field-label">NOME DA VIAGEM</label>
-    <input class="field-input" id="ev-nome" type="text" placeholder="Ex: Portugal - 2026" autocomplete="off" />
+    <label class="field-label">NOME</label>
+    <input class="field-input" id="ev-nome" type="text" autocomplete="off"/>
     <label class="field-label">ORÇAMENTO (R$)</label>
-    <input class="field-input" id="ev-orc" type="number" min="0" step="0.01" placeholder="0,00" />
-    <div class="edit-btn-row">
-      <button class="btn-cancel" onclick="fecharEditarViagem()">Cancelar</button>
-      <button class="btn-submit" style="flex:2" onclick="salvarEditarViagem()">Salvar</button>
+    <input class="field-input" id="ev-orc" type="number" min="0" step="0.01"/>
+    <div class="btn-row">
+      <button class="btn-cancel" id="btn-cancel-ev">Cancelar</button>
+      <button class="btn-submit" id="btn-submit-ev">Salvar</button>
     </div>
   </div>
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
+// ── CONSTANTES ────────────────────────────────────────
 const CATS = [
   { id:'hospedagem',  label:'Hospedagem',  emoji:'🏨', cor:'#FF6B6B' },
   { id:'transporte',  label:'Transporte',  emoji:'✈️', cor:'#4ECDC4' },
@@ -380,20 +335,33 @@ const CATS = [
   { id:'compras',     label:'Compras',     emoji:'🛍️', cor:'#FF8B94' },
   { id:'outros',      label:'Outros',      emoji:'📦', cor:'#C3B1E1' },
 ];
+const TIPOS = [
+  { id:'hotel',       label:'Hotel',       emoji:'🏨', cor:'#FF6B6B' },
+  { id:'restaurante', label:'Restaurante', emoji:'🍽️', cor:'#FFE66D' },
+  { id:'atração',     label:'Atração',     emoji:'🎡', cor:'#4ECDC4' },
+  { id:'transporte',  label:'Transporte',  emoji:'✈️', cor:'#A8E6CF' },
+  { id:'compras',     label:'Compras',     emoji:'🛍️', cor:'#FF8B94' },
+  { id:'outro',       label:'Outro',       emoji:'📍', cor:'#C3B1E1' },
+];
 const BRL = v => new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
+const $ = id => document.getElementById(id);
 
-let sb, viagemId=null, gastos=[], filtroCategoria=null, editingId=null, viagens=[];
+// ── ESTADO ────────────────────────────────────────────
+let sb, viagemId=null, gastos=[], viagens=[];
+let filtroCategoria=null, editingGastoId=null;
+let roteiroDias=[], roteiroParadas=[], diasAbertos={};
+let diaEditId=null, paraEditId=null, diaAtualId=null, realizadoModal=false;
 
-// ── INIT ─────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────
 (async () => {
-  const url = 'https://evvvzmnguhgqaopvquhs.supabase.co';
-  const key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2dnZ6bW5ndWhncWFvcHZxdWhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMTMzODYsImV4cCI6MjA5NDc4OTM4Nn0.FSuRZjedHmJs4QRiCrk_DS1tzEO-tOU3pN8HG15Iw5g';
-  sb = supabase.createClient(url, key);
-  document.getElementById('app').classList.add('ready');
+  sb = supabase.createClient(
+    'https://evvvzmnguhgqaopvquhs.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2dnZ6bW5ndWhncWFvcHZxdWhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMTMzODYsImV4cCI6MjA5NDc4OTM4Nn0.FSuRZjedHmJs4QRiCrk_DS1tzEO-tOU3pN8HG15Iw5g'
+  );
   await loadViagens();
 })();
 
-// ── VIAGENS ──────────────────────────────────────────
+// ── VIAGENS ───────────────────────────────────────────
 async function loadViagens() {
   const { data } = await sb.from('viagens').select('*').order('criado_em',{ascending:false});
   viagens = data || [];
@@ -404,340 +372,239 @@ async function loadViagens() {
 }
 
 function renderViagemSelector() {
-  const el = document.getElementById('viagem-list');
-  el.innerHTML = '';
+  const el = $('viagem-list'); el.innerHTML='';
   viagens.forEach(v => {
-    const chip = document.createElement('div');
-    chip.className = 'viagem-chip' + (v.id===viagemId?' active':'');
-    chip.textContent = v.nome;
-    chip.onclick = async () => { viagemId=v.id; renderViagemSelector(); await loadGastos(); };
-    el.appendChild(chip);
+    const c = document.createElement('div');
+    c.className='viagem-chip'+(v.id===viagemId?' active':'');
+    c.textContent=v.nome;
+    c.addEventListener('click', async()=>{ viagemId=v.id; renderViagemSelector(); await loadGastos(); });
+    el.appendChild(c);
   });
-  const add = document.createElement('div');
-  add.className='viagem-chip add'; add.textContent='+ nova';
-  add.onclick = novaViagem;
-  el.appendChild(add);
+  const a=document.createElement('div'); a.className='viagem-chip add'; a.textContent='+ nova';
+  a.addEventListener('click', novaViagem); el.appendChild(a);
 }
 
 async function novaViagem() {
-  const nome = prompt('Nome da viagem:');
-  const realizado = realizadoModal;
-  if(!nome) return;
-  const orc = parseFloat(prompt('Orçamento (R$):') || '0');
-  const { data, error } = await sb.from('viagens').insert({nome,orcamento:orc}).select().single();
-  if(error){ toast('Erro ao criar viagem'); return; }
-  viagens.unshift(data);
-  viagemId = data.id;
-  renderViagemSelector();
-  await loadGastos();
+  const nome=prompt('Nome da viagem:'); if(!nome) return;
+  const orc=parseFloat(prompt('Orçamento (R$):')||'0');
+  const {data,error}=await sb.from('viagens').insert({nome,orcamento:orc}).select().single();
+  if(error){toast('Erro ao criar');return;}
+  viagens.unshift(data); viagemId=data.id; renderViagemSelector(); await loadGastos();
 }
 
-// ── EDITAR VIAGEM ────────────────────────────────────
-function abrirEditarViagem() {
-  const v = viagens.find(x=>x.id===viagemId); if(!v) return;
-  document.getElementById('ev-nome').value = v.nome;
-  document.getElementById('ev-orc').value  = v.orcamento;
-  document.getElementById('edit-modal-bg').classList.add('open');
-  setTimeout(()=>document.getElementById('ev-nome').focus(),100);
-}
-function fecharEditarViagem() {
-  document.getElementById('edit-modal-bg').classList.remove('open');
-}
-async function salvarEditarViagem() {
-  const nome = document.getElementById('ev-nome').value.trim();
-  const orc  = parseFloat(document.getElementById('ev-orc').value);
-  if(!nome) return;
-  const v = viagens.find(x=>x.id===viagemId); if(!v) return;
-  v.nome = nome;
-  v.orcamento = isNaN(orc) ? v.orcamento : orc;
-  document.getElementById('trip-name-text').textContent = nome;
-  renderViagemSelector();
-  renderTopbar();
-  fecharEditarViagem();
-  toast('Viagem atualizada ✓');
-  await sb.from('viagens').update({nome, orcamento:v.orcamento}).eq('id',viagemId);
-}
-document.getElementById('edit-modal-bg').addEventListener('click', e => {
-  if(e.target===document.getElementById('edit-modal-bg')) fecharEditarViagem();
+// ── EDITAR VIAGEM ─────────────────────────────────────
+$('trip-name-el').addEventListener('click', ()=>{
+  const v=viagens.find(x=>x.id===viagemId); if(!v) return;
+  $('ev-nome').value=v.nome; $('ev-orc').value=v.orcamento;
+  $('edit-viagem-bg').classList.add('open');
+  setTimeout(()=>$('ev-nome').focus(),100);
+});
+$('btn-cancel-ev').addEventListener('click', ()=>$('edit-viagem-bg').classList.remove('open'));
+$('edit-viagem-bg').addEventListener('click', e=>{ if(e.target===$('edit-viagem-bg')) $('edit-viagem-bg').classList.remove('open'); });
+$('btn-submit-ev').addEventListener('click', async()=>{
+  const nome=$('ev-nome').value.trim(); if(!nome) return;
+  const orc=parseFloat($('ev-orc').value)||0;
+  const v=viagens.find(x=>x.id===viagemId); if(!v) return;
+  v.nome=nome; v.orcamento=orc;
+  $('trip-name-text').textContent=nome; renderViagemSelector(); renderTopbar();
+  $('edit-viagem-bg').classList.remove('open'); toast('Viagem atualizada ✓');
+  await sb.from('viagens').update({nome,orcamento:orc}).eq('id',viagemId);
 });
 
-// ── GASTOS ───────────────────────────────────────────
+// ── GASTOS ────────────────────────────────────────────
 async function loadGastos() {
-  const v = viagens.find(x=>x.id===viagemId); if(!v) return;
-  document.getElementById('trip-name-text').textContent = v.nome;
-  const { data } = await sb.from('gastos').select('*').eq('viagem_id',viagemId).order('data',{ascending:false});
-  gastos = data || [];
-  render();
+  const v=viagens.find(x=>x.id===viagemId); if(!v) return;
+  $('trip-name-text').textContent=v.nome;
+  const {data}=await sb.from('gastos').select('*').eq('viagem_id',viagemId).order('data',{ascending:false});
+  gastos=data||[]; render();
 }
 
 function render() { renderTopbar(); renderDashboard(); renderList(); }
 
-// ── TOPBAR ───────────────────────────────────────────
 function renderTopbar() {
-  const v     = viagens.find(x=>x.id===viagemId);
-  const total = gastos.reduce((s,g)=>s+Number(g.valor),0);
-  const orc   = v?.orcamento||0;
-  const rest  = orc-total;
-  const pct   = orc ? Math.min(total/orc*100,100) : 0;
-  const cor   = pct>90?'#FF6B6B':pct>70?'#FFE66D':'#4ECDC4';
-  document.getElementById('total-display').textContent = BRL(total);
-  document.getElementById('total-display').style.color = cor;
-  document.getElementById('budget-display').textContent = BRL(orc);
-  document.getElementById('restante-display').textContent = rest>=0?`Restam ${BRL(rest)}`:`Excedido ${BRL(-rest)}`;
-  document.getElementById('restante-display').style.color = rest>=0?'#4ECDC4':'#FF6B6B';
-  const bar = document.getElementById('prog-bar');
-  bar.style.width=pct+'%'; bar.style.background=cor;
+  const v=viagens.find(x=>x.id===viagemId);
+  const total=gastos.reduce((s,g)=>s+Number(g.valor),0);
+  const orc=v?.orcamento||0; const rest=orc-total;
+  const pct=orc?Math.min(total/orc*100,100):0;
+  const cor=pct>90?'#FF6B6B':pct>70?'#FFE66D':'#4ECDC4';
+  $('total-display').textContent=BRL(total); $('total-display').style.color=cor;
+  $('budget-display').textContent=BRL(orc);
+  $('restante-display').textContent=rest>=0?`Restam ${BRL(rest)}`:`Excedido ${BRL(-rest)}`;
+  $('restante-display').style.color=rest>=0?'#4ECDC4':'#FF6B6B';
+  const bar=$('prog-bar'); bar.style.width=pct+'%'; bar.style.background=cor;
 }
 
-// ── DASHBOARD ────────────────────────────────────────
 function renderDashboard() {
-  const total = gastos.reduce((s,g)=>s+Number(g.valor),0);
-  const byCat = CATS.map(c=>({...c, total:gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)}));
-  const maxCat = Math.max(...byCat.map(c=>c.total),1);
-
-  // cat grid
-  const grid = document.getElementById('dash-cat-grid');
-  grid.innerHTML='';
+  const total=gastos.reduce((s,g)=>s+Number(g.valor),0);
+  const byCat=CATS.map(c=>({...c,total:gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)}));
+  const maxCat=Math.max(...byCat.map(c=>c.total),1);
+  const grid=$('dash-cat-grid'); grid.innerHTML='';
   byCat.forEach(c=>{
-    const d=document.createElement('div');
-    d.className='cat-card'+(filtroCategoria===c.id?' active':'');
-    d.style.setProperty('--active-color',c.cor);
-    d.innerHTML=`<div class="ico">${c.emoji}</div>
-      <div class="lbl">${c.label}</div>
+    const d=document.createElement('div'); d.className='cat-card';
+    d.innerHTML=`<div class="ico">${c.emoji}</div><div class="lbl">${c.label}</div>
       <div class="val" style="color:${c.total?c.cor:'#333'}">${c.total?BRL(c.total):'—'}</div>`;
-    d.addEventListener('click', ()=>abrirCatModal(c.id));
-    grid.appendChild(d);
+    d.addEventListener('click',()=>abrirCatModal(c.id)); grid.appendChild(d);
   });
-
-  // stats
-  const v=viagens.find(x=>x.id===viagemId);
-  const orc=v?.orcamento||0;
+  const v=viagens.find(x=>x.id===viagemId); const orc=v?.orcamento||0;
   const dias=[...new Set(gastos.map(g=>g.data))].length;
   const maior=gastos.length?gastos.reduce((a,b)=>Number(a.valor)>Number(b.valor)?a:b):null;
-  document.getElementById('dash-stats').innerHTML=`
-    <div class="stat-card"><div class="stat-lbl">Total Gasto</div>
-      <div class="stat-val" style="color:var(--teal)">${BRL(total)}</div>
-      <div class="stat-sub">${orc?Math.round(total/orc*100)+'% do orçamento':'—'}</div></div>
-    <div class="stat-card"><div class="stat-lbl">Lançamentos</div>
-      <div class="stat-val">${gastos.length}</div>
-      <div class="stat-sub">${dias} dia${dias!==1?'s':''} com gasto</div></div>
-    <div class="stat-card"><div class="stat-lbl">Ticket Médio</div>
-      <div class="stat-val" style="color:var(--yellow)">${gastos.length?BRL(total/gastos.length):'—'}</div>
-      <div class="stat-sub">por lançamento</div></div>
-    <div class="stat-card"><div class="stat-lbl">Maior Gasto</div>
-      <div class="stat-val" style="color:var(--red)">${maior?BRL(maior.valor):'—'}</div>
-      <div class="stat-sub">${maior?maior.descricao.slice(0,18):'—'}</div></div>`;
-
+  $('dash-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-lbl">Total Gasto</div><div class="stat-val" style="color:var(--teal)">${BRL(total)}</div><div class="stat-sub">${orc?Math.round(total/orc*100)+'% do orçamento':'—'}</div></div>
+    <div class="stat-card"><div class="stat-lbl">Lançamentos</div><div class="stat-val">${gastos.length}</div><div class="stat-sub">${dias} dia${dias!==1?'s':''} com gasto</div></div>
+    <div class="stat-card"><div class="stat-lbl">Ticket Médio</div><div class="stat-val" style="color:var(--yellow)">${gastos.length?BRL(total/gastos.length):'—'}</div><div class="stat-sub">por lançamento</div></div>
+    <div class="stat-card"><div class="stat-lbl">Maior Gasto</div><div class="stat-val" style="color:var(--red)">${maior?BRL(maior.valor):'—'}</div><div class="stat-sub">${maior?maior.descricao.slice(0,18):'—'}</div></div>`;
   buildDonut(byCat,total);
-
-  // bars
-  const barEl=document.getElementById('bar-chart');
-  barEl.innerHTML='';
+  const barEl=$('bar-chart'); barEl.innerHTML='';
   const sorted=byCat.filter(c=>c.total>0).sort((a,b)=>b.total-a.total);
-  if(!sorted.length){ barEl.innerHTML='<div style="color:#333;font-size:13px;text-align:center;padding:20px">Nenhum dado ainda</div>'; return; }
+  if(!sorted.length){barEl.innerHTML='<div style="color:#333;font-size:13px;text-align:center;padding:20px">Nenhum dado ainda</div>';return;}
   sorted.forEach(c=>{
-    const pct=maxCat?c.total/maxCat*100:0;
-    barEl.innerHTML+=`<div class="bar-row">
-      <div class="name">${c.emoji} ${c.label}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${c.cor}"></div></div>
+    const p=maxCat?c.total/maxCat*100:0;
+    barEl.innerHTML+=`<div class="bar-row"><div class="name">${c.emoji} ${c.label}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${c.cor}"></div></div>
       <div class="amount" style="color:${c.cor}">${BRL(c.total)}</div></div>`;
   });
 }
 
-function buildDonut(byCat,total) {
-  const svg=document.getElementById('donut-svg');
-  const leg=document.getElementById('donut-legend');
-  svg.innerHTML=''; leg.innerHTML='';
+function buildDonut(byCat,total){
+  const svg=$('donut-svg'),leg=$('donut-legend'); svg.innerHTML='';leg.innerHTML='';
   const has=byCat.filter(c=>c.total>0);
-  if(!has.length){ svg.innerHTML='<circle cx="60" cy="60" r="40" fill="none" stroke="#2A2A3E" stroke-width="20"/>'; return; }
-  let angle=-Math.PI/2;
-  const R=40,cx=60,cy=60;
+  if(!has.length){svg.innerHTML='<circle cx="60" cy="60" r="40" fill="none" stroke="#2A2A3E" stroke-width="20"/>';return;}
+  let angle=-Math.PI/2; const R=40,cx=60,cy=60;
   has.forEach(c=>{
-    const slice=total?c.total/total*2*Math.PI:0;
+    const sl=total?c.total/total*2*Math.PI:0;
     const x1=cx+R*Math.cos(angle),y1=cy+R*Math.sin(angle);
-    const x2=cx+R*Math.cos(angle+slice),y2=cy+R*Math.sin(angle+slice);
-    const large=slice>Math.PI?1:0;
+    const x2=cx+R*Math.cos(angle+sl),y2=cy+R*Math.sin(angle+sl);
+    const lg=sl>Math.PI?1:0;
     const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d',`M ${cx} ${cy} L ${x1} ${y1} A ${R} ${R} 0 ${large} 1 ${x2} ${y2} Z`);
-    path.setAttribute('fill',c.cor);
-    svg.appendChild(path);
+    path.setAttribute('d',`M ${cx} ${cy} L ${x1} ${y1} A ${R} ${R} 0 ${lg} 1 ${x2} ${y2} Z`);
+    path.setAttribute('fill',c.cor); svg.appendChild(path);
     const hole=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    hole.setAttribute('cx',cx); hole.setAttribute('cy',cy); hole.setAttribute('r',20); hole.setAttribute('fill','#0F0F1A');
-    svg.appendChild(hole);
-    angle+=slice;
+    hole.setAttribute('cx',cx);hole.setAttribute('cy',cy);hole.setAttribute('r',20);hole.setAttribute('fill','#0F0F1A');
+    svg.appendChild(hole); angle+=sl;
     const pct=total?Math.round(c.total/total*100):0;
     leg.innerHTML+=`<div class="legend-row"><div class="legend-dot" style="background:${c.cor}"></div>
       <span>${c.emoji} ${c.label}</span><span style="margin-left:auto;color:${c.cor}">${pct}%</span></div>`;
   });
 }
 
-// ── POPUP CATEGORIA ──────────────────────────────────
-function abrirCatModal(catId) {
-  const c = CATS.find(x=>x.id===catId);
-  const itens = gastos.filter(g=>g.categoria===catId).sort((a,b)=>new Date(b.data)-new Date(a.data));
-  const totalCat = itens.reduce((s,g)=>s+Number(g.valor),0);
-  const totalGeral = gastos.reduce((s,g)=>s+Number(g.valor),0);
-  const pct = totalGeral ? Math.round(totalCat/totalGeral*100) : 0;
-
-  document.getElementById('cat-modal-title').innerHTML = `<span>${c.emoji}</span> <span>${c.label}</span>`;
-  document.getElementById('cat-modal-total').innerHTML =
-    `<strong style="color:${c.cor};font-size:20px">${BRL(totalCat)}</strong>
-     <span style="margin-left:10px">${itens.length} lançamento${itens.length!==1?'s':''} · ${pct}% do total</span>`;
-
-  const list = document.getElementById('cat-modal-list');
-  if(!itens.length){
-    list.innerHTML=`<div class="cat-modal-empty">Nenhum gasto em ${c.label} ainda</div>`;
-  } else {
-    list.innerHTML = itens.map(g=>{
-      const dt = g.data?g.data.split('-').reverse().join('/'):'';
-      return `<div class="cat-modal-item" style="--item-color:${c.cor}">
-        <div>
-          <div style="font-size:14px">${g.descricao}</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:2px">${dt}${g.observacao?' · '+g.observacao:''}</div>
-        </div>
-        <div style="font-size:15px;font-weight:700;color:${c.cor};flex-shrink:0;margin-left:12px">${BRL(Number(g.valor))}</div>
-      </div>`;
-    }).join('');
-  }
-  document.getElementById('cat-modal-bg').classList.add('open');
+// ── POPUP CATEGORIA ───────────────────────────────────
+function abrirCatModal(catId){
+  const c=CATS.find(x=>x.id===catId);
+  const itens=gastos.filter(g=>g.categoria===catId).sort((a,b)=>new Date(b.data)-new Date(a.data));
+  const totalCat=itens.reduce((s,g)=>s+Number(g.valor),0);
+  const totalGeral=gastos.reduce((s,g)=>s+Number(g.valor),0);
+  const pct=totalGeral?Math.round(totalCat/totalGeral*100):0;
+  $('cat-modal-title').innerHTML=`<span>${c.emoji}</span><span>${c.label}</span>`;
+  $('cat-modal-total').innerHTML=`<strong style="color:${c.cor};font-size:20px">${BRL(totalCat)}</strong>
+    <span style="margin-left:10px">${itens.length} lançamento${itens.length!==1?'s':''} · ${pct}% do total</span>`;
+  const list=$('cat-modal-list');
+  list.innerHTML=itens.length?itens.map(g=>{
+    const dt=g.data?g.data.split('-').reverse().join('/'):'';
+    return `<div class="cat-modal-item" style="--item-color:${c.cor}">
+      <div><div style="font-size:14px">${g.descricao}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:2px">${dt}${g.observacao?' · '+g.observacao:''}</div></div>
+      <div style="font-size:15px;font-weight:700;color:${c.cor};flex-shrink:0;margin-left:12px">${BRL(Number(g.valor))}</div>
+    </div>`;
+  }).join(''):`<div style="text-align:center;padding:32px;color:#333">Nenhum gasto aqui ainda</div>`;
+  $('cat-modal-bg').classList.add('open');
 }
-function fecharCatModal() {
-  document.getElementById('cat-modal-bg').classList.remove('open');
-}
-document.getElementById('cat-modal-close').addEventListener('click', fecharCatModal);
-document.getElementById('cat-modal-bg').addEventListener('click', e=>{
-  if(e.target===document.getElementById('cat-modal-bg')) fecharCatModal();
-});
+$('cat-modal-close').addEventListener('click',()=>$('cat-modal-bg').classList.remove('open'));
+$('cat-modal-bg').addEventListener('click',e=>{if(e.target===$('cat-modal-bg'))$('cat-modal-bg').classList.remove('open');});
 
-// ── LIST ─────────────────────────────────────────────
-function renderList() {
-  const filtered = filtroCategoria ? gastos.filter(g=>g.categoria===filtroCategoria) : gastos;
-  const cat = filtroCategoria ? CATS.find(c=>c.id===filtroCategoria) : null;
-  document.getElementById('list-count').textContent = cat
-    ? `${cat.emoji} ${cat.label} — ${filtered.length} lançamento${filtered.length!==1?'s':''}`
-    : `${filtered.length} lançamento${filtered.length!==1?'s':''}`;
-  document.getElementById('filter-clear').style.display = filtroCategoria?'':'none';
-  const el = document.getElementById('gastos-list');
-  if(!filtered.length){
-    el.innerHTML=`<div class="empty"><div style="font-size:40px;margin-bottom:12px">🗺️</div>
-      <div style="font-size:14px">Nenhum lançamento${filtroCategoria?' nesta categoria':''}</div></div>`;
-    return;
-  }
+// ── LIST ──────────────────────────────────────────────
+function renderList(){
+  const filtered=filtroCategoria?gastos.filter(g=>g.categoria===filtroCategoria):gastos;
+  const cat=filtroCategoria?CATS.find(c=>c.id===filtroCategoria):null;
+  $('list-count').textContent=cat?`${cat.emoji} ${cat.label} — ${filtered.length} lançamento${filtered.length!==1?'s':''}`:
+    `${filtered.length} lançamento${filtered.length!==1?'s':''}`;
+  $('filter-clear').style.display=filtroCategoria?'':'none';
+  const el=$('gastos-list');
+  if(!filtered.length){el.innerHTML=`<div class="empty"><div style="font-size:40px;margin-bottom:12px">🗺️</div>
+    <div style="font-size:14px">Nenhum lançamento</div></div>`;return;}
   el.innerHTML='';
   filtered.forEach(g=>{
     const c=CATS.find(x=>x.id===g.categoria)||CATS[5];
     const dt=g.data?g.data.split('-').reverse().join('/'):'';
-    const d=document.createElement('div');
-    d.className='gasto-item';
-    d.style.setProperty('--item-color',c.cor);
-    d.innerHTML=`
-      <div class="gasto-left">
-        <span class="gasto-ico">${c.emoji}</span>
-        <div>
-          <div class="gasto-desc">${g.descricao}</div>
-          <div class="gasto-meta">${dt}${g.observacao?' · '+g.observacao:''}</div>
-        </div>
-      </div>
-      <div class="gasto-right">
-        <span class="gasto-val" style="color:${c.cor}">${BRL(Number(g.valor))}</span>
-        <div class="gasto-actions">
-          <button class="btn-icon" onclick="openEdit('${g.id}')">✏️</button>
-          <button class="btn-icon" onclick="deleteGasto('${g.id}')">🗑️</button>
-        </div>
-      </div>`;
+    const d=document.createElement('div'); d.className='gasto-item'; d.style.setProperty('--item-color',c.cor);
+    d.innerHTML=`<div class="gasto-left"><span class="gasto-ico">${c.emoji}</span>
+      <div><div class="gasto-desc">${g.descricao}</div>
+      <div class="gasto-meta">${dt}${g.observacao?' · '+g.observacao:''}</div></div></div>
+      <div class="gasto-right"><span class="gasto-val" style="color:${c.cor}">${BRL(Number(g.valor))}</span>
+      <div class="gasto-actions">
+        <button class="btn-icon btn-edit-gasto" data-id="${g.id}">✏️</button>
+        <button class="btn-icon btn-del-gasto" data-id="${g.id}">🗑️</button>
+      </div></div>`;
+    d.querySelector('.btn-edit-gasto').addEventListener('click',()=>openEditGasto(g.id));
+    d.querySelector('.btn-del-gasto').addEventListener('click',()=>deleteGasto(g.id));
     el.appendChild(d);
   });
 }
+$('filter-clear').addEventListener('click',()=>{filtroCategoria=null;renderDashboard();renderList();});
 
-function limparFiltro() { filtroCategoria=null; renderDashboard(); renderList(); }
-
-// ── MODAL GASTO ──────────────────────────────────────
-const modalBg = document.getElementById('modal-bg');
-const pillsEl = document.getElementById('cat-pills');
+// ── MODAL GASTO ───────────────────────────────────────
+const cpEl=$('cat-pills');
 CATS.forEach(c=>{
-  const p=document.createElement('div');
-  p.className='pill'; p.dataset.id=c.id;
-  p.style.setProperty('--pill-color',c.cor);
-  p.innerHTML=`${c.emoji} ${c.label}`;
-  p.onclick=()=>{ document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active')); p.classList.add('active'); checkSubmit(); };
-  pillsEl.appendChild(p);
+  const p=document.createElement('div'); p.className='pill'; p.dataset.id=c.id;
+  p.style.setProperty('--pill-color',c.cor); p.innerHTML=`${c.emoji} ${c.label}`;
+  p.addEventListener('click',()=>{document.querySelectorAll('#cat-pills .pill').forEach(x=>x.classList.remove('active'));p.classList.add('active');checkGasto();});
+  cpEl.appendChild(p);
 });
-document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
-document.querySelector('.pill').classList.add('active');
+$('f-data').value=new Date().toISOString().split('T')[0];
+document.querySelector('#cat-pills .pill').classList.add('active');
 
-function checkSubmit(){
-  const ok=document.getElementById('f-desc').value.trim()&&document.getElementById('f-valor').value>0&&document.querySelector('.pill.active');
-  document.getElementById('btn-submit').disabled=!ok;
+function checkGasto(){
+  $('btn-submit-gasto').disabled=!($('f-desc').value.trim()&&$('f-valor').value>0&&document.querySelector('#cat-pills .pill.active'));
 }
-['f-desc','f-valor','f-obs'].forEach(id=>document.getElementById(id).addEventListener('input',checkSubmit));
+['f-desc','f-valor','f-obs'].forEach(id=>$(id).addEventListener('input',checkGasto));
 
-document.getElementById('fab').addEventListener('click',()=>{
-  editingId=null;
-  document.getElementById('modal-title').textContent='Novo Gasto';
-  document.getElementById('f-desc').value='';
-  document.getElementById('f-valor').value='';
-  document.getElementById('f-obs').value='';
-  document.getElementById('f-data').value=new Date().toISOString().split('T')[0];
-  document.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));
-  document.querySelector('.pill').classList.add('active');
-  checkSubmit();
-  modalBg.classList.add('open');
-  setTimeout(()=>document.getElementById('f-desc').focus(),100);
+$('fab').addEventListener('click',()=>{
+  editingGastoId=null; $('modal-gasto-title').textContent='Novo Gasto';
+  $('f-desc').value=''; $('f-valor').value=''; $('f-obs').value='';
+  $('f-data').value=new Date().toISOString().split('T')[0];
+  document.querySelectorAll('#cat-pills .pill').forEach(x=>x.classList.remove('active'));
+  document.querySelector('#cat-pills .pill').classList.add('active');
+  checkGasto(); $('modal-gasto-bg').classList.add('open');
+  setTimeout(()=>$('f-desc').focus(),100);
 });
-modalBg.addEventListener('click',e=>{ if(e.target===modalBg) modalBg.classList.remove('open'); });
+$('modal-gasto-bg').addEventListener('click',e=>{if(e.target===$('modal-gasto-bg'))$('modal-gasto-bg').classList.remove('open');});
 
-window.openEdit = function(id){
+function openEditGasto(id){
   const g=gastos.find(x=>x.id===id); if(!g) return;
-  editingId=id;
-  document.getElementById('modal-title').textContent='Editar Gasto';
-  document.getElementById('f-desc').value=g.descricao;
-  document.getElementById('f-valor').value=Number(g.valor);
-  document.getElementById('f-obs').value=g.observacao||'';
-  document.getElementById('f-data').value=g.data;
-  document.querySelectorAll('.pill').forEach(p=>p.classList.toggle('active',p.dataset.id===g.categoria));
-  checkSubmit();
-  modalBg.classList.add('open');
-};
+  editingGastoId=id; $('modal-gasto-title').textContent='Editar Gasto';
+  $('f-desc').value=g.descricao; $('f-valor').value=Number(g.valor);
+  $('f-obs').value=g.observacao||''; $('f-data').value=g.data;
+  document.querySelectorAll('#cat-pills .pill').forEach(p=>p.classList.toggle('active',p.dataset.id===g.categoria));
+  checkGasto(); $('modal-gasto-bg').classList.add('open');
+}
 
-document.getElementById('btn-submit').addEventListener('click',async()=>{
-  const descricao  = document.getElementById('f-desc').value.trim();
-  const valor      = parseFloat(document.getElementById('f-valor').value);
-  const observacao = document.getElementById('f-obs').value.trim();
-  const data       = document.getElementById('f-data').value;
-  const categoria  = document.querySelector('.pill.active')?.dataset.id;
+$('btn-submit-gasto').addEventListener('click',async()=>{
+  const descricao=$('f-desc').value.trim(), valor=parseFloat($('f-valor').value);
+  const observacao=$('f-obs').value.trim(), data=$('f-data').value;
+  const categoria=document.querySelector('#cat-pills .pill.active')?.dataset.id;
   if(!descricao||!valor||!categoria) return;
-
-  if(editingId){
-    const idx=gastos.findIndex(x=>x.id===editingId);
-    if(idx!==-1){ gastos[idx]={...gastos[idx],descricao,valor,observacao,data,categoria}; render(); }
-    modalBg.classList.remove('open');
-    toast('Gasto atualizado ✓');
-    const {error}=await sb.from('gastos').update({descricao,valor,observacao,data,categoria}).eq('id',editingId);
-    if(error){ toast('Erro ao sincronizar ⚠️'); await loadGastos(); }
+  if(editingGastoId){
+    const idx=gastos.findIndex(x=>x.id===editingGastoId);
+    if(idx!==-1) gastos[idx]={...gastos[idx],descricao,valor,observacao,data,categoria};
+    render(); $('modal-gasto-bg').classList.remove('open'); toast('Gasto atualizado ✓');
+    await sb.from('gastos').update({descricao,valor,observacao,data,categoria}).eq('id',editingGastoId);
   } else {
-    const tempId='temp_'+Date.now();
-    gastos.unshift({id:tempId,viagem_id:viagemId,descricao,valor,observacao,data,categoria});
-    render();
-    modalBg.classList.remove('open');
-    toast('Gasto adicionado ✓');
+    const tmp='temp_'+Date.now();
+    gastos.unshift({id:tmp,viagem_id:viagemId,descricao,valor,observacao,data,categoria});
+    render(); $('modal-gasto-bg').classList.remove('open'); toast('Gasto adicionado ✓');
     const {data:ins,error}=await sb.from('gastos').insert({viagem_id:viagemId,descricao,valor,observacao,data,categoria}).select().single();
-    if(error){ gastos=gastos.filter(g=>g.id!==tempId); render(); toast('Erro ao salvar ⚠️'); }
-    else { const i=gastos.findIndex(g=>g.id===tempId); if(i!==-1) gastos[i]=ins; }
+    if(error){gastos=gastos.filter(g=>g.id!==tmp);render();toast('Erro ao salvar ⚠️');}
+    else{const i=gastos.findIndex(g=>g.id===tmp);if(i!==-1)gastos[i]=ins;}
   }
 });
 
-window.deleteGasto = async function(id){
+async function deleteGasto(id){
   if(!confirm('Excluir este lançamento?')) return;
-  const backup=[...gastos];
-  gastos=gastos.filter(g=>g.id!==id);
-  render();
-  toast('Excluído ✓');
+  const bk=[...gastos]; gastos=gastos.filter(g=>g.id!==id); render(); toast('Excluído ✓');
   const {error}=await sb.from('gastos').delete().eq('id',id);
-  if(error){ gastos=backup; render(); toast('Erro ao excluir ⚠️'); }
-};
+  if(error){gastos=bk;render();toast('Erro ⚠️');}
+}
 
-// ── ORÇAMENTO ────────────────────────────────────────
-document.getElementById('budget-display').addEventListener('click',async()=>{
+$('budget-display').addEventListener('click',async()=>{
   const v=viagens.find(x=>x.id===viagemId); if(!v) return;
   const novo=parseFloat(prompt('Novo orçamento (R$):',v.orcamento)||v.orcamento);
   if(isNaN(novo)||novo<0) return;
@@ -745,150 +612,162 @@ document.getElementById('budget-display').addEventListener('click',async()=>{
   await sb.from('viagens').update({orcamento:novo}).eq('id',viagemId);
 });
 
-// ── ROTEIRO ──────────────────────────────────────────
-const TIPOS = [
-  { id:'hotel',       label:'Hotel',       emoji:'🏨', cor:'#FF6B6B' },
-  { id:'restaurante', label:'Restaurante', emoji:'🍽️', cor:'#FFE66D' },
-  { id:'atração',     label:'Atração',     emoji:'🎡', cor:'#4ECDC4' },
-  { id:'transporte',  label:'Transporte',  emoji:'✈️', cor:'#A8E6CF' },
-  { id:'compras',     label:'Compras',     emoji:'🛍️', cor:'#FF8B94' },
-  { id:'outro',       label:'Outro',       emoji:'📍', cor:'#C3B1E1' },
-];
-
-let roteiroDias=[], roteiroParadas=[], diaEditId=null, paraEditId=null, diaAtualId=null, diasAbertos={};
-
-async function loadRoteiro() {
-  const { data: dias } = await sb.from('roteiro_dias').select('*').eq('viagem_id', viagemId).order('numero');
-  roteiroDias = dias || [];
-  const ids = roteiroDias.map(d=>d.id);
-  if(ids.length) {
-    const { data: pars } = await sb.from('roteiro_paradas').select('*').in('dia_id', ids).order('ordem');
-    roteiroParadas = pars || [];
+// ── ROTEIRO ───────────────────────────────────────────
+async function loadRoteiro(){
+  const {data:dias}=await sb.from('roteiro_dias').select('*').eq('viagem_id',viagemId).order('numero');
+  roteiroDias=dias||[];
+  if(roteiroDias.length){
+    const ids=roteiroDias.map(d=>d.id);
+    const {data:pars}=await sb.from('roteiro_paradas').select('*').in('dia_id',ids).order('ordem');
+    roteiroParadas=pars||[];
   } else { roteiroParadas=[]; }
   renderRoteiro();
 }
 
-function renderRoteiro() {
-  const el = document.getElementById('roteiro-list');
-  if(!roteiroDias.length) {
-    el.innerHTML=`<div class="roteiro-empty">
-      <div style="font-size:40px;margin-bottom:12px">🗺️</div>
-      <div style="font-size:14px;margin-bottom:20px">Nenhum dia no roteiro ainda</div>
-      <button class="btn-primary" style="width:auto;padding:12px 28px" onclick="abrirDiaModal()">+ Adicionar Dia</button>
-    </div>`;
-    return;
-  }
-  el.innerHTML='';
+function renderRoteiro(){
+  const el=$('roteiro-container'); el.innerHTML='';
 
-  // botão add dia no topo
-  const addBtn = document.createElement('button');
-  addBtn.className='btn-sm'; addBtn.style.cssText='width:100%;margin-bottom:14px;padding:10px;color:var(--teal);border-color:var(--teal)';
-  addBtn.textContent='+ Adicionar Dia'; addBtn.onclick=()=>abrirDiaModal();
-  el.appendChild(addBtn);
+  const addDiaBtn=document.createElement('button');
+  addDiaBtn.className='btn-sm';
+  addDiaBtn.style.cssText='width:100%;margin-bottom:14px;padding:10px;color:var(--teal);border-color:var(--teal);font-size:13px';
+  addDiaBtn.textContent='+ Adicionar Dia';
+  addDiaBtn.addEventListener('click',()=>abrirDiaModal(null));
+  el.appendChild(addDiaBtn);
+
+  if(!roteiroDias.length){
+    const empty=document.createElement('div'); empty.className='roteiro-empty';
+    empty.innerHTML='<div style="font-size:40px;margin-bottom:12px">🗺️</div><div style="font-size:14px">Nenhum dia no roteiro ainda</div>';
+    el.appendChild(empty); return;
+  }
 
   roteiroDias.forEach(dia=>{
-    const paradas = roteiroParadas.filter(p=>p.dia_id===dia.id).sort((a,b)=>a.ordem-b.ordem);
-    const aberto  = diasAbertos[dia.id] !== false; // default aberto
+    const paradas=roteiroParadas.filter(p=>p.dia_id===dia.id).sort((a,b)=>a.ordem-b.ordem);
+    const aberto=diasAbertos[dia.id]!==false;
+    const dtFmt=dia.data?new Date(dia.data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}):'';
 
-    const card = document.createElement('div');
-    card.className='dia-card';
+    const card=document.createElement('div'); card.className='dia-card';
 
-    const dtFmt = dia.data ? new Date(dia.data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}) : '';
+    // header
+    const header=document.createElement('div'); header.className='dia-header';
+    header.innerHTML=`<span class="dia-badge">Dia ${dia.numero}</span>
+      <span class="dia-titulo">${dia.titulo}</span>
+      <span class="dia-data">${dtFmt}</span>
+      <span class="dia-chevron">${aberto?'▲':'▼'}</span>`;
+    header.addEventListener('click',()=>{ diasAbertos[dia.id]=!aberto; renderRoteiro(); });
+    card.appendChild(header);
 
-    card.innerHTML=`
-      <div class="dia-header" id="dh-${dia.id}">
-        <span class="dia-badge">Dia ${dia.numero}</span>
-        <span class="dia-titulo">${dia.titulo}</span>
-        <span class="dia-data">${dtFmt}</span>
-        <span style="margin-left:8px;color:var(--muted);font-size:12px">${aberto?'▲':'▼'}</span>
-      </div>
-      <div class="dia-body" id="db-${dia.id}" style="display:${aberto?'block':'none'}">
-        ${dia.descricao?`<div class="dia-desc">${dia.descricao}</div>`:''}
-        <div id="paradas-${dia.id}">
-          ${renderParadasHTML(paradas, dia.id)}
-        </div>
-        <div class="dia-actions" id="da-${dia.id}">
-          <button class="btn-sm" data-action="parada" data-dia="${dia.id}">+ Parada</button>
-          <button class="btn-sm" data-action="editdia" data-dia="${dia.id}">✏️ Dia</button>
-          <button class="btn-sm" style="color:var(--red)" data-action="deldia" data-dia="${dia.id}">🗑️</button>
-        </div>
-      </div>`;
+    if(aberto){
+      const body=document.createElement('div'); body.className='dia-body';
+      if(dia.descricao){ const dc=document.createElement('div'); dc.className='dia-desc'; dc.textContent=dia.descricao; body.appendChild(dc); }
 
-    card.querySelector(`#dh-${dia.id}`).addEventListener('click', ()=>{
-      diasAbertos[dia.id] = !aberto;
-      renderRoteiro();
-    });
+      // paradas
+      const paradaWrap=document.createElement('div');
+      if(!paradas.length){
+        paradaWrap.innerHTML='<div style="font-size:12px;color:#444;padding:10px 0">Nenhuma parada — adicione abaixo</div>';
+      } else {
+        paradas.forEach((p,i)=>{
+          const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
+          const row=document.createElement('div'); row.className='parada-item';
+
+          const linha=document.createElement('div'); linha.className='parada-linha';
+          const dot=document.createElement('div'); dot.className='parada-dot';
+          dot.style.cssText=`background:color-mix(in srgb,${t.cor} 20%,transparent);border:2px solid ${t.cor}`;
+          dot.textContent=t.emoji; linha.appendChild(dot);
+          if(i<paradas.length-1){ const ln=document.createElement('div'); ln.className='parada-line'; linha.appendChild(ln); }
+          row.appendChild(linha);
+
+          const info=document.createElement('div'); info.className='parada-info';
+          const nome=document.createElement('div'); nome.className='parada-nome'+(p.realizado?' done':''); nome.textContent=p.nome; info.appendChild(nome);
+          if(p.horario||p.endereco){
+            const meta=document.createElement('div'); meta.className='parada-meta';
+            if(p.horario) meta.innerHTML+=`<span>⏰ ${p.horario}</span>`;
+            if(p.endereco) meta.innerHTML+=`<span>📍 ${p.endereco}</span>`;
+            info.appendChild(meta);
+          }
+          if(p.observacao){ const obs=document.createElement('div'); obs.className='parada-obs'; obs.textContent='💬 '+p.observacao; info.appendChild(obs); }
+          row.appendChild(info);
+
+          const btns=document.createElement('div'); btns.className='parada-btns';
+
+          const chk=document.createElement('button'); chk.className='check-btn'+(p.realizado?' done':'');
+          chk.textContent=p.realizado?'✓':''; chk.title=p.realizado?'Marcar pendente':'Marcar realizado';
+          chk.addEventListener('click',()=>toggleRealizado(p.id,p.realizado)); btns.appendChild(chk);
+
+          const editBtn=document.createElement('button'); editBtn.className='btn-icon'; editBtn.textContent='✏️';
+          editBtn.addEventListener('click',()=>abrirParModal(dia.id,p.id)); btns.appendChild(editBtn);
+
+          const delBtn=document.createElement('button'); delBtn.className='btn-icon'; delBtn.textContent='🗑️';
+          delBtn.addEventListener('click',()=>deletarParada(p.id)); btns.appendChild(delBtn);
+
+          row.appendChild(btns); paradaWrap.appendChild(row);
+        });
+      }
+      body.appendChild(paradaWrap);
+
+      // ações do dia
+      const actions=document.createElement('div'); actions.className='dia-actions';
+
+      const btnPar=document.createElement('button'); btnPar.className='btn-sm';
+      btnPar.style.color='var(--teal)'; btnPar.style.borderColor='var(--teal)';
+      btnPar.textContent='+ Parada';
+      btnPar.addEventListener('click', (e)=>{ e.stopPropagation(); abrirParModal(dia.id, null); });
+      actions.appendChild(btnPar);
+
+      const btnEditDia=document.createElement('button'); btnEditDia.className='btn-sm'; btnEditDia.textContent='✏️ Dia';
+      btnEditDia.addEventListener('click',(e)=>{ e.stopPropagation(); abrirDiaModal(dia.id); }); actions.appendChild(btnEditDia);
+
+      const btnDelDia=document.createElement('button'); btnDelDia.className='btn-sm'; btnDelDia.style.color='var(--red)'; btnDelDia.textContent='🗑️';
+      btnDelDia.addEventListener('click',(e)=>{ e.stopPropagation(); deletarDia(dia.id); }); actions.appendChild(btnDelDia);
+
+      body.appendChild(actions); card.appendChild(body);
+    }
     el.appendChild(card);
   });
 }
 
-function renderParadasHTML(paradas, diaId) {
-  if(!paradas.length) return `<div style="font-size:12px;color:#333;padding:8px 0">Nenhuma parada — toque em "+ Parada"</div>`;
-  return paradas.map((p,i)=>{
-    const t = TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
-    const haNext = i < paradas.length-1;
-    return `<div class="parada-item">
-      <div class="parada-linha">
-        <div class="parada-dot" style="background:color-mix(in srgb,${t.cor} 20%,transparent);border:2px solid ${t.cor}">${t.emoji}</div>
-        ${haNext?`<div class="parada-line"></div>`:''}
-      </div>
-      <div class="parada-info">
-        <div class="parada-nome${p.realizado?' done':''}">${p.nome}</div>
-        <div class="parada-meta">
-          ${p.horario?`<span>⏰ ${p.horario}</span>`:''}
-          ${p.endereco?`<span>📍 ${p.endereco}</span>`:''}
-        </div>
-        ${p.observacao?`<div class="parada-obs">💬 ${p.observacao}</div>`:''}
-      </div>
-      <div class="parada-actions">
-        <button class="check-btn${p.realizado?' done':''}" onclick="toggleRealizado('${p.id}',${p.realizado})" title="${p.realizado?'Marcar como pendente':'Marcar como realizado'}">${p.realizado?'✓':''}</button>
-        <button class="btn-icon" onclick="abrirParModal('${diaId}','${p.id}')">✏️</button>
-        <button class="btn-icon" onclick="deletarParada('${p.id}')">🗑️</button>
-      </div>
-    </div>`;
-  }).join('');
+async function toggleRealizado(id,atual){
+  const novo=!atual;
+  const idx=roteiroParadas.findIndex(p=>p.id===id);
+  if(idx!==-1) roteiroParadas[idx].realizado=novo;
+  renderRoteiro();
+  await sb.from('roteiro_paradas').update({realizado:novo}).eq('id',id);
 }
 
 // ── MODAL DIA ─────────────────────────────────────────
-function abrirDiaModal(id=null) {
+function abrirDiaModal(id){
   diaEditId=id;
-  const dia = id ? roteiroDias.find(d=>d.id===id) : null;
-  document.getElementById('dia-modal-title').textContent = dia?'Editar Dia':'Novo Dia';
-  document.getElementById('d-titulo').value  = dia?.titulo||'';
-  document.getElementById('d-numero').value  = dia?.numero || (roteiroDias.length+1);
-  document.getElementById('d-data').value    = dia?.data||'';
-  document.getElementById('d-desc').value    = dia?.descricao||'';
-  document.getElementById('dia-modal-bg').classList.add('open');
-  setTimeout(()=>document.getElementById('d-titulo').focus(),100);
+  const dia=id?roteiroDias.find(d=>d.id===id):null;
+  $('modal-dia-title').textContent=dia?'Editar Dia':'Novo Dia';
+  $('d-titulo').value=dia?.titulo||'';
+  $('d-numero').value=dia?.numero||(roteiroDias.length+1);
+  $('d-data').value=dia?.data||'';
+  $('d-desc').value=dia?.descricao||'';
+  $('modal-dia-bg').classList.add('open');
+  setTimeout(()=>$('d-titulo').focus(),100);
 }
-function fecharDiaModal() { document.getElementById('dia-modal-bg').classList.remove('open'); }
-document.getElementById('dia-modal-bg').addEventListener('click',e=>{ if(e.target===document.getElementById('dia-modal-bg')) fecharDiaModal(); });
-
-document.getElementById('d-submit').addEventListener('click', async()=>{
-  const titulo = document.getElementById('d-titulo').value.trim();
-  const numero = parseInt(document.getElementById('d-numero').value)||1;
-  const data   = document.getElementById('d-data').value||null;
-  const descricao = document.getElementById('d-desc').value.trim()||null;
-  if(!titulo) return;
-  fecharDiaModal();
-
-  if(diaEditId) {
+$('btn-cancel-dia').addEventListener('click',()=>$('modal-dia-bg').classList.remove('open'));
+$('modal-dia-bg').addEventListener('click',e=>{if(e.target===$('modal-dia-bg'))$('modal-dia-bg').classList.remove('open');});
+$('btn-submit-dia').addEventListener('click',async()=>{
+  const titulo=$('d-titulo').value.trim(); if(!titulo) return;
+  const numero=parseInt($('d-numero').value)||1;
+  const data=$('d-data').value||null, descricao=$('d-desc').value.trim()||null;
+  $('modal-dia-bg').classList.remove('open');
+  if(diaEditId){
     const idx=roteiroDias.findIndex(d=>d.id===diaEditId);
     if(idx!==-1) roteiroDias[idx]={...roteiroDias[idx],titulo,numero,data,descricao};
     renderRoteiro(); toast('Dia atualizado ✓');
     await sb.from('roteiro_dias').update({titulo,numero,data,descricao}).eq('id',diaEditId);
   } else {
-    const tempId='temp_'+Date.now();
-    roteiroDias.push({id:tempId,viagem_id:viagemId,titulo,numero,data,descricao});
-    roteiroDias.sort((a,b)=>a.numero-b.numero);
-    renderRoteiro(); toast('Dia adicionado ✓');
+    const tmp='tmp_'+Date.now();
+    roteiroDias.push({id:tmp,viagem_id:viagemId,titulo,numero,data,descricao});
+    roteiroDias.sort((a,b)=>a.numero-b.numero); renderRoteiro(); toast('Dia adicionado ✓');
     const {data:ins,error}=await sb.from('roteiro_dias').insert({viagem_id:viagemId,titulo,numero,data,descricao}).select().single();
-    if(error){ roteiroDias=roteiroDias.filter(d=>d.id!==tempId); renderRoteiro(); toast('Erro ⚠️'); }
-    else { const i=roteiroDias.findIndex(d=>d.id===tempId); if(i!==-1) roteiroDias[i]=ins; renderRoteiro(); }
+    if(error){roteiroDias=roteiroDias.filter(d=>d.id!==tmp);renderRoteiro();toast('Erro ⚠️');}
+    else{const i=roteiroDias.findIndex(d=>d.id===tmp);if(i!==-1){roteiroDias[i]=ins;renderRoteiro();}}
   }
 });
 
-async function deletarDia(id) {
+async function deletarDia(id){
   if(!confirm('Excluir este dia e todas as paradas?')) return;
   roteiroDias=roteiroDias.filter(d=>d.id!==id);
   roteiroParadas=roteiroParadas.filter(p=>p.dia_id!==id);
@@ -897,112 +776,82 @@ async function deletarDia(id) {
 }
 
 // ── MODAL PARADA ──────────────────────────────────────
-// build tipo pills
-const tipoPillsEl=document.getElementById('tipo-pills');
+const tpEl=$('tipo-pills');
 TIPOS.forEach(t=>{
-  const p=document.createElement('div');
-  p.className='pill'; p.dataset.id=t.id;
-  p.style.setProperty('--pill-color',t.cor);
-  p.innerHTML=`${t.emoji} ${t.label}`;
-  p.onclick=()=>{ document.querySelectorAll('#tipo-pills .pill').forEach(x=>x.classList.remove('active')); p.classList.add('active'); };
-  tipoPillsEl.appendChild(p);
+  const p=document.createElement('div'); p.className='pill'; p.dataset.id=t.id;
+  p.style.setProperty('--pill-color',t.cor); p.innerHTML=`${t.emoji} ${t.label}`;
+  p.addEventListener('click',()=>{ document.querySelectorAll('#tipo-pills .pill').forEach(x=>x.classList.remove('active')); p.classList.add('active'); });
+  tpEl.appendChild(p);
 });
 document.querySelector('#tipo-pills .pill').classList.add('active');
 
-let realizadoModal = false;
-function toggleRealizadoModal() {
-  realizadoModal = !realizadoModal;
-  document.getElementById('realizado-switch').classList.toggle('on', realizadoModal);
-}
+$('realizado-toggle').addEventListener('click',()=>{
+  realizadoModal=!realizadoModal;
+  $('realizado-sw').classList.toggle('on',realizadoModal);
+});
 
-function abrirParModal(diaId, paraId=null) {
-  diaAtualId=diaId; paraEditId=paraId;
-  const par = paraId ? roteiroParadas.find(p=>p.id===paraId) : null;
-  document.getElementById('par-modal-title').textContent = par?'Editar Parada':'Nova Parada';
-  document.getElementById('p-nome').value    = par?.nome||'';
-  document.getElementById('p-horario').value = par?.horario||'';
-  document.getElementById('p-end').value     = par?.endereco||'';
-  document.getElementById('p-obs').value     = par?.observacao||'';
-  const tipoId = par?.tipo||'atração';
+function abrirParModal(diaId, paraId){
+  diaAtualId=diaId; paraEditId=paraId||null;
+  const par=paraId?roteiroParadas.find(p=>p.id===paraId):null;
+  $('modal-par-title').textContent=par?'Editar Parada':'Nova Parada';
+  $('p-nome').value=par?.nome||'';
+  $('p-horario').value=par?.horario||'';
+  $('p-end').value=par?.endereco||'';
+  $('p-obs').value=par?.observacao||'';
+  realizadoModal=par?.realizado||false;
+  $('realizado-sw').classList.toggle('on',realizadoModal);
+  const tipoId=par?.tipo||'atração';
   document.querySelectorAll('#tipo-pills .pill').forEach(p=>p.classList.toggle('active',p.dataset.id===tipoId));
-  realizadoModal = par?.realizado || false;
-  document.getElementById('realizado-switch').classList.toggle('on', realizadoModal);
-  setTimeout(()=>document.getElementById('p-nome').focus(),100);
+  $('modal-par-bg').classList.add('open');
+  setTimeout(()=>$('p-nome').focus(),100);
 }
-function fecharParModal() { document.getElementById('par-modal-bg').classList.remove('open'); }
-document.getElementById('par-modal-bg').addEventListener('click',e=>{ if(e.target===document.getElementById('par-modal-bg')) fecharParModal(); });
+$('btn-cancel-par').addEventListener('click',()=>$('modal-par-bg').classList.remove('open'));
+$('modal-par-bg').addEventListener('click',e=>{if(e.target===$('modal-par-bg'))$('modal-par-bg').classList.remove('open');});
 
-document.getElementById('p-submit').addEventListener('click', async()=>{
-  const nome      = document.getElementById('p-nome').value.trim();
-  const horario   = document.getElementById('p-horario').value||null;
-  const endereco  = document.getElementById('p-end').value.trim()||null;
-  const observacao= document.getElementById('p-obs').value.trim()||null;
-  const tipo      = document.querySelector('#tipo-pills .pill.active')?.dataset.id||'outro';
-  if(!nome) return;
-  const ordemMax  = roteiroParadas.filter(p=>p.dia_id===diaAtualId).length+1;
-  fecharParModal();
-
-  if(paraEditId) {
+$('btn-submit-par').addEventListener('click',async()=>{
+  const nome=$('p-nome').value.trim(); if(!nome) return;
+  const horario=$('p-horario').value||null, endereco=$('p-end').value.trim()||null;
+  const observacao=$('p-obs').value.trim()||null, realizado=realizadoModal;
+  const tipo=document.querySelector('#tipo-pills .pill.active')?.dataset.id||'outro';
+  const ordemMax=roteiroParadas.filter(p=>p.dia_id===diaAtualId).length+1;
+  $('modal-par-bg').classList.remove('open');
+  if(paraEditId){
     const idx=roteiroParadas.findIndex(p=>p.id===paraEditId);
     if(idx!==-1) roteiroParadas[idx]={...roteiroParadas[idx],nome,horario,endereco,observacao,tipo,realizado};
     renderRoteiro(); toast('Parada atualizada ✓');
     await sb.from('roteiro_paradas').update({nome,horario,endereco,observacao,tipo,realizado}).eq('id',paraEditId);
   } else {
-    const tempId='temp_'+Date.now();
-    roteiroParadas.push({id:tempId,dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,realizado,ordem:ordemMax});
+    const tmp='tmp_'+Date.now();
+    roteiroParadas.push({id:tmp,dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,realizado,ordem:ordemMax});
     renderRoteiro(); toast('Parada adicionada ✓');
     const {data:ins,error}=await sb.from('roteiro_paradas').insert({dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,realizado,ordem:ordemMax}).select().single();
-    if(error){ roteiroParadas=roteiroParadas.filter(p=>p.id!==tempId); renderRoteiro(); toast('Erro ⚠️'); }
-    else { const i=roteiroParadas.findIndex(p=>p.id===tempId); if(i!==-1) roteiroParadas[i]=ins; renderRoteiro(); }
+    if(error){roteiroParadas=roteiroParadas.filter(p=>p.id!==tmp);renderRoteiro();toast('Erro ⚠️');}
+    else{const i=roteiroParadas.findIndex(p=>p.id===tmp);if(i!==-1)roteiroParadas[i]=ins;}
   }
 });
 
-// Delegação de eventos do roteiro — resolve onclicks em elementos dinâmicos
-document.getElementById('tab-roteiro').addEventListener('click', e => {
-  const btn = e.target.closest('[data-action]');
-  if(!btn) return;
-  const action = btn.dataset.action;
-  if(action==='parada')   abrirParModal(btn.dataset.dia);
-  if(action==='editdia')  abrirDiaModal(btn.dataset.dia);
-  if(action==='deldia')   deletarDia(btn.dataset.dia);
-  if(action==='editpar')  abrirParModal(btn.dataset.dia, btn.dataset.id);
-  if(action==='delpar')   deletarParada(btn.dataset.id);
-  if(action==='realizado') toggleRealizado(btn.dataset.id, btn.dataset.atual==='true');
-});
-
-async function toggleRealizado(id, atual) {
-  const novo = !atual;
-  const idx = roteiroParadas.findIndex(p=>p.id===id);
-  if(idx!==-1) roteiroParadas[idx].realizado = novo;
-  renderRoteiro();
-  await sb.from('roteiro_paradas').update({ realizado: novo }).eq('id', id);
-}
-
-async function deletarParada(id) {
+async function deletarParada(id){
   if(!confirm('Excluir esta parada?')) return;
-  roteiroParadas=roteiroParadas.filter(p=>p.id!==id);
-  renderRoteiro(); toast('Parada excluída ✓');
+  roteiroParadas=roteiroParadas.filter(p=>p.id!==id); renderRoteiro(); toast('Parada excluída ✓');
   await sb.from('roteiro_paradas').delete().eq('id',id);
 }
 
-// ── TABS ─────────────────────────────────────────────
+// ── TABS ──────────────────────────────────────────────
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); tab.classList.add('active');
     const id=tab.dataset.tab;
-    document.getElementById('tab-dashboard').style.display   = id==='dashboard'  ?'':'none';
-    document.getElementById('tab-lancamentos').style.display = id==='lancamentos'?'':'none';
-    document.getElementById('tab-roteiro').style.display     = id==='roteiro'    ?'':'none';
-    document.getElementById('fab').classList.toggle('hidden', id!=='lancamentos');
+    $('tab-dashboard').style.display   =id==='dashboard'  ?'':'none';
+    $('tab-lancamentos').style.display =id==='lancamentos'?'':'none';
+    $('tab-roteiro').style.display     =id==='roteiro'    ?'':'none';
+    $('fab').classList.toggle('hidden',id!=='lancamentos');
     if(id==='roteiro') loadRoteiro();
   });
 });
 
-// ── TOAST ────────────────────────────────────────────
+// ── TOAST ─────────────────────────────────────────────
 function toast(msg,dur=2200){
-  const el=document.getElementById('toast');
-  el.textContent=msg; el.classList.add('show');
+  const el=$('toast'); el.textContent=msg; el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),dur);
 }
 </script>

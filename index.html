@@ -6,7 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>TripCash</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -104,14 +106,22 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .btn-sm{background:var(--bg);border:1px solid var(--bor);border-radius:8px;color:var(--mut);font-size:11px;padding:6px 11px;cursor:pointer}
 .rot-empty{text-align:center;padding:40px 0;color:#444}
 
-/* MAPA */
-#mapa-page{position:fixed;inset:0;display:none;flex-direction:column;background:var(--bg);z-index:50}
+#mapa-page{position:fixed;inset:0;display:none;flex-direction:column;background:var(--bg);z-index:50;overflow:hidden}
 #mapa-page.visible{display:flex}
-.mapa-dia-scroll{display:flex;gap:6px;padding:10px 16px 6px;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch}
+.mapa-topo{flex-shrink:0;padding:calc(var(--st)+16px) 16px 12px;display:flex;align-items:center;gap:10px;background:var(--bg);border-bottom:1px solid var(--bor)}
+.mapa-dia-scroll{display:flex;gap:6px;padding:10px 16px;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch;width:100%;border-bottom:1px solid var(--bor)}
 .mapa-dia-scroll::-webkit-scrollbar{display:none}
-.mapa-dia-btn{flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;font-size:11px;padding:6px 13px;cursor:pointer;color:var(--mut);white-space:nowrap}
+.mapa-dia-btn{flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;font-size:11px;padding:7px 14px;cursor:pointer;color:var(--mut);white-space:nowrap;user-select:none}
 .mapa-dia-btn.on{background:var(--teal);border-color:var(--teal);color:var(--bg);font-weight:700}
-#mapa-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+20px)}
+/* mapa split: mapa em cima, lista embaixo */
+#mapa-body{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0}
+#mapa-leaflet{height:42vh;flex-shrink:0;width:100%}
+#mapa-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px calc(var(--sb)+16px)}
+.leaflet-container{background:#1A1A2E!important}
+.leaflet-popup-content-wrapper{background:var(--sur)!important;color:var(--txt)!important;border:1px solid var(--bor)!important;border-radius:10px!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important}
+.leaflet-popup-tip{background:var(--sur)!important}
+.leaflet-popup-content{margin:10px 13px!important;font-family:-apple-system,sans-serif!important;font-size:13px!important}
+.mapa-status{text-align:center;padding:12px;font-size:12px;color:var(--teal)}
 .rota-card{background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:14px;margin-bottom:12px}
 .rota-tit{font-size:15px;font-weight:700;margin-bottom:3px}
 .rota-sub{font-size:11px;color:var(--mut);margin-bottom:12px}
@@ -214,12 +224,15 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div class="page hidden" id="page-roteiro"><div id="roteiro-wrap"></div></div>
 
   <div id="mapa-page">
-    <div style="display:flex;align-items:center;gap:10px;padding:calc(var(--st)+14px) 16px 0;flex-shrink:0">
-      <button id="mapa-back" style="background:var(--sur);border:1px solid var(--bor);border-radius:99px;color:var(--txt);font-size:13px;padding:6px 14px;cursor:pointer">← Voltar</button>
-      <div style="font-size:14px;font-weight:600" id="mapa-header-tit">📍 Rota do Dia</div>
+    <div class="mapa-topo">
+      <button id="mapa-back" style="background:var(--sur);border:1px solid var(--bor);border-radius:99px;color:var(--txt);font-size:12px;padding:6px 13px;cursor:pointer;flex-shrink:0">← Voltar</button>
+      <div style="font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="mapa-header-tit">📍 Rota do Dia</div>
     </div>
     <div class="mapa-dia-scroll" id="mapa-dias"></div>
-    <div id="mapa-scroll"></div>
+    <div id="mapa-body">
+      <div id="mapa-leaflet"></div>
+      <div id="mapa-scroll"></div>
+    </div>
   </div>
 
   <button class="fab hidden" id="fab">＋ Adicionar Gasto</button>
@@ -706,24 +719,23 @@ async function moverParada(diaId, parId, dir){
   const ordemA=pA.ordem;
   const ordemB=pB.ordem;
 
-  // atualiza memória imediatamente
+  // atualiza memória
   const iA=rParadas.findIndex(p=>p.id===pA.id);
   const iB=rParadas.findIndex(p=>p.id===pB.id);
   rParadas[iA].ordem=ordemB;
   rParadas[iB].ordem=ordemA;
   renderRoteiro();
 
-  // usa valor temporário negativo para driblar a constraint UNIQUE
-  const tmpOrdem=-Date.now();
-  await sb.from('roteiro_paradas').update({ordem:tmpOrdem}).eq('id',pA.id);
-  await sb.from('roteiro_paradas').update({ordem:ordemA}).eq('id',pB.id);
-  const{error}=await sb.from('roteiro_paradas').update({ordem:ordemB}).eq('id',pA.id);
+  // persiste sequencialmente (sem constraint UNIQUE não há conflito)
+  const r1=await sb.from('roteiro_paradas').update({ordem:ordemB}).eq('id',pA.id);
+  const r2=await sb.from('roteiro_paradas').update({ordem:ordemA}).eq('id',pB.id);
 
-  if(error){
-    toast('Erro ao salvar ordem ⚠️');
+  if(r1.error||r2.error){
+    // reverte memória
     rParadas[iA].ordem=ordemA;
     rParadas[iB].ordem=ordemB;
     renderRoteiro();
+    toast('Erro ao salvar ordem ⚠️');
   } else {
     toast('Ordem atualizada ✓');
   }
@@ -839,7 +851,8 @@ function renderMapaDias(){
     btn.textContent=`Dia ${dia.numero} · ${dia.titulo.split('—')[0].split('&')[0].trim().slice(0,22)}`;
     btn.addEventListener('click',()=>{
       document.querySelectorAll('.mapa-dia-btn').forEach(b=>b.classList.remove('on'));
-      btn.classList.add('on');renderRotaDia(dia);
+      btn.classList.add('on');
+      renderRotaDia(dia);
     });
     wrap.appendChild(btn);
   });

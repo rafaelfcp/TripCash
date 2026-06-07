@@ -105,7 +105,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .rot-empty{text-align:center;padding:40px 0;color:#444}
 
 /* MAPA */
-#mapa-page{flex:1;display:none;flex-direction:column;overflow:hidden;min-height:0}
+#mapa-page{position:fixed;inset:0;display:none;flex-direction:column;background:var(--bg);z-index:50}
 #mapa-page.visible{display:flex}
 .mapa-dia-scroll{display:flex;gap:6px;padding:10px 16px 6px;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch}
 .mapa-dia-scroll::-webkit-scrollbar{display:none}
@@ -214,6 +214,10 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div class="page hidden" id="page-roteiro"><div id="roteiro-wrap"></div></div>
 
   <div id="mapa-page">
+    <div style="display:flex;align-items:center;gap:10px;padding:calc(var(--st)+14px) 16px 0;flex-shrink:0">
+      <button id="mapa-back" style="background:var(--sur);border:1px solid var(--bor);border-radius:99px;color:var(--txt);font-size:13px;padding:6px 14px;cursor:pointer">← Voltar</button>
+      <div style="font-size:14px;font-weight:600" id="mapa-header-tit">📍 Rota do Dia</div>
+    </div>
     <div class="mapa-dia-scroll" id="mapa-dias"></div>
     <div id="mapa-scroll"></div>
   </div>
@@ -692,36 +696,34 @@ function renderRoteiro(){
 
 // ── MOVER PARADA (por ID, não por índice) ─────────────
 async function moverParada(diaId, parId, dir){
-  // obtém lista ordenada do dia
-  const lista = rParadas
-    .filter(p=>p.dia_id===diaId)
-    .sort((a,b)=>a.ordem-b.ordem);
+  const lista=[...rParadas.filter(p=>p.dia_id===diaId)].sort((a,b)=>a.ordem-b.ordem);
+  const idx=lista.findIndex(p=>p.id===parId);
+  const novoIdx=idx+dir;
+  if(idx===-1||novoIdx<0||novoIdx>=lista.length) return;
 
-  const idx = lista.findIndex(p=>p.id===parId);
-  const novoIdx = idx + dir;
-  if(idx===-1 || novoIdx<0 || novoIdx>=lista.length) return;
+  const pA=lista[idx];
+  const pB=lista[novoIdx];
+  const ordemA=pA.ordem;
+  const ordemB=pB.ordem;
 
-  const pA = lista[idx];
-  const pB = lista[novoIdx];
-
-  // troca as ordens nos objetos do array global rParadas
-  const iA = rParadas.findIndex(p=>p.id===pA.id);
-  const iB = rParadas.findIndex(p=>p.id===pB.id);
-  const tmpOrdem = rParadas[iA].ordem;
-  rParadas[iA].ordem = rParadas[iB].ordem;
-  rParadas[iB].ordem = tmpOrdem;
-
-  // re-renderiza imediatamente
+  // atualiza memória imediatamente
+  const iA=rParadas.findIndex(p=>p.id===pA.id);
+  const iB=rParadas.findIndex(p=>p.id===pB.id);
+  rParadas[iA].ordem=ordemB;
+  rParadas[iB].ordem=ordemA;
   renderRoteiro();
 
-  // salva no banco
-  const [rA,rB] = await Promise.all([
-    sb.from('roteiro_paradas').update({ordem:rParadas[iA].ordem}).eq('id',pA.id),
-    sb.from('roteiro_paradas').update({ordem:rParadas[iB].ordem}).eq('id',pB.id),
-  ]);
-  if(rA.error||rB.error){
+  // usa valor temporário negativo para driblar a constraint UNIQUE
+  const tmpOrdem=-Date.now();
+  await sb.from('roteiro_paradas').update({ordem:tmpOrdem}).eq('id',pA.id);
+  await sb.from('roteiro_paradas').update({ordem:ordemA}).eq('id',pB.id);
+  const{error}=await sb.from('roteiro_paradas').update({ordem:ordemB}).eq('id',pA.id);
+
+  if(error){
     toast('Erro ao salvar ordem ⚠️');
-    await loadRoteiro();renderRoteiro();
+    rParadas[iA].ordem=ordemA;
+    rParadas[iB].ordem=ordemB;
+    renderRoteiro();
   } else {
     toast('Ordem atualizada ✓');
   }
@@ -846,52 +848,55 @@ function renderMapaDias(){
 function renderRotaDia(dia){
   const paradas=[...rParadas.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
   const el=$('mapa-scroll');el.innerHTML='';
+  $('mapa-header-tit').textContent=`📍 Dia ${dia.numero} · ${dia.titulo}`;
+
   const dtFmt=dia.data?new Date(dia.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'}):'';
+
   if(!paradas.length){
-    el.innerHTML=`<div class="mapa-empty">🗺️<br>Nenhuma parada no Dia ${dia.numero}<br><span style="font-size:11px;color:#333">Adicione paradas no Roteiro</span></div>`;
+    el.innerHTML=`<div class="mapa-empty">🗺️<br>Nenhuma parada no Dia ${dia.numero}<br><span style="font-size:11px;color:#333">Adicione paradas na aba Roteiro</span></div>`;
     return;
   }
-  // header com botão rota completa
+
+  // ── card rota completa ──
   const card=document.createElement('div');card.className='rota-card';
-  const comLoc=paradas.filter(p=>p.gmaps_link||p.endereco||p.nome);
-  // monta URL de rota completa
-  let rotaURL=null;
-  if(comLoc.length>=1){
-    const destinos=comLoc.map(p=>{
-      if(p.gmaps_link&&!p.gmaps_link.includes('maps.app.goo.gl')) return p.gmaps_link;
-      return encodeURIComponent((p.endereco||p.nome)+', Portugal');
-    });
-    if(comLoc.length===1&&comLoc[0].gmaps_link){
-      rotaURL=comLoc[0].gmaps_link;
-    }else{
-      rotaURL='https://www.google.com/maps/dir/'+destinos.join('/');
-    }
-  }
-  card.innerHTML=`<div class="rota-tit">Dia ${dia.numero} · ${dia.titulo}</div>
+
+  // monta URL rota Google Maps usando nome+endereço de cada parada
+  const destinos=paradas.map(p=>{
+    if(p.gmaps_link&&p.gmaps_link.startsWith('http')) return p.gmaps_link;
+    const q=p.endereco?`${p.nome}, ${p.endereco}`:`${p.nome}, Portugal`;
+    return encodeURIComponent(q);
+  });
+  const rotaURL = paradas.length===1
+    ? (paradas[0].gmaps_link||`https://www.google.com/maps/search/?api=1&query=${destinos[0]}`)
+    : `https://www.google.com/maps/dir/${destinos.join('/')}`;
+
+  card.innerHTML=`
+    <div class="rota-tit">Dia ${dia.numero} · ${dia.titulo}</div>
     <div class="rota-sub">${dtFmt} · ${paradas.length} parada${paradas.length!==1?'s':''}</div>`;
-  if(rotaURL){
-    const btn=document.createElement('a');btn.className='btn-rota';
-    btn.href=rotaURL;btn.target='_blank';btn.rel='noopener';
-    btn.innerHTML='🗺️ Abrir rota completa no Google Maps';
-    card.appendChild(btn);
-  }else{
-    card.innerHTML+=`<div style="font-size:11px;color:var(--mut);text-align:center;padding:10px;background:var(--bg);border-radius:8px">Adicione links do Google Maps nas paradas</div>`;
-  }
+  const btn=document.createElement('a');btn.className='btn-rota';
+  btn.href=rotaURL;btn.target='_blank';btn.rel='noopener';
+  btn.innerHTML='🗺️ Abrir rota completa no Google Maps';
+  card.appendChild(btn);
   el.appendChild(card);
-  // lista de paradas
+
+  // ── lista de paradas ──
   const lista=document.createElement('div');
-  lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:4px 14px';
+  lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:4px 14px;margin-bottom:20px';
   paradas.forEach((p,i)=>{
     const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
     const cor=PINCORES[i%PINCORES.length];
     const item=document.createElement('div');item.className='par-rota';
+
     const lh=document.createElement('div');lh.className='par-rota-lh';
-    const num=document.createElement('div');num.className='par-rota-num';num.style.background=cor;num.textContent=i+1;lh.appendChild(num);
+    const num=document.createElement('div');num.className='par-rota-num';
+    num.style.background=cor;num.textContent=i+1;lh.appendChild(num);
     if(i<paradas.length-1){const ln=document.createElement('div');ln.className='par-rota-line';lh.appendChild(ln);}
     item.appendChild(lh);
+
     const info=document.createElement('div');info.className='par-rota-info';
     info.innerHTML=`<div class="par-rota-nome">${t.emoji} ${p.nome}${p.realizado?' <span style="color:var(--teal);font-size:10px">✓</span>':''}</div>
       <div class="par-rota-meta">${p.horario?'⏰ '+p.horario+' · ':''}${t.label}</div>`;
+
     if(p.observacao){
       const obs=document.createElement('div');obs.className='par-rota-obs';obs.textContent='💬 '+p.observacao;info.appendChild(obs);
       if(p.observacao.length>60){
@@ -900,13 +905,15 @@ function renderRotaDia(dia){
         info.appendChild(tog);
       }
     }
-    // botão Maps individual
-    const url=p.gmaps_link||(p.endereco
-      ?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.endereco)}`
-      :`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.nome+', Portugal')}`);
+
+    // botão Maps individual — sempre funciona com nome do local
+    const url=p.gmaps_link&&p.gmaps_link.startsWith('http')
+      ?p.gmaps_link
+      :`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((p.endereco||p.nome)+', Portugal')}`;
     const link=document.createElement('a');link.className='btn-gmaps';
     link.href=url;link.target='_blank';link.rel='noopener';link.innerHTML='📍 Ver no Maps';
     info.appendChild(link);
+
     item.appendChild(info);lista.appendChild(item);
   });
   el.appendChild(lista);
@@ -931,6 +938,14 @@ document.querySelectorAll('.tab').forEach(tab=>{
       if(id==='roteiro'){await loadRoteiro();renderRoteiro();}
     }
   });
+});
+
+$('mapa-back').addEventListener('click',()=>{
+  $('mapa-page').classList.remove('visible');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelector('[data-tab="dashboard"]').classList.add('on');
+  ['dashboard','lancamentos','roteiro'].forEach(p=>$(`page-${p}`).classList.toggle('hidden',p!=='dashboard'));
+  $('fab').classList.add('hidden');
 });
 
 // ── TOAST ─────────────────────────────────────────────

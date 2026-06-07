@@ -807,10 +807,10 @@ function renderRoteiro() {
         <div id="paradas-${dia.id}">
           ${renderParadasHTML(paradas, dia.id)}
         </div>
-        <div class="dia-actions">
-          <button class="btn-sm" onclick="abrirParModal('${dia.id}')">+ Parada</button>
-          <button class="btn-sm" onclick="abrirDiaModal('${dia.id}')">✏️ Dia</button>
-          <button class="btn-sm" style="color:var(--red)" onclick="deletarDia('${dia.id}')">🗑️</button>
+        <div class="dia-actions" id="da-${dia.id}">
+          <button class="btn-sm" data-action="parada" data-dia="${dia.id}">+ Parada</button>
+          <button class="btn-sm" data-action="editdia" data-dia="${dia.id}">✏️ Dia</button>
+          <button class="btn-sm" style="color:var(--red)" data-action="deldia" data-dia="${dia.id}">🗑️</button>
         </div>
       </div>`;
 
@@ -955,6 +955,19 @@ document.getElementById('p-submit').addEventListener('click', async()=>{
     if(error){ roteiroParadas=roteiroParadas.filter(p=>p.id!==tempId); renderRoteiro(); toast('Erro ⚠️'); }
     else { const i=roteiroParadas.findIndex(p=>p.id===tempId); if(i!==-1) roteiroParadas[i]=ins; renderRoteiro(); }
   }
+});
+
+// Delegação de eventos do roteiro — resolve onclicks em elementos dinâmicos
+document.getElementById('tab-roteiro').addEventListener('click', e => {
+  const btn = e.target.closest('[data-action]');
+  if(!btn) return;
+  const action = btn.dataset.action;
+  if(action==='parada')   abrirParModal(btn.dataset.dia);
+  if(action==='editdia')  abrirDiaModal(btn.dataset.dia);
+  if(action==='deldia')   deletarDia(btn.dataset.dia);
+  if(action==='editpar')  abrirParModal(btn.dataset.dia, btn.dataset.id);
+  if(action==='delpar')   deletarParada(btn.dataset.id);
+  if(action==='realizado') toggleRealizado(btn.dataset.id, btn.dataset.atual==='true');
 });
 
 async function toggleRealizado(id, atual) {

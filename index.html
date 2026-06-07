@@ -6,8 +6,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <title>TripCash</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -19,78 +17,68 @@
   --sb:env(safe-area-inset-bottom,0px);
 }
 html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system,'SF Pro Text',sans-serif;overflow:hidden}
-
-/* ── APP SHELL ── */
 #app{display:flex;flex-direction:column;height:100dvh}
 
-/* ── TOPBAR ── */
-.topbar{padding:calc(var(--st) + 12px) 16px 0;background:var(--bg);flex-shrink:0}
+/* TOPBAR */
+.topbar{padding:calc(var(--st)+12px) 16px 0;background:var(--bg);flex-shrink:0}
 .tb-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .trip-label{font-size:10px;letter-spacing:3px;color:var(--teal);text-transform:uppercase;margin-bottom:2px}
 .trip-name{font-size:20px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px}
-.trip-name span.ico{font-size:13px;opacity:.5}
 .budget-box{text-align:right;flex-shrink:0}
 .budget-lbl{font-size:10px;color:var(--mut)}
-.budget-val{font-size:15px;cursor:pointer;font-weight:600;color:var(--txt)}
+.budget-val{font-size:15px;cursor:pointer;font-weight:600}
 .prog-wrap{margin-top:10px;background:var(--sur);border-radius:99px;height:7px;overflow:hidden}
 .prog-bar{height:100%;border-radius:99px;transition:width .5s,background .3s}
-.prog-info{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--mut);padding-bottom:10px}
-.chip-row{display:flex;gap:6px;flex-wrap:wrap;padding:6px 0 8px}
+.prog-info{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--mut);padding-bottom:8px}
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;padding:4px 0 6px}
 .vchip{background:var(--sur);border:1px solid var(--bor);border-radius:99px;font-size:11px;padding:3px 10px;cursor:pointer;color:var(--mut)}
 .vchip.on{border-color:var(--teal);color:var(--teal)}
 .vchip.add{color:var(--teal);border-style:dashed}
 
-/* ── TABS ── */
-.tabs{display:flex;gap:3px;padding:0 16px 10px;flex-shrink:0}
+/* TABS */
+.tabs{display:flex;gap:3px;padding:0 16px 8px;flex-shrink:0}
 .tab{flex:1;background:var(--sur);border:1px solid var(--bor);border-radius:99px;color:var(--mut);font-size:11px;padding:7px 2px;cursor:pointer;text-align:center;transition:all .2s}
 .tab.on{background:var(--teal);border-color:var(--teal);color:var(--bg);font-weight:700}
 
-/* ── SCROLL AREA ── */
-.page{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px calc(var(--sb) + 90px)}
+/* PAGES */
+.page{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 16px calc(var(--sb)+90px)}
 .page.hidden{display:none}
 
-/* ── DASH ── */
+/* DASHBOARD */
 .sec-title{font-size:10px;letter-spacing:2px;color:var(--mut);text-transform:uppercase;margin-bottom:8px}
-.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
-.cat-card{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:11px 6px;text-align:center;cursor:pointer}
-.cat-card .ico{font-size:20px}
-.cat-card .lbl{font-size:9px;color:var(--mut);margin-top:2px;text-transform:uppercase;letter-spacing:1px}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.cat-card{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer}
+.cat-card .ico{font-size:20px}.cat-card .lbl{font-size:9px;color:var(--mut);margin-top:2px;text-transform:uppercase;letter-spacing:1px}
 .cat-card .val{font-size:11px;margin-top:2px;font-weight:700}
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
 .stat-card{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:12px}
 .stat-lbl{font-size:9px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-.stat-val{font-size:17px;font-weight:700}
-.stat-sub{font-size:10px;color:var(--mut);margin-top:2px}
-.donut-wrap{display:flex;align-items:center;gap:16px;margin-bottom:18px}
-.legend{flex:1}
-.leg-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:11px}
+.stat-val{font-size:17px;font-weight:700}.stat-sub{font-size:10px;color:var(--mut);margin-top:2px}
+.donut-wrap{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.legend{flex:1}.leg-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-size:11px}
 .leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
 .bar-row .nm{font-size:11px;width:80px;flex-shrink:0}
 .bar-track{flex:1;background:var(--sur);border-radius:99px;height:7px;overflow:hidden}
-.bar-fill{height:100%;border-radius:99px;transition:width .4s}
+.bar-fill{height:100%;border-radius:99px}
 .bar-row .am{font-size:11px;width:68px;text-align:right;flex-shrink:0}
 
-/* ── LANCAMENTOS ── */
+/* LANCAMENTOS */
 .list-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .filt-clr{font-size:11px;color:var(--teal);cursor:pointer}
 .gasto-item{background:var(--sur);border:1px solid var(--bor);border-left:3px solid var(--ic,var(--teal));border-radius:10px;padding:11px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.g-left{display:flex;align-items:center;gap:9px}
-.g-ico{font-size:20px}
-.g-desc{font-size:13px;font-weight:500}
-.g-meta{font-size:10px;color:var(--mut);margin-top:1px}
+.g-left{display:flex;align-items:center;gap:9px}.g-ico{font-size:20px}
+.g-desc{font-size:13px;font-weight:500}.g-meta{font-size:10px;color:var(--mut);margin-top:1px}
 .g-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.g-val{font-size:14px;font-weight:700}
-.g-acts{display:flex;gap:4px}
-.btn-i{background:none;border:none;font-size:15px;cursor:pointer;padding:2px;line-height:1}
+.g-val{font-size:14px;font-weight:700}.g-acts{display:flex;gap:4px}
+.btn-i{background:none;border:none;font-size:15px;cursor:pointer;padding:2px;line-height:1;color:var(--txt)}
 
-/* ── ROTEIRO ── */
+/* ROTEIRO */
 .dia-card{background:var(--sur);border:1px solid var(--bor);border-radius:14px;margin-bottom:12px;overflow:hidden}
 .dia-hdr{display:flex;align-items:center;padding:12px 14px;cursor:pointer;gap:8px}
 .dia-badge{background:var(--teal);color:var(--bg);border-radius:99px;font-size:9px;font-weight:700;padding:3px 9px;flex-shrink:0}
 .dia-tit{font-size:14px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dia-dt{font-size:10px;color:var(--mut);flex-shrink:0}
-.dia-chev{font-size:10px;color:var(--mut);flex-shrink:0}
 .dia-body{padding:0 14px 12px;border-top:1px solid var(--bor)}
 .dia-desc-txt{font-size:11px;color:var(--mut);padding:8px 0 6px;line-height:1.5}
 .par-item{display:flex;gap:8px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--bor)}
@@ -103,49 +91,47 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .par-nome.done{text-decoration:line-through;opacity:.4}
 .par-horario{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--teal);font-weight:600;margin-top:3px;background:color-mix(in srgb,var(--teal) 12%,transparent);padding:2px 7px;border-radius:99px}
 .par-end{font-size:10px;color:var(--mut);margin-top:3px}
-.par-obs{font-size:11px;color:var(--mut);margin-top:5px;line-height:1.5;background:var(--bg);border-radius:8px;padding:6px 8px;border-left:2px solid var(--bor)}
-.par-obs.collapsed{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.par-obs-tog{font-size:10px;color:var(--teal);cursor:pointer;margin-top:3px;display:inline-block;font-weight:600}
-.par-btns{display:flex;gap:3px;align-items:center;flex-shrink:0;margin-left:4px}
-.chk-btn{width:24px;height:24px;border-radius:50%;border:2px solid var(--bor);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;transition:all .2s;flex-shrink:0}
+.par-obs{font-size:11px;color:var(--mut);margin-top:5px;line-height:1.5;background:var(--bg);border-radius:8px;padding:6px 8px;border-left:2px solid var(--bor);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.par-obs.open{display:block}
+.par-obs-tog{font-size:10px;color:var(--teal);cursor:pointer;margin-top:2px;display:inline-block;font-weight:600}
+.par-btns{display:flex;flex-direction:column;gap:2px;align-items:center;flex-shrink:0;margin-left:2px}
+.par-btns-row{display:flex;gap:2px}
+.ord-btn{background:none;border:none;font-size:13px;cursor:pointer;padding:1px 4px;color:var(--teal);line-height:1}
+.ord-btn:disabled{opacity:.2;cursor:default}
+.chk-btn{width:24px;height:24px;border-radius:50%;border:2px solid var(--bor);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--txt);transition:all .2s}
 .chk-btn.done{background:var(--teal);border-color:var(--teal);color:var(--bg)}
 .dia-acts{display:flex;gap:6px;justify-content:flex-end;margin-top:10px;padding-top:8px;border-top:1px solid var(--bor)}
 .btn-sm{background:var(--bg);border:1px solid var(--bor);border-radius:8px;color:var(--mut);font-size:11px;padding:6px 11px;cursor:pointer}
-.rot-empty{text-align:center;padding:40px 0;color:#333}
+.rot-empty{text-align:center;padding:40px 0;color:#444}
 
-/* ── MAPA ── */
+/* MAPA */
 #mapa-page{flex:1;display:none;flex-direction:column;overflow:hidden;min-height:0}
 #mapa-page.visible{display:flex}
-.mapa-dia-scroll{display:flex;gap:6px;padding:12px 16px 8px;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch}
+.mapa-dia-scroll{display:flex;gap:6px;padding:10px 16px 6px;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch}
 .mapa-dia-scroll::-webkit-scrollbar{display:none}
-.mapa-dia-btn{flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;font-size:11px;padding:6px 13px;cursor:pointer;color:var(--mut);white-space:nowrap;transition:all .2s}
+.mapa-dia-btn{flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;font-size:11px;padding:6px 13px;cursor:pointer;color:var(--mut);white-space:nowrap}
 .mapa-dia-btn.on{background:var(--teal);border-color:var(--teal);color:var(--bg);font-weight:700}
-/* card de rota */
-.rota-header{background:var(--sur);border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid var(--bor)}
-.rota-titulo{font-size:15px;font-weight:700;margin-bottom:4px}
+#mapa-scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+20px)}
+.rota-card{background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:14px;margin-bottom:12px}
+.rota-tit{font-size:15px;font-weight:700;margin-bottom:3px}
 .rota-sub{font-size:11px;color:var(--mut);margin-bottom:12px}
-.btn-rota-completa{width:100%;background:var(--teal);border:none;border-radius:10px;color:var(--bg);font-size:14px;font-weight:700;padding:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
-.btn-rota-completa:active{opacity:.85}
-.par-rota-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--bor)}
-.par-rota-item:last-child{border-bottom:none}
-.par-rota-linha{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
-.par-rota-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
-.par-rota-line{width:2px;flex:1;min-height:18px;background:var(--bor);margin-top:3px}
+.btn-rota{display:flex;align-items:center;justify-content:center;gap:8px;background:#1A73E8;border:none;border-radius:10px;color:#fff;font-size:14px;font-weight:700;padding:13px;cursor:pointer;text-decoration:none;width:100%}
+.btn-rota:active{opacity:.85}
+.par-rota{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--bor)}
+.par-rota:last-child{border-bottom:none}
+.par-rota-lh{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.par-rota-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.par-rota-line{width:2px;flex:1;min-height:16px;background:var(--bor);margin-top:3px}
 .par-rota-info{flex:1;min-width:0}
 .par-rota-nome{font-size:13px;font-weight:600;margin-bottom:2px}
-.par-rota-meta{font-size:11px;color:var(--mut);margin-bottom:4px}
-.btn-gmaps{display:inline-flex;align-items:center;gap:5px;background:#1A73E8;border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;text-decoration:none;margin-top:2px}
-.btn-gmaps-disabled{display:inline-flex;align-items:center;gap:5px;background:var(--bor);border:none;border-radius:8px;color:var(--mut);font-size:11px;padding:5px 10px;cursor:default}
-.mapa-empty{text-align:center;padding:40px 16px;color:#444;font-size:13px}
-.par-obs-tag{font-size:11px;color:var(--mut);margin-top:5px;line-height:1.5;background:var(--bg);border-radius:8px;padding:6px 8px;border-left:2px solid var(--bor);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.par-obs-tag.open{display:block}
-.par-obs-tog{font-size:10px;color:var(--teal);cursor:pointer;margin-top:2px;display:inline-block;font-weight:600}
+.par-rota-meta{font-size:11px;color:var(--mut)}
+.par-rota-obs{font-size:11px;color:var(--mut);margin-top:4px;line-height:1.5;background:var(--bg);border-radius:8px;padding:5px 8px;border-left:2px solid var(--bor);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.par-rota-obs.open{display:block}
+.btn-gmaps{display:inline-flex;align-items:center;gap:4px;background:#1A73E8;border:none;border-radius:7px;color:#fff;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;text-decoration:none;margin-top:5px}
+.btn-gmaps-off{display:inline-flex;align-items:center;gap:4px;background:var(--bor);border:none;border-radius:7px;color:var(--mut);font-size:11px;padding:5px 10px;margin-top:5px}
+.mapa-empty{text-align:center;padding:48px 16px;color:#444;font-size:13px;line-height:2}
 
-/* ── FAB ── */
-.fab{position:fixed;bottom:calc(var(--sb)+22px);left:50%;transform:translateX(-50%);background:var(--teal);border:none;border-radius:99px;color:var(--bg);font-size:14px;font-weight:700;padding:13px 28px;cursor:pointer;box-shadow:0 4px 20px rgba(78,205,196,.4);display:flex;align-items:center;gap:6px;white-space:nowrap;z-index:100}
-.fab.hidden{display:none}
-
-/* ── MODAIS ── */
+/* MODAIS */
 .mover{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:flex-end;justify-content:center}
 .mover.open{display:flex}
 .msheet{background:var(--sur);border-radius:20px 20px 0 0;padding:18px 16px calc(var(--sb)+22px);width:100%;max-height:92dvh;overflow-y:auto;animation:sup .3s ease}
@@ -168,8 +154,6 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .tog-sw.on{background:var(--teal)}
 .tog-sw::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:3px;left:3px;transition:left .2s}
 .tog-sw.on::after{left:21px}
-
-/* POPUP CAT */
 .cmover{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:flex-end;justify-content:center}
 .cmover.open{display:flex}
 .csheet{background:var(--sur);border-radius:20px 20px 0 0;padding:18px 16px calc(var(--sb)+18px);width:100%;max-height:80dvh;display:flex;flex-direction:column;animation:sup .3s ease}
@@ -177,34 +161,27 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .csheet-tot{font-size:12px;color:var(--mut);margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--bor)}
 .csheet-list{overflow-y:auto;flex:1}
 .citem{background:var(--bg);border:1px solid var(--bor);border-left:3px solid var(--ic,var(--teal));border-radius:10px;padding:11px 12px;display:flex;justify-content:space-between;margin-bottom:7px}
-
-/* CENTER MODAL */
 .cmcenter{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:400;align-items:center;justify-content:center;padding:20px}
 .cmcenter.open{display:flex}
 .cmbox{background:var(--sur);border-radius:16px;padding:22px;width:100%;max-width:360px;animation:zin .25s ease}
 .cmbox h3{font-size:15px;font-weight:600;margin-bottom:16px}
-
+.fab{position:fixed;bottom:calc(var(--sb)+22px);left:50%;transform:translateX(-50%);background:var(--teal);border:none;border-radius:99px;color:var(--bg);font-size:14px;font-weight:700;padding:13px 28px;cursor:pointer;box-shadow:0 4px 20px rgba(78,205,196,.4);z-index:100;white-space:nowrap}
+.fab.hidden{display:none}
 .toast{position:fixed;bottom:calc(var(--sb)+90px);left:50%;transform:translateX(-50%) translateY(16px);background:var(--sur);border:1px solid var(--bor);border-radius:99px;padding:9px 18px;font-size:12px;opacity:0;transition:all .25s;pointer-events:none;z-index:999;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
 @keyframes sup{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes zin{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-thumb{background:var(--bor);border-radius:99px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--bor);border-radius:99px}
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
-input[type=time]::-webkit-date-and-time-value{text-align:left}
 </style>
 </head>
 <body>
 <div id="app">
-  <!-- TOPBAR -->
   <div class="topbar">
     <div class="tb-row">
       <div>
         <div class="trip-label">Controle de Viagem</div>
-        <div class="trip-name" id="trip-name-el">
-          <span id="trip-name-txt">—</span><span class="ico">✏️</span>
-        </div>
+        <div class="trip-name" id="trip-name-el"><span id="trip-name-txt">—</span><span style="font-size:13px;opacity:.5">✏️</span></div>
         <div class="chip-row" id="viagem-chips"></div>
       </div>
       <div class="budget-box">
@@ -219,35 +196,14 @@ input[type=time]::-webkit-date-and-time-value{text-align:left}
     </div>
   </div>
 
-  <!-- TABS -->
   <div class="tabs">
-    <div class="tab on" data-tab="dashboard">📊</div>
-    <div class="tab" data-tab="lancamentos">📋</div>
-    <div class="tab" data-tab="roteiro">🗺️ Roteiro</div>
-    <div class="tab" data-tab="mapa">📍 Mapa</div>
+    <div class="tab on"  data-tab="dashboard">📊</div>
+    <div class="tab"     data-tab="lancamentos">📋</div>
+    <div class="tab"     data-tab="roteiro">🗺️ Roteiro</div>
+    <div class="tab"     data-tab="mapa">📍 Mapa</div>
   </div>
 
-  <!-- DASHBOARD -->
-  <div class="page" id="page-dashboard">
-    <div style="margin-bottom:16px">
-      <div class="sec-title">por categoria</div>
-      <div class="cat-grid" id="cat-grid"></div>
-    </div>
-    <div class="stat-grid" id="stat-grid"></div>
-    <div style="margin-bottom:16px">
-      <div class="sec-title">distribuição</div>
-      <div class="donut-wrap">
-        <svg id="donut" width="110" height="110" viewBox="0 0 110 110"></svg>
-        <div class="legend" id="donut-leg"></div>
-      </div>
-    </div>
-    <div>
-      <div class="sec-title">por categoria</div>
-      <div id="bar-chart"></div>
-    </div>
-  </div>
-
-  <!-- LANÇAMENTOS -->
+  <div class="page"        id="page-dashboard"></div>
   <div class="page hidden" id="page-lancamentos">
     <div class="list-hdr">
       <span id="list-count" style="font-size:11px;color:var(--mut)"></span>
@@ -255,125 +211,108 @@ input[type=time]::-webkit-date-and-time-value{text-align:left}
     </div>
     <div id="gastos-list"></div>
   </div>
+  <div class="page hidden" id="page-roteiro"><div id="roteiro-wrap"></div></div>
 
-  <!-- ROTEIRO -->
-  <div class="page hidden" id="page-roteiro">
-    <div id="roteiro-wrap"></div>
-  </div>
-
-  <!-- MAPA (layout especial — ocupa tela toda) -->
   <div id="mapa-page">
     <div class="mapa-dia-scroll" id="mapa-dias"></div>
-    <div id="map"></div>
-    <div class="mapa-leg-scroll" id="mapa-leg"></div>
+    <div id="mapa-scroll"></div>
   </div>
 
   <button class="fab hidden" id="fab">＋ Adicionar Gasto</button>
 </div>
 
 <!-- MODAL GASTO -->
-<div class="mover" id="mg-bg">
-  <div class="msheet">
-    <div class="mhandle"></div>
-    <div class="mtitle" id="mg-title">Novo Gasto</div>
-    <label class="flabel">DESCRIÇÃO</label>
-    <input class="finput" id="f-desc" type="text" placeholder="Ex: Almoço no centro..." autocomplete="off"/>
-    <div class="fgrid2">
-      <div><label class="flabel">VALOR (R$)</label>
-        <input class="finput" id="f-val" type="number" min="0.01" step="0.01" placeholder="0,00" style="color:var(--yel);font-weight:700"/></div>
-      <div><label class="flabel">DATA</label>
-        <input class="finput" id="f-data" type="date" style="color-scheme:dark"/></div>
-    </div>
-    <label class="flabel">OBSERVAÇÃO (opcional)</label>
-    <input class="finput" id="f-obs" type="text" placeholder="Detalhes..." autocomplete="off"/>
-    <label class="flabel">CATEGORIA</label>
-    <div class="cat-pills" id="cat-pills"></div>
-    <button class="btn-ok" id="btn-ok-gasto" style="width:100%" disabled>Salvar</button>
+<div class="mover" id="mg-bg"><div class="msheet">
+  <div class="mhandle"></div>
+  <div class="mtitle" id="mg-title">Novo Gasto</div>
+  <label class="flabel">DESCRIÇÃO</label>
+  <input class="finput" id="f-desc" type="text" placeholder="Ex: Almoço no centro..." autocomplete="off"/>
+  <div class="fgrid2">
+    <div><label class="flabel">VALOR (R$)</label>
+      <input class="finput" id="f-val" type="number" min="0.01" step="0.01" placeholder="0,00" style="color:var(--yel);font-weight:700"/></div>
+    <div><label class="flabel">DATA</label>
+      <input class="finput" id="f-data" type="date" style="color-scheme:dark"/></div>
   </div>
-</div>
+  <label class="flabel">OBSERVAÇÃO (opcional)</label>
+  <input class="finput" id="f-obs" type="text" placeholder="Detalhes..." autocomplete="off"/>
+  <label class="flabel">CATEGORIA</label>
+  <div class="cat-pills" id="cat-pills"></div>
+  <button class="btn-ok" id="btn-ok-gasto" style="width:100%" disabled>Salvar</button>
+</div></div>
 
 <!-- MODAL DIA -->
-<div class="mover" id="md-bg">
-  <div class="msheet">
-    <div class="mhandle"></div>
-    <div class="mtitle" id="md-title">Novo Dia</div>
-    <label class="flabel">TÍTULO DO DIA</label>
-    <input class="finput" id="d-tit" type="text" placeholder="Ex: Lisboa — chegada" autocomplete="off"/>
-    <div class="fgrid2">
-      <div><label class="flabel">Nº DO DIA</label>
-        <input class="finput" id="d-num" type="number" min="1" placeholder="1"/></div>
-      <div><label class="flabel">DATA</label>
-        <input class="finput" id="d-dat" type="date" style="color-scheme:dark"/></div>
-    </div>
-    <label class="flabel">DESCRIÇÃO (opcional)</label>
-    <input class="finput" id="d-dsc" type="text" placeholder="Resumo do dia..." autocomplete="off"/>
-    <div class="btn-row">
-      <button class="btn-cancel" id="btn-cancel-dia">Cancelar</button>
-      <button class="btn-ok" id="btn-ok-dia">Salvar Dia</button>
-    </div>
+<div class="mover" id="md-bg"><div class="msheet">
+  <div class="mhandle"></div>
+  <div class="mtitle" id="md-title">Novo Dia</div>
+  <label class="flabel">TÍTULO DO DIA</label>
+  <input class="finput" id="d-tit" type="text" placeholder="Ex: Lisboa — chegada" autocomplete="off"/>
+  <div class="fgrid2">
+    <div><label class="flabel">Nº DO DIA</label>
+      <input class="finput" id="d-num" type="number" min="1" placeholder="1"/></div>
+    <div><label class="flabel">DATA</label>
+      <input class="finput" id="d-dat" type="date" style="color-scheme:dark"/></div>
   </div>
-</div>
+  <label class="flabel">DESCRIÇÃO (opcional)</label>
+  <input class="finput" id="d-dsc" type="text" placeholder="Resumo do dia..." autocomplete="off"/>
+  <div class="btn-row">
+    <button class="btn-cancel" id="btn-cancel-dia">Cancelar</button>
+    <button class="btn-ok" id="btn-ok-dia">Salvar Dia</button>
+  </div>
+</div></div>
 
 <!-- MODAL PARADA -->
-<div class="mover" id="mp-bg">
-  <div class="msheet">
-    <div class="mhandle"></div>
-    <div class="mtitle" id="mp-title">Nova Parada</div>
-    <label class="flabel">NOME DO LOCAL</label>
-    <input class="finput" id="p-nome" type="text" placeholder="Ex: Torre de Belém" autocomplete="off"/>
-    <label class="flabel">TIPO</label>
-    <div class="tipo-pills" id="tipo-pills"></div>
-    <label class="flabel">HORÁRIO</label>
-    <input class="finput" id="p-hor" type="time" style="color-scheme:dark;color:var(--teal)"/>
-    <label class="flabel">ENDEREÇO</label>
-    <input class="finput" id="p-end" type="text" placeholder="Opcional" autocomplete="off"/>
-    <label class="flabel">LINK GOOGLE MAPS</label>
-    <input class="finput" id="p-gmaps" type="url" placeholder="https://maps.app.goo.gl/..." autocomplete="off" style="font-size:13px"/>
-    <label class="flabel">OBSERVAÇÃO</label>
-    <textarea class="finput" id="p-obs" rows="3" placeholder="Reserva, ingresso, dica..." autocomplete="off" style="resize:none;line-height:1.5;font-size:14px"></textarea>
-    <div class="tog-row" id="real-tog">
-      <span style="font-size:13px">✅ Marcar como realizado</span>
-      <div class="tog-sw" id="real-sw"></div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-cancel" id="btn-cancel-par">Cancelar</button>
-      <button class="btn-ok" id="btn-ok-par">Salvar Parada</button>
-    </div>
+<div class="mover" id="mp-bg"><div class="msheet">
+  <div class="mhandle"></div>
+  <div class="mtitle" id="mp-title">Nova Parada</div>
+  <label class="flabel">NOME DO LOCAL</label>
+  <input class="finput" id="p-nome" type="text" placeholder="Ex: Torre de Belém" autocomplete="off"/>
+  <label class="flabel">TIPO</label>
+  <div class="tipo-pills" id="tipo-pills"></div>
+  <label class="flabel">HORÁRIO</label>
+  <input class="finput" id="p-hor" type="time" style="color-scheme:dark;color:var(--teal)"/>
+  <label class="flabel">ENDEREÇO</label>
+  <input class="finput" id="p-end" type="text" placeholder="Opcional" autocomplete="off"/>
+  <label class="flabel">LINK GOOGLE MAPS</label>
+  <input class="finput" id="p-gmaps" type="url" placeholder="https://maps.app.goo.gl/..." style="font-size:13px"/>
+  <label class="flabel">OBSERVAÇÃO</label>
+  <textarea class="finput" id="p-obs" rows="3" placeholder="Reserva, ingresso, dica..." style="resize:none;line-height:1.5;font-size:14px"></textarea>
+  <div class="tog-row" id="real-tog">
+    <span style="font-size:13px">✅ Marcar como realizado</span>
+    <div class="tog-sw" id="real-sw"></div>
   </div>
-</div>
+  <div class="btn-row">
+    <button class="btn-cancel" id="btn-cancel-par">Cancelar</button>
+    <button class="btn-ok" id="btn-ok-par">Salvar Parada</button>
+  </div>
+</div></div>
 
 <!-- POPUP CATEGORIA -->
-<div class="cmover" id="cm-bg">
-  <div class="csheet">
-    <div class="mhandle"></div>
-    <div class="csheet-hdr">
-      <div id="cm-title" style="font-size:16px;font-weight:600;display:flex;align-items:center;gap:6px"></div>
-      <button class="btn-i" id="cm-close" style="font-size:18px;color:var(--mut)">✕</button>
-    </div>
-    <div class="csheet-tot" id="cm-tot"></div>
-    <div class="csheet-list" id="cm-list"></div>
+<div class="cmover" id="cm-bg"><div class="csheet">
+  <div class="mhandle"></div>
+  <div class="csheet-hdr">
+    <div id="cm-title" style="font-size:16px;font-weight:600;display:flex;align-items:center;gap:6px"></div>
+    <button class="btn-i" id="cm-close" style="font-size:18px;color:var(--mut)">✕</button>
   </div>
-</div>
+  <div class="csheet-tot" id="cm-tot"></div>
+  <div class="csheet-list" id="cm-list"></div>
+</div></div>
 
 <!-- EDIT VIAGEM -->
-<div class="cmcenter" id="ev-bg">
-  <div class="cmbox">
-    <h3>✏️ Editar Viagem</h3>
-    <label class="flabel">NOME</label>
-    <input class="finput" id="ev-nome" type="text" autocomplete="off"/>
-    <label class="flabel">ORÇAMENTO (R$)</label>
-    <input class="finput" id="ev-orc" type="number" min="0" step="0.01"/>
-    <div class="btn-row">
-      <button class="btn-cancel" id="btn-cancel-ev">Cancelar</button>
-      <button class="btn-ok" id="btn-ok-ev">Salvar</button>
-    </div>
+<div class="cmcenter" id="ev-bg"><div class="cmbox">
+  <h3>✏️ Editar Viagem</h3>
+  <label class="flabel">NOME</label>
+  <input class="finput" id="ev-nome" type="text" autocomplete="off"/>
+  <label class="flabel">ORÇAMENTO (R$)</label>
+  <input class="finput" id="ev-orc" type="number" min="0" step="0.01"/>
+  <div class="btn-row">
+    <button class="btn-cancel" id="btn-cancel-ev">Cancelar</button>
+    <button class="btn-ok" id="btn-ok-ev">Salvar</button>
   </div>
-</div>
+</div></div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ─────────────────────────────────────────────────────
 const CATS=[
   {id:'hospedagem', label:'Hospedagem', emoji:'🏨',cor:'#FF6B6B'},
   {id:'transporte', label:'Transporte', emoji:'✈️',cor:'#4ECDC4'},
@@ -398,7 +337,6 @@ let sb,vid=null,gastos=[],viagens=[];
 let filtCat=null,editGastoId=null;
 let rDias=[],rParadas=[],diasOpen={};
 let diaEditId=null,parEditId=null,diaAtualId=null,realModal=false;
-let mapa=null,mMarkers=[],mLine=null;
 
 // ── INIT ─────────────────────────────────────────────
 (async()=>{
@@ -407,6 +345,7 @@ let mapa=null,mMarkers=[],mLine=null;
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2dnZ6bW5ndWhncWFvcHZxdWhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMTMzODYsImV4cCI6MjA5NDc4OTM4Nn0.FSuRZjedHmJs4QRiCrk_DS1tzEO-tOU3pN8HG15Iw5g'
   );
   await loadViagens();
+  renderDash();
 })();
 
 // ── VIAGENS ──────────────────────────────────────────
@@ -415,7 +354,8 @@ async function loadViagens(){
   viagens=data||[];
   if(!viagens.length)return;
   vid=viagens[0].id;
-  renderChips();await loadGastos();
+  renderChips();
+  await loadGastos();
 }
 function renderChips(){
   const el=$('viagem-chips');el.innerHTML='';
@@ -432,7 +372,7 @@ async function novaViagem(){
   const nome=prompt('Nome da viagem:');if(!nome)return;
   const orc=parseFloat(prompt('Orçamento (R$):')||'0');
   const{data,error}=await sb.from('viagens').insert({nome,orcamento:orc}).select().single();
-  if(error){toast('Erro');return;}
+  if(error){toast('Erro ao criar');return;}
   viagens.unshift(data);vid=data.id;renderChips();await loadGastos();
 }
 
@@ -459,10 +399,9 @@ async function loadGastos(){
   const v=viagens.find(x=>x.id===vid);if(!v)return;
   $('trip-name-txt').textContent=v.nome;
   const{data}=await sb.from('gastos').select('*').eq('viagem_id',vid).order('data',{ascending:false});
-  gastos=data||[];renderAll();
+  gastos=data||[];
+  renderTopbar();renderDash();renderList();
 }
-function renderAll(){renderTopbar();renderDash();renderList();}
-
 function renderTopbar(){
   const v=viagens.find(x=>x.id===vid);
   const tot=gastos.reduce((s,g)=>s+Number(g.valor),0);
@@ -476,38 +415,54 @@ function renderTopbar(){
   $('prog-bar').style.width=pct+'%';$('prog-bar').style.background=cor;
 }
 
+// ── DASHBOARD ─────────────────────────────────────────
 function renderDash(){
   const tot=gastos.reduce((s,g)=>s+Number(g.valor),0);
   const byCat=CATS.map(c=>({...c,tot:gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)}));
   const mx=Math.max(...byCat.map(c=>c.tot),1);
-  const grid=$('cat-grid');grid.innerHTML='';
+  const el=$('page-dashboard');el.innerHTML='';
+  // cat grid
+  const sec1=document.createElement('div');sec1.style.marginBottom='16px';
+  sec1.innerHTML='<div class="sec-title">por categoria</div>';
+  const grid=document.createElement('div');grid.className='cat-grid';
   byCat.forEach(c=>{
     const d=document.createElement('div');d.className='cat-card';
     d.innerHTML=`<div class="ico">${c.emoji}</div><div class="lbl">${c.label}</div>
       <div class="val" style="color:${c.tot?c.cor:'#333'}">${c.tot?BRL(c.tot):'—'}</div>`;
     d.addEventListener('click',()=>openCatModal(c.id));grid.appendChild(d);
   });
+  sec1.appendChild(grid);el.appendChild(sec1);
+  // stats
   const v=viagens.find(x=>x.id===vid);const orc=v?.orcamento||0;
   const dias=[...new Set(gastos.map(g=>g.data))].length;
   const maior=gastos.length?gastos.reduce((a,b)=>Number(a.valor)>Number(b.valor)?a:b):null;
-  $('stat-grid').innerHTML=`
+  const sg=document.createElement('div');sg.className='stat-grid';
+  sg.innerHTML=`
     <div class="stat-card"><div class="stat-lbl">Total Gasto</div><div class="stat-val" style="color:var(--teal)">${BRL(tot)}</div><div class="stat-sub">${orc?Math.round(tot/orc*100)+'% do orçamento':'—'}</div></div>
     <div class="stat-card"><div class="stat-lbl">Lançamentos</div><div class="stat-val">${gastos.length}</div><div class="stat-sub">${dias} dia${dias!==1?'s':''} com gasto</div></div>
     <div class="stat-card"><div class="stat-lbl">Ticket Médio</div><div class="stat-val" style="color:var(--yel)">${gastos.length?BRL(tot/gastos.length):'—'}</div><div class="stat-sub">por lançamento</div></div>
     <div class="stat-card"><div class="stat-lbl">Maior Gasto</div><div class="stat-val" style="color:var(--red)">${maior?BRL(maior.valor):'—'}</div><div class="stat-sub">${maior?maior.descricao.slice(0,18):'—'}</div></div>`;
-  buildDonut(byCat,tot);
-  const barEl=$('bar-chart');barEl.innerHTML='';
-  byCat.filter(c=>c.tot>0).sort((a,b)=>b.tot-a.tot).forEach(c=>{
+  el.appendChild(sg);
+  // donut
+  const dw=document.createElement('div');dw.style.marginBottom='16px';
+  dw.innerHTML='<div class="sec-title">distribuição</div><div class="donut-wrap"><svg id="donut" width="110" height="110" viewBox="0 0 110 110"></svg><div class="legend" id="donut-leg"></div></div>';
+  el.appendChild(dw);buildDonut(byCat,tot);
+  // bars
+  const bw=document.createElement('div');
+  bw.innerHTML='<div class="sec-title">por categoria</div>';
+  const sorted=byCat.filter(c=>c.tot>0).sort((a,b)=>b.tot-a.tot);
+  sorted.forEach(c=>{
     const p=mx?c.tot/mx*100:0;
-    barEl.innerHTML+=`<div class="bar-row"><div class="nm">${c.emoji} ${c.label}</div>
+    bw.innerHTML+=`<div class="bar-row"><div class="nm">${c.emoji} ${c.label}</div>
       <div class="bar-track"><div class="bar-fill" style="width:${p}%;background:${c.cor}"></div></div>
       <div class="am" style="color:${c.cor}">${BRL(c.tot)}</div></div>`;
   });
-  if(!byCat.some(c=>c.tot>0))barEl.innerHTML='<div style="color:#333;text-align:center;padding:16px;font-size:13px">Nenhum dado ainda</div>';
+  if(!sorted.length)bw.innerHTML+='<div style="color:#333;text-align:center;padding:16px;font-size:12px">Nenhum dado ainda</div>';
+  el.appendChild(bw);
 }
-
 function buildDonut(byCat,tot){
-  const svg=$('donut'),leg=$('donut-leg');svg.innerHTML='';leg.innerHTML='';
+  const svg=$('donut'),leg=$('donut-leg');if(!svg)return;
+  svg.innerHTML='';leg.innerHTML='';
   const has=byCat.filter(c=>c.tot>0);
   if(!has.length){svg.innerHTML='<circle cx="55" cy="55" r="38" fill="none" stroke="#2A2A3E" stroke-width="18"/>';return;}
   let angle=-Math.PI/2;const R=38,cx=55,cy=55;
@@ -521,9 +476,8 @@ function buildDonut(byCat,tot){
     const hole=document.createElementNS('http://www.w3.org/2000/svg','circle');
     hole.setAttribute('cx',cx);hole.setAttribute('cy',cy);hole.setAttribute('r',20);hole.setAttribute('fill','#0F0F1A');
     svg.appendChild(hole);angle+=sl;
-    const pct=tot?Math.round(c.tot/tot*100):0;
     leg.innerHTML+=`<div class="leg-row"><div class="leg-dot" style="background:${c.cor}"></div>
-      <span>${c.emoji} ${c.label}</span><span style="margin-left:auto;color:${c.cor}">${pct}%</span></div>`;
+      <span>${c.emoji} ${c.label}</span><span style="margin-left:auto;color:${c.cor}">${Math.round(c.tot/tot*100)}%</span></div>`;
   });
 }
 
@@ -535,14 +489,14 @@ function openCatModal(catId){
   const totG=gastos.reduce((s,g)=>s+Number(g.valor),0);
   $('cm-title').innerHTML=`<span>${c.emoji}</span><span>${c.label}</span>`;
   $('cm-tot').innerHTML=`<strong style="color:${c.cor};font-size:18px">${BRL(totC)}</strong>
-    <span style="margin-left:8px">${itens.length} lançamento${itens.length!==1?'s':''} · ${totG?Math.round(totC/totG*100):0}% do total</span>`;
+    <span style="margin-left:8px">${itens.length} lançamento${itens.length!==1?'s':''} · ${totG?Math.round(totC/totG*100):0}%</span>`;
   $('cm-list').innerHTML=itens.length?itens.map(g=>{
     const dt=g.data?g.data.split('-').reverse().join('/'):'';
     return `<div class="citem" style="--ic:${c.cor}">
       <div><div style="font-size:13px">${g.descricao}</div>
       <div style="font-size:10px;color:var(--mut);margin-top:1px">${dt}${g.observacao?' · '+g.observacao:''}</div></div>
       <div style="font-size:14px;font-weight:700;color:${c.cor};flex-shrink:0;margin-left:10px">${BRL(Number(g.valor))}</div></div>`;
-  }).join(''):`<div style="text-align:center;padding:28px;color:#333">Nenhum gasto aqui ainda</div>`;
+  }).join(''):'<div style="text-align:center;padding:28px;color:#333">Nenhum gasto aqui ainda</div>';
   $('cm-bg').classList.add('open');
 }
 $('cm-close').addEventListener('click',()=>$('cm-bg').classList.remove('open'));
@@ -556,8 +510,7 @@ function renderList(){
     `${fl.length} lançamento${fl.length!==1?'s':''}`;
   $('filt-clr').classList.toggle('hidden',!filtCat);
   const el=$('gastos-list');el.innerHTML='';
-  if(!fl.length){el.innerHTML=`<div style="text-align:center;padding:40px 0;color:#333">
-    <div style="font-size:36px;margin-bottom:10px">🗺️</div><div style="font-size:13px">Nenhum lançamento</div></div>`;return;}
+  if(!fl.length){el.innerHTML='<div style="text-align:center;padding:40px 0;color:#444"><div style="font-size:36px;margin-bottom:10px">🗺️</div><div style="font-size:13px">Nenhum lançamento</div></div>';return;}
   fl.forEach(g=>{
     const c=CATS.find(x=>x.id===g.categoria)||CATS[5];
     const dt=g.data?g.data.split('-').reverse().join('/'):'';
@@ -584,7 +537,7 @@ CATS.forEach(c=>{
 });
 $('f-data').value=new Date().toISOString().split('T')[0];
 document.querySelector('#cat-pills .pill').classList.add('on');
-function chkGasto(){$('btn-ok-gasto').disabled=!($('f-desc').value.trim()&&$('f-val').value>0&&document.querySelector('#cat-pills .pill.on'));}
+function chkGasto(){$('btn-ok-gasto').disabled=!($('f-desc').value.trim()&&$('f-val').value>0);}
 ['f-desc','f-val','f-obs'].forEach(id=>$(id).addEventListener('input',chkGasto));
 $('fab').addEventListener('click',()=>{
   editGastoId=null;$('mg-title').textContent='Novo Gasto';
@@ -611,22 +564,25 @@ $('btn-ok-gasto').addEventListener('click',async()=>{
   if(editGastoId){
     const i=gastos.findIndex(x=>x.id===editGastoId);
     if(i!==-1)gastos[i]={...gastos[i],descricao,valor,observacao,data,categoria};
-    renderAll();$('mg-bg').classList.remove('open');toast('Gasto atualizado ✓');
+    renderTopbar();renderDash();renderList();
+    $('mg-bg').classList.remove('open');toast('Gasto atualizado ✓');
     await sb.from('gastos').update({descricao,valor,observacao,data,categoria}).eq('id',editGastoId);
   }else{
     const tmp='t'+Date.now();
     gastos.unshift({id:tmp,viagem_id:vid,descricao,valor,observacao,data,categoria});
-    renderAll();$('mg-bg').classList.remove('open');toast('Gasto adicionado ✓');
+    renderTopbar();renderDash();renderList();
+    $('mg-bg').classList.remove('open');toast('Gasto adicionado ✓');
     const{data:ins,error}=await sb.from('gastos').insert({viagem_id:vid,descricao,valor,observacao,data,categoria}).select().single();
-    if(error){gastos=gastos.filter(g=>g.id!==tmp);renderAll();toast('Erro ⚠️');}
+    if(error){gastos=gastos.filter(g=>g.id!==tmp);renderTopbar();renderDash();renderList();toast('Erro ⚠️');}
     else{const i=gastos.findIndex(g=>g.id===tmp);if(i!==-1)gastos[i]=ins;}
   }
 });
 async function deleteGasto(id){
   if(!confirm('Excluir?'))return;
-  const bk=[...gastos];gastos=gastos.filter(g=>g.id!==id);renderAll();toast('Excluído ✓');
+  const bk=[...gastos];gastos=gastos.filter(g=>g.id!==id);
+  renderTopbar();renderDash();renderList();toast('Excluído ✓');
   const{error}=await sb.from('gastos').delete().eq('id',id);
-  if(error){gastos=bk;renderAll();toast('Erro ⚠️');}
+  if(error){gastos=bk;renderTopbar();renderDash();renderList();toast('Erro ⚠️');}
 }
 $('budget-val').addEventListener('click',async()=>{
   const v=viagens.find(x=>x.id===vid);if(!v)return;
@@ -637,14 +593,13 @@ $('budget-val').addEventListener('click',async()=>{
 });
 
 // ── ROTEIRO ───────────────────────────────────────────
-async function loadRoteiro(render=true){
+async function loadRoteiro(){
   const{data:dias}=await sb.from('roteiro_dias').select('*').eq('viagem_id',vid).order('numero');
   rDias=dias||[];
   if(rDias.length){
     const{data:pars}=await sb.from('roteiro_paradas').select('*').in('dia_id',rDias.map(d=>d.id)).order('ordem');
     rParadas=pars||[];
   }else rParadas=[];
-  if(render) renderRoteiro();
 }
 
 function renderRoteiro(){
@@ -656,12 +611,11 @@ function renderRoteiro(){
   addBtn.addEventListener('click',()=>openDiaModal(null));
   el.appendChild(addBtn);
   if(!rDias.length){
-    const e=document.createElement('div');e.className='rot-empty';
-    e.innerHTML='<div style="font-size:36px;margin-bottom:10px">🗺️</div><div style="font-size:13px">Nenhum dia no roteiro ainda</div>';
-    el.appendChild(e);return;
+    el.innerHTML+='<div class="rot-empty"><div style="font-size:36px;margin-bottom:10px">🗺️</div><div style="font-size:13px">Nenhum dia no roteiro ainda</div></div>';
+    return;
   }
   rDias.forEach(dia=>{
-    const paradas=rParadas.filter(p=>p.dia_id===dia.id).sort((a,b)=>a.ordem-b.ordem);
+    const paradas=[...rParadas.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
     const aberto=diasOpen[dia.id]!==false;
     const dtFmt=dia.data?new Date(dia.data+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}):'';
     const card=document.createElement('div');card.className='dia-card';
@@ -669,15 +623,12 @@ function renderRoteiro(){
     hdr.innerHTML=`<span class="dia-badge">Dia ${dia.numero}</span>
       <span class="dia-tit">${dia.titulo}</span>
       <span class="dia-dt">${dtFmt}</span>
-      <span class="dia-chev">${aberto?'▲':'▼'}</span>`;
+      <span style="color:var(--mut);font-size:10px;flex-shrink:0">${aberto?'▲':'▼'}</span>`;
     hdr.addEventListener('click',()=>{diasOpen[dia.id]=!aberto;renderRoteiro();});
     card.appendChild(hdr);
     if(aberto){
       const body=document.createElement('div');body.className='dia-body';
-      if(dia.descricao){
-        const dc=document.createElement('div');dc.className='dia-desc-txt';dc.textContent=dia.descricao;body.appendChild(dc);
-      }
-      // paradas
+      if(dia.descricao){const dc=document.createElement('div');dc.className='dia-desc-txt';dc.textContent=dia.descricao;body.appendChild(dc);}
       const pw=document.createElement('div');
       if(!paradas.length){
         pw.innerHTML='<div style="font-size:11px;color:#444;padding:8px 0">Nenhuma parada — adicione abaixo</div>';
@@ -685,7 +636,7 @@ function renderRoteiro(){
         paradas.forEach((p,i)=>{
           const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
           const row=document.createElement('div');row.className='par-item';
-          // linha timeline
+          // timeline
           const lh=document.createElement('div');lh.className='par-linha';
           const dot=document.createElement('div');dot.className='par-dot';
           dot.style.cssText=`background:color-mix(in srgb,${t.cor} 18%,transparent);border:2px solid ${t.cor}`;
@@ -695,49 +646,36 @@ function renderRoteiro(){
           // info
           const info=document.createElement('div');info.className='par-info';
           const nome=document.createElement('div');nome.className='par-nome'+(p.realizado?' done':'');nome.textContent=p.nome;info.appendChild(nome);
-          // horário como badge
-          if(p.horario){
-            const hb=document.createElement('div');hb.className='par-horario';hb.textContent='⏰ '+p.horario;info.appendChild(hb);
-          }
-          // endereço
-          if(p.endereco){
-            const en=document.createElement('div');en.className='par-end';en.textContent='📍 '+p.endereco;info.appendChild(en);
-          }
-          // observação com ver mais/menos
+          if(p.horario){const hb=document.createElement('div');hb.className='par-horario';hb.textContent='⏰ '+p.horario;info.appendChild(hb);}
+          if(p.endereco){const en=document.createElement('div');en.className='par-end';en.textContent='📍 '+p.endereco;info.appendChild(en);}
           if(p.observacao){
-            const obs=document.createElement('div');obs.className='par-obs collapsed';obs.textContent='💬 '+p.observacao;info.appendChild(obs);
+            const obs=document.createElement('div');obs.className='par-obs';obs.textContent='💬 '+p.observacao;info.appendChild(obs);
             if(p.observacao.length>55){
               const tog=document.createElement('span');tog.className='par-obs-tog';tog.textContent='ver mais ▾';
-              tog.addEventListener('click',e=>{
-                e.stopPropagation();
-                const col=obs.classList.toggle('collapsed');
-                tog.textContent=col?'ver mais ▾':'ver menos ▴';
-              });
+              tog.addEventListener('click',e=>{e.stopPropagation();const op=obs.classList.toggle('open');tog.textContent=op?'ver menos ▴':'ver mais ▾';});
               info.appendChild(tog);
             }
           }
           row.appendChild(info);
-          // botões
+          // botões — coluna vertical: setas em cima, ações em baixo
           const btns=document.createElement('div');btns.className='par-btns';
-          // setas de ordem
-          const upBtn=document.createElement('button');upBtn.className='btn-i';upBtn.textContent='▲';
-          upBtn.style.cssText='font-size:12px;opacity:'+(i===0?'0.2':'0.8');upBtn.disabled=i===0;
-          upBtn.addEventListener('click',()=>moverParada(dia.id,i,-1));btns.appendChild(upBtn);
-          const dnBtn=document.createElement('button');dnBtn.className='btn-i';dnBtn.textContent='▼';
-          dnBtn.style.cssText='font-size:12px;opacity:'+(i===paradas.length-1?'0.2':'0.8');dnBtn.disabled=i===paradas.length-1;
-          dnBtn.addEventListener('click',()=>moverParada(dia.id,i,+1));btns.appendChild(dnBtn);
+          const arrowRow=document.createElement('div');arrowRow.className='par-btns-row';
+          const upBtn=document.createElement('button');upBtn.className='ord-btn';upBtn.textContent='▲';upBtn.disabled=(i===0);
+          upBtn.addEventListener('click',e=>{e.stopPropagation();moverParada(dia.id,p.id,-1);});
+          const dnBtn=document.createElement('button');dnBtn.className='ord-btn';dnBtn.textContent='▼';dnBtn.disabled=(i===paradas.length-1);
+          dnBtn.addEventListener('click',e=>{e.stopPropagation();moverParada(dia.id,p.id,+1);});
+          arrowRow.appendChild(upBtn);arrowRow.appendChild(dnBtn);btns.appendChild(arrowRow);
+          const actRow=document.createElement('div');actRow.className='par-btns-row';
           const chk=document.createElement('button');chk.className='chk-btn'+(p.realizado?' done':'');
-          chk.textContent=p.realizado?'✓':'';
-          chk.addEventListener('click',()=>toggleReal(p.id,p.realizado));btns.appendChild(chk);
-          const eb=document.createElement('button');eb.className='btn-i';eb.textContent='✏️';
-          eb.addEventListener('click',()=>openParModal(dia.id,p.id));btns.appendChild(eb);
-          const db=document.createElement('button');db.className='btn-i';db.textContent='🗑️';
-          db.addEventListener('click',()=>delParada(p.id));btns.appendChild(db);
-          row.appendChild(btns);pw.appendChild(row);
+          chk.textContent=p.realizado?'✓':'';chk.addEventListener('click',()=>toggleReal(p.id,p.realizado));actRow.appendChild(chk);
+          const eb=document.createElement('button');eb.className='btn-i';eb.textContent='✏️';eb.style.fontSize='14px';
+          eb.addEventListener('click',()=>openParModal(dia.id,p.id));actRow.appendChild(eb);
+          const db=document.createElement('button');db.className='btn-i';db.textContent='🗑️';db.style.fontSize='14px';
+          db.addEventListener('click',()=>delParada(p.id));actRow.appendChild(db);
+          btns.appendChild(actRow);row.appendChild(btns);pw.appendChild(row);
         });
       }
       body.appendChild(pw);
-      // ações
       const acts=document.createElement('div');acts.className='dia-acts';
       const bPar=document.createElement('button');bPar.className='btn-sm';
       bPar.style.cssText='color:var(--teal);border-color:var(--teal);font-weight:600';bPar.textContent='+ Parada';
@@ -752,47 +690,47 @@ function renderRoteiro(){
   });
 }
 
-async function moverParada(diaId, idx, dir){
-  // pega paradas do dia ordenadas
-  const idxGlobal = p => rParadas.findIndex(x=>x.id===p.id);
-  const paradas = rParadas.filter(p=>p.dia_id===diaId).sort((a,b)=>a.ordem-b.ordem);
-  const novoIdx = idx+dir;
-  if(novoIdx<0||novoIdx>=paradas.length) return;
+// ── MOVER PARADA (por ID, não por índice) ─────────────
+async function moverParada(diaId, parId, dir){
+  // obtém lista ordenada do dia
+  const lista = rParadas
+    .filter(p=>p.dia_id===diaId)
+    .sort((a,b)=>a.ordem-b.ordem);
 
-  const a = paradas[idx];
-  const b = paradas[novoIdx];
+  const idx = lista.findIndex(p=>p.id===parId);
+  const novoIdx = idx + dir;
+  if(idx===-1 || novoIdx<0 || novoIdx>=lista.length) return;
 
-  // troca ordens
-  const tmpOrdem = a.ordem;
-  a.ordem = b.ordem;
-  b.ordem = tmpOrdem;
+  const pA = lista[idx];
+  const pB = lista[novoIdx];
 
-  // atualiza diretamente no array global por referência de id
-  const ia = idxGlobal(a);
-  const ib = idxGlobal(b);
-  if(ia!==-1) rParadas[ia].ordem = a.ordem;
-  if(ib!==-1) rParadas[ib].ordem = b.ordem;
+  // troca as ordens nos objetos do array global rParadas
+  const iA = rParadas.findIndex(p=>p.id===pA.id);
+  const iB = rParadas.findIndex(p=>p.id===pB.id);
+  const tmpOrdem = rParadas[iA].ordem;
+  rParadas[iA].ordem = rParadas[iB].ordem;
+  rParadas[iB].ordem = tmpOrdem;
 
+  // re-renderiza imediatamente
   renderRoteiro();
 
-  // persiste no banco
-  const [ra,rb] = await Promise.all([
-    sb.from('roteiro_paradas').update({ordem:a.ordem}).eq('id',a.id),
-    sb.from('roteiro_paradas').update({ordem:b.ordem}).eq('id',b.id),
+  // salva no banco
+  const [rA,rB] = await Promise.all([
+    sb.from('roteiro_paradas').update({ordem:rParadas[iA].ordem}).eq('id',pA.id),
+    sb.from('roteiro_paradas').update({ordem:rParadas[iB].ordem}).eq('id',pB.id),
   ]);
-  if(ra.error||rb.error){
+  if(rA.error||rB.error){
     toast('Erro ao salvar ordem ⚠️');
-    await loadRoteiro();
+    await loadRoteiro();renderRoteiro();
   } else {
     toast('Ordem atualizada ✓');
   }
 }
 
 async function toggleReal(id,atual){
-  const novo=!atual;
-  const i=rParadas.findIndex(p=>p.id===id);if(i!==-1)rParadas[i].realizado=novo;
-  renderRoteiro();
-  await sb.from('roteiro_paradas').update({realizado:novo}).eq('id',id);
+  const i=rParadas.findIndex(p=>p.id===id);if(i===-1)return;
+  rParadas[i].realizado=!atual;renderRoteiro();
+  await sb.from('roteiro_paradas').update({realizado:!atual}).eq('id',id);
 }
 
 // ── MODAL DIA ─────────────────────────────────────────
@@ -883,13 +821,12 @@ async function delParada(id){
   await sb.from('roteiro_paradas').delete().eq('id',id);
 }
 
-// ── MAPA / ROTA ───────────────────────────────────────
+// ── MAPA ──────────────────────────────────────────────
 async function initMapa(){
-  // sempre recarrega roteiro ao abrir o mapa
   await loadRoteiro();
   renderMapaDias();
   if(rDias.length) renderRotaDia(rDias[0]);
-  else $('mapa-content').innerHTML='<div class="mapa-empty">🗺️<br><br>Nenhum dia no roteiro ainda</div>';
+  else $('mapa-scroll').innerHTML='<div class="mapa-empty">🗺️<br>Nenhum dia no roteiro ainda<br><span style="font-size:11px;color:#333">Adicione dias na aba Roteiro</span></div>';
 }
 
 function renderMapaDias(){
@@ -897,7 +834,7 @@ function renderMapaDias(){
   rDias.forEach((dia,idx)=>{
     const btn=document.createElement('div');
     btn.className='mapa-dia-btn'+(idx===0?' on':'');
-    btn.textContent=`Dia ${dia.numero} · ${dia.titulo.split('—')[0].split('&')[0].trim().slice(0,20)}`;
+    btn.textContent=`Dia ${dia.numero} · ${dia.titulo.split('—')[0].split('&')[0].trim().slice(0,22)}`;
     btn.addEventListener('click',()=>{
       document.querySelectorAll('.mapa-dia-btn').forEach(b=>b.classList.remove('on'));
       btn.classList.add('on');renderRotaDia(dia);
@@ -906,136 +843,92 @@ function renderMapaDias(){
   });
 }
 
-function buildGMapsRotaURL(paradas){
-  // Monta URL de rota do Google Maps com waypoints
-  const comLink = paradas.filter(p=>p.gmaps_link||p.endereco||p.nome);
-  if(!comLink.length) return null;
-
-  // Se tiver link curto do Google Maps (maps.app.goo.gl), abre direto
-  // Se tiver múltiplos, monta rota via /dir/
-  const destinos = comLink.map(p=>{
-    if(p.gmaps_link && p.gmaps_link.includes('maps.app.goo.gl')){
-      return null; // links curtos não compõem rotas — usamos nome
-    }
-    return encodeURIComponent(p.endereco||p.nome+', Portugal');
-  });
-
-  if(comLink.length===1){
-    if(comLink[0].gmaps_link) return comLink[0].gmaps_link;
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(comLink[0].endereco||comLink[0].nome+', Portugal')}`;
-  }
-
-  // rota completa: origin/waypoints/destination
-  const origin=destinos[0];
-  const dest=destinos[destinos.length-1];
-  const waypts=destinos.slice(1,-1).filter(Boolean).join('|');
-  return `https://www.google.com/maps/dir/${destinos.filter(Boolean).join('/')}`;
-}
-
 function renderRotaDia(dia){
-  const paradas=rParadas.filter(p=>p.dia_id===dia.id).sort((a,b)=>a.ordem-b.ordem);
-  const el=$('mapa-content');el.innerHTML='';
+  const paradas=[...rParadas.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
+  const el=$('mapa-scroll');el.innerHTML='';
   const dtFmt=dia.data?new Date(dia.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'}):'';
-
   if(!paradas.length){
-    el.innerHTML=`<div class="mapa-empty">🗺️<br><br>Nenhuma parada no Dia ${dia.numero}<br><span style="font-size:11px;color:#333">Adicione paradas no Roteiro</span></div>`;
+    el.innerHTML=`<div class="mapa-empty">🗺️<br>Nenhuma parada no Dia ${dia.numero}<br><span style="font-size:11px;color:#333">Adicione paradas no Roteiro</span></div>`;
     return;
   }
-
-  // ── Header com botão de rota completa ──
-  const header=document.createElement('div');header.className='rota-header';
-  const rotaURL=buildGMapsRotaURL(paradas);
-  const comGmaps=paradas.filter(p=>p.gmaps_link||p.endereco).length;
-  header.innerHTML=`
-    <div class="rota-titulo">Dia ${dia.numero} · ${dia.titulo}</div>
-    <div class="rota-sub">${dtFmt} · ${paradas.length} parada${paradas.length!==1?'s':''} · ${comGmaps} com localização</div>`;
+  // header com botão rota completa
+  const card=document.createElement('div');card.className='rota-card';
+  const comLoc=paradas.filter(p=>p.gmaps_link||p.endereco||p.nome);
+  // monta URL de rota completa
+  let rotaURL=null;
+  if(comLoc.length>=1){
+    const destinos=comLoc.map(p=>{
+      if(p.gmaps_link&&!p.gmaps_link.includes('maps.app.goo.gl')) return p.gmaps_link;
+      return encodeURIComponent((p.endereco||p.nome)+', Portugal');
+    });
+    if(comLoc.length===1&&comLoc[0].gmaps_link){
+      rotaURL=comLoc[0].gmaps_link;
+    }else{
+      rotaURL='https://www.google.com/maps/dir/'+destinos.join('/');
+    }
+  }
+  card.innerHTML=`<div class="rota-tit">Dia ${dia.numero} · ${dia.titulo}</div>
+    <div class="rota-sub">${dtFmt} · ${paradas.length} parada${paradas.length!==1?'s':''}</div>`;
   if(rotaURL){
-    const btn=document.createElement('a');btn.className='btn-rota-completa';
+    const btn=document.createElement('a');btn.className='btn-rota';
     btn.href=rotaURL;btn.target='_blank';btn.rel='noopener';
     btn.innerHTML='🗺️ Abrir rota completa no Google Maps';
-    header.appendChild(btn);
+    card.appendChild(btn);
   }else{
-    const aviso=document.createElement('div');
-    aviso.style.cssText='font-size:11px;color:var(--mut);text-align:center;padding:10px;background:var(--bg);border-radius:8px';
-    aviso.textContent='Adicione links do Google Maps nas paradas para ativar a rota';
-    header.appendChild(aviso);
+    card.innerHTML+=`<div style="font-size:11px;color:var(--mut);text-align:center;padding:10px;background:var(--bg);border-radius:8px">Adicione links do Google Maps nas paradas</div>`;
   }
-  el.appendChild(header);
-
-  // ── Lista de paradas com botão individual ──
+  el.appendChild(card);
+  // lista de paradas
   const lista=document.createElement('div');
   lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:4px 14px';
   paradas.forEach((p,i)=>{
     const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
     const cor=PINCORES[i%PINCORES.length];
-    const item=document.createElement('div');item.className='par-rota-item';
-
-    // linha timeline
-    const lh=document.createElement('div');lh.className='par-rota-linha';
-    const num=document.createElement('div');num.className='par-rota-num';
-    num.style.background=cor;num.textContent=i+1;lh.appendChild(num);
+    const item=document.createElement('div');item.className='par-rota';
+    const lh=document.createElement('div');lh.className='par-rota-lh';
+    const num=document.createElement('div');num.className='par-rota-num';num.style.background=cor;num.textContent=i+1;lh.appendChild(num);
     if(i<paradas.length-1){const ln=document.createElement('div');ln.className='par-rota-line';lh.appendChild(ln);}
     item.appendChild(lh);
-
-    // info
     const info=document.createElement('div');info.className='par-rota-info';
-    info.innerHTML=`<div class="par-rota-nome">${t.emoji} ${p.nome}${p.realizado?' <span style="color:var(--teal);font-size:11px">✓ realizado</span>':''}</div>
+    info.innerHTML=`<div class="par-rota-nome">${t.emoji} ${p.nome}${p.realizado?' <span style="color:var(--teal);font-size:10px">✓</span>':''}</div>
       <div class="par-rota-meta">${p.horario?'⏰ '+p.horario+' · ':''}${t.label}</div>`;
-
-    // observação
     if(p.observacao){
-      const obs=document.createElement('div');obs.className='par-obs-tag';obs.textContent='💬 '+p.observacao;info.appendChild(obs);
+      const obs=document.createElement('div');obs.className='par-rota-obs';obs.textContent='💬 '+p.observacao;info.appendChild(obs);
       if(p.observacao.length>60){
         const tog=document.createElement('span');tog.className='par-obs-tog';tog.textContent='ver mais ▾';
-        tog.addEventListener('click',()=>{
-          const open=obs.classList.toggle('open');tog.textContent=open?'ver menos ▴':'ver mais ▾';
-        });
+        tog.addEventListener('click',()=>{const op=obs.classList.toggle('open');tog.textContent=op?'ver menos ▴':'ver mais ▾';});
         info.appendChild(tog);
       }
     }
-
-    // botão Google Maps individual
-    if(p.gmaps_link||p.endereco||p.nome){
-      const url=p.gmaps_link||(
-        p.endereco
-          ?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.endereco)}`
-          :`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.nome+', Portugal')}`
-      );
-      const link=document.createElement('a');link.className='btn-gmaps';
-      link.href=url;link.target='_blank';link.rel='noopener';
-      link.innerHTML='📍 Ver no Maps';
-      info.appendChild(link);
-    }else{
-      const na=document.createElement('span');na.className='btn-gmaps-disabled';na.innerHTML='📍 Sem localização';
-      info.appendChild(na);
-    }
-
+    // botão Maps individual
+    const url=p.gmaps_link||(p.endereco
+      ?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.endereco)}`
+      :`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.nome+', Portugal')}`);
+    const link=document.createElement('a');link.className='btn-gmaps';
+    link.href=url;link.target='_blank';link.rel='noopener';link.innerHTML='📍 Ver no Maps';
+    info.appendChild(link);
     item.appendChild(info);lista.appendChild(item);
   });
   el.appendChild(lista);
 }
 
 // ── TABS ──────────────────────────────────────────────
-const pages=['dashboard','lancamentos','roteiro'];
 document.querySelectorAll('.tab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
+  tab.addEventListener('click',async()=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));tab.classList.add('on');
     const id=tab.dataset.tab;
-    // páginas normais
-    pages.forEach(p=>{
-      const el=$(`page-${p}`);
-      if(el)el.classList.toggle('hidden',p!==id);
+    ['dashboard','lancamentos','roteiro'].forEach(p=>{
+      $(`page-${p}`).classList.toggle('hidden',p!==id);
     });
-    // mapa tem layout especial
-    const mapaPage=$('mapa-page');
+    const mp=$('mapa-page');
     if(id==='mapa'){
-      mapaPage.classList.add('visible');
+      mp.classList.add('visible');
       $('fab').classList.add('hidden');
-      initMapa();
+      await initMapa();
     }else{
-      mapaPage.classList.remove('visible');
+      mp.classList.remove('visible');
       $('fab').classList.toggle('hidden',id!=='lancamentos');
-      if(id==='roteiro')loadRoteiro();
+      if(id==='roteiro'){await loadRoteiro();renderRoteiro();}
     }
   });
 });

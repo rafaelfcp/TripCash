@@ -114,27 +114,32 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .rot-empty{text-align:center;padding:40px 0;color:#333}
 
 /* ── MAPA ── */
-#mapa-page{flex:1;display:none;flex-direction:column;overflow:hidden}
+#mapa-page{flex:1;display:none;flex-direction:column;overflow:hidden;min-height:0}
 #mapa-page.visible{display:flex}
 .mapa-dia-scroll{display:flex;gap:6px;padding:12px 16px 8px;overflow-x:auto;flex-shrink:0;-webkit-overflow-scrolling:touch}
 .mapa-dia-scroll::-webkit-scrollbar{display:none}
 .mapa-dia-btn{flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;font-size:11px;padding:6px 13px;cursor:pointer;color:var(--mut);white-space:nowrap;transition:all .2s}
 .mapa-dia-btn.on{background:var(--teal);border-color:var(--teal);color:var(--bg);font-weight:700}
-#map{flex:1;min-height:0}
-.mapa-leg-scroll{flex-shrink:0;overflow-y:auto;max-height:36vh;padding:8px 16px calc(var(--sb)+8px);background:var(--bg)}
-.mapa-leg-item{display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--bor);cursor:pointer}
-.mapa-leg-item:last-child{border-bottom:none}
-.mapa-leg-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px}
-.mapa-leg-nome{font-size:12px;font-weight:500}
-.mapa-leg-meta{font-size:10px;color:var(--mut);margin-top:1px}
-.mapa-status{padding:16px;text-align:center;font-size:12px;color:var(--teal)}
-.leaflet-container{background:#1A1A2E!important}
-.leaflet-popup-content-wrapper{background:var(--sur)!important;color:var(--txt)!important;border:1px solid var(--bor)!important;border-radius:10px!important;box-shadow:0 4px 20px rgba(0,0,0,.5)!important}
-.leaflet-popup-tip{background:var(--sur)!important}
-.leaflet-popup-content{margin:10px 13px!important;font-family:-apple-system,sans-serif!important}
-.pop-tit{font-size:13px;font-weight:700;margin-bottom:3px}
-.pop-met{font-size:11px;color:var(--mut)}
-.pop-obs{font-size:10px;color:var(--mut);font-style:italic;margin-top:3px}
+/* card de rota */
+.rota-header{background:var(--sur);border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid var(--bor)}
+.rota-titulo{font-size:15px;font-weight:700;margin-bottom:4px}
+.rota-sub{font-size:11px;color:var(--mut);margin-bottom:12px}
+.btn-rota-completa{width:100%;background:var(--teal);border:none;border-radius:10px;color:var(--bg);font-size:14px;font-weight:700;padding:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn-rota-completa:active{opacity:.85}
+.par-rota-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--bor)}
+.par-rota-item:last-child{border-bottom:none}
+.par-rota-linha{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
+.par-rota-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.par-rota-line{width:2px;flex:1;min-height:18px;background:var(--bor);margin-top:3px}
+.par-rota-info{flex:1;min-width:0}
+.par-rota-nome{font-size:13px;font-weight:600;margin-bottom:2px}
+.par-rota-meta{font-size:11px;color:var(--mut);margin-bottom:4px}
+.btn-gmaps{display:inline-flex;align-items:center;gap:5px;background:#1A73E8;border:none;border-radius:8px;color:#fff;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;text-decoration:none;margin-top:2px}
+.btn-gmaps-disabled{display:inline-flex;align-items:center;gap:5px;background:var(--bor);border:none;border-radius:8px;color:var(--mut);font-size:11px;padding:5px 10px;cursor:default}
+.mapa-empty{text-align:center;padding:40px 16px;color:#444;font-size:13px}
+.par-obs-tag{font-size:11px;color:var(--mut);margin-top:5px;line-height:1.5;background:var(--bg);border-radius:8px;padding:6px 8px;border-left:2px solid var(--bor);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.par-obs-tag.open{display:block}
+.par-obs-tog{font-size:10px;color:var(--teal);cursor:pointer;margin-top:2px;display:inline-block;font-weight:600}
 
 /* ── FAB ── */
 .fab{position:fixed;bottom:calc(var(--sb)+22px);left:50%;transform:translateX(-50%);background:var(--teal);border:none;border-radius:99px;color:var(--bg);font-size:14px;font-weight:700;padding:13px 28px;cursor:pointer;box-shadow:0 4px 20px rgba(78,205,196,.4);display:flex;align-items:center;gap:6px;white-space:nowrap;z-index:100}
@@ -322,6 +327,8 @@ input[type=time]::-webkit-date-and-time-value{text-align:left}
     <input class="finput" id="p-hor" type="time" style="color-scheme:dark;color:var(--teal)"/>
     <label class="flabel">ENDEREÇO</label>
     <input class="finput" id="p-end" type="text" placeholder="Opcional" autocomplete="off"/>
+    <label class="flabel">LINK GOOGLE MAPS</label>
+    <input class="finput" id="p-gmaps" type="url" placeholder="https://maps.app.goo.gl/..." autocomplete="off" style="font-size:13px"/>
     <label class="flabel">OBSERVAÇÃO</label>
     <textarea class="finput" id="p-obs" rows="3" placeholder="Reserva, ingresso, dica..." autocomplete="off" style="resize:none;line-height:1.5;font-size:14px"></textarea>
     <div class="tog-row" id="real-tog">
@@ -797,6 +804,7 @@ function openParModal(diaId,parId){
   $('mp-title').textContent=par?'Editar Parada':'Nova Parada';
   $('p-nome').value=par?.nome||'';$('p-hor').value=par?.horario||'';
   $('p-end').value=par?.endereco||'';$('p-obs').value=par?.observacao||'';
+  $('p-gmaps').value=par?.gmaps_link||'';
   realModal=par?.realizado||false;$('real-sw').classList.toggle('on',realModal);
   const tid=par?.tipo||'atração';
   document.querySelectorAll('#tipo-pills .pill').forEach(p=>p.classList.toggle('on',p.dataset.id===tid));
@@ -808,19 +816,20 @@ $('btn-ok-par').addEventListener('click',async()=>{
   const nome=$('p-nome').value.trim();if(!nome)return;
   const horario=$('p-hor').value||null,endereco=$('p-end').value.trim()||null;
   const observacao=$('p-obs').value.trim()||null,realizado=realModal;
+  const gmaps_link=$('p-gmaps').value.trim()||null;
   const tipo=document.querySelector('#tipo-pills .pill.on')?.dataset.id||'outro';
   const ordem=rParadas.filter(p=>p.dia_id===diaAtualId).length+1;
   $('mp-bg').classList.remove('open');
   if(parEditId){
     const i=rParadas.findIndex(p=>p.id===parEditId);
-    if(i!==-1)rParadas[i]={...rParadas[i],nome,horario,endereco,observacao,tipo,realizado};
+    if(i!==-1)rParadas[i]={...rParadas[i],nome,horario,endereco,observacao,tipo,realizado,gmaps_link};
     renderRoteiro();toast('Parada atualizada ✓');
-    await sb.from('roteiro_paradas').update({nome,horario,endereco,observacao,tipo,realizado}).eq('id',parEditId);
+    await sb.from('roteiro_paradas').update({nome,horario,endereco,observacao,tipo,realizado,gmaps_link}).eq('id',parEditId);
   }else{
     const tmp='t'+Date.now();
-    rParadas.push({id:tmp,dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,realizado,ordem});
+    rParadas.push({id:tmp,dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,realizado,gmaps_link,ordem});
     renderRoteiro();toast('Parada adicionada ✓');
-    const{data:ins,error}=await sb.from('roteiro_paradas').insert({dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,realizado,ordem}).select().single();
+    const{data:ins,error}=await sb.from('roteiro_paradas').insert({dia_id:diaAtualId,nome,horario,endereco,observacao,tipo,realizado,gmaps_link,ordem}).select().single();
     if(error){rParadas=rParadas.filter(p=>p.id!==tmp);renderRoteiro();toast('Erro ⚠️');}
     else{const i=rParadas.findIndex(p=>p.id===tmp);if(i!==-1)rParadas[i]=ins;}
   }
@@ -831,86 +840,134 @@ async function delParada(id){
   await sb.from('roteiro_paradas').delete().eq('id',id);
 }
 
-// ── MAPA ──────────────────────────────────────────────
+// ── MAPA / ROTA ───────────────────────────────────────
 async function initMapa(){
   if(!rDias.length)await loadRoteiro();
-  if(!mapa){
-    mapa=L.map('map',{zoomControl:true,attributionControl:false}).setView([39.5,-8],7);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(mapa);
-    setTimeout(()=>mapa.invalidateSize(),200);
-  }
   renderMapaDias();
-  if(rDias.length)await loadMapaDia(rDias[0]);
+  if(rDias.length)renderRotaDia(rDias[0]);
 }
+
 function renderMapaDias(){
   const wrap=$('mapa-dias');wrap.innerHTML='';
   rDias.forEach((dia,idx)=>{
-    const btn=document.createElement('div');btn.className='mapa-dia-btn'+(idx===0?' on':'');
-    btn.textContent=`Dia ${dia.numero} · ${dia.titulo.split('—')[0].split('&')[0].trim().slice(0,18)}`;
-    btn.addEventListener('click',async()=>{
+    const btn=document.createElement('div');
+    btn.className='mapa-dia-btn'+(idx===0?' on':'');
+    btn.textContent=`Dia ${dia.numero} · ${dia.titulo.split('—')[0].split('&')[0].trim().slice(0,20)}`;
+    btn.addEventListener('click',()=>{
       document.querySelectorAll('.mapa-dia-btn').forEach(b=>b.classList.remove('on'));
-      btn.classList.add('on');await loadMapaDia(dia);
+      btn.classList.add('on');renderRotaDia(dia);
     });
     wrap.appendChild(btn);
   });
 }
-async function loadMapaDia(dia){
+
+function buildGMapsRotaURL(paradas){
+  // Monta URL de rota do Google Maps com waypoints
+  const comLink = paradas.filter(p=>p.gmaps_link||p.endereco||p.nome);
+  if(!comLink.length) return null;
+
+  // Se tiver link curto do Google Maps (maps.app.goo.gl), abre direto
+  // Se tiver múltiplos, monta rota via /dir/
+  const destinos = comLink.map(p=>{
+    if(p.gmaps_link && p.gmaps_link.includes('maps.app.goo.gl')){
+      return null; // links curtos não compõem rotas — usamos nome
+    }
+    return encodeURIComponent(p.endereco||p.nome+', Portugal');
+  });
+
+  if(comLink.length===1){
+    if(comLink[0].gmaps_link) return comLink[0].gmaps_link;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(comLink[0].endereco||comLink[0].nome+', Portugal')}`;
+  }
+
+  // rota completa: origin/waypoints/destination
+  const origin=destinos[0];
+  const dest=destinos[destinos.length-1];
+  const waypts=destinos.slice(1,-1).filter(Boolean).join('|');
+  return `https://www.google.com/maps/dir/${destinos.filter(Boolean).join('/')}`;
+}
+
+function renderRotaDia(dia){
   const paradas=rParadas.filter(p=>p.dia_id===dia.id).sort((a,b)=>a.ordem-b.ordem);
-  mMarkers.forEach(m=>mapa.removeLayer(m));mMarkers=[];
-  if(mLine){mapa.removeLayer(mLine);mLine=null;}
-  const leg=$('mapa-leg');
-  if(!paradas.length){leg.innerHTML='<div class="mapa-status">Nenhuma parada neste dia</div>';return;}
-  leg.innerHTML='<div class="mapa-status">🔍 Localizando paradas...</div>';
-  const coords=[];
-  for(let i=0;i<paradas.length;i++){
-    const p=paradas[i];
-    const q=p.endereco?`${p.nome}, ${p.endereco}`:`${p.nome}, Portugal`;
-    try{
-      const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`,
-        {headers:{'Accept-Language':'pt-BR','User-Agent':'TripCash/1.0'}});
-      const d=await r.json();
-      coords.push(d.length?{p,lat:+d[0].lat,lng:+d[0].lon,ok:true}:{p,ok:false});
-    }catch{coords.push({p,ok:false});}
-    if(i<paradas.length-1)await new Promise(r=>setTimeout(r,300));
+  const el=$('mapa-content');el.innerHTML='';
+  const dtFmt=dia.data?new Date(dia.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'}):'';
+
+  if(!paradas.length){
+    el.innerHTML=`<div class="mapa-empty">🗺️<br><br>Nenhuma parada no Dia ${dia.numero}<br><span style="font-size:11px;color:#333">Adicione paradas no Roteiro</span></div>`;
+    return;
   }
-  const found=coords.filter(c=>c.ok);
-  if(!found.length){leg.innerHTML='<div class="mapa-status" style="color:var(--mut)">Não foi possível localizar as paradas</div>';return;}
-  const lls=[];
-  found.forEach((c,i)=>{
-    const cor=PINCORES[i%PINCORES.length];
-    const t=TIPOS.find(x=>x.id===c.p.tipo)||TIPOS[5];
-    const icon=L.divIcon({
-      html:`<div style="width:30px;height:30px;background:${cor};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.8);box-shadow:0 2px 8px rgba(0,0,0,.5)">
-        <span style="transform:rotate(45deg);font-size:12px;font-weight:700;color:#fff">${i+1}</span></div>`,
-      iconSize:[30,30],iconAnchor:[15,30],popupAnchor:[0,-32],className:''
-    });
-    const mk=L.marker([c.lat,c.lng],{icon}).addTo(mapa);
-    mk.bindPopup(`<div class="pop-tit">${i+1}. ${c.p.nome}</div>
-      <div class="pop-met">${t.emoji} ${t.label}${c.p.horario?' · ⏰ '+c.p.horario:''}</div>
-      ${c.p.observacao?`<div class="pop-obs">💬 ${c.p.observacao.slice(0,80)}${c.p.observacao.length>80?'...':''}</div>`:''}`);
-    mMarkers.push(mk);lls.push([c.lat,c.lng]);
-  });
-  if(lls.length>1)mLine=L.polyline(lls,{color:'#4ECDC4',weight:3,opacity:.75,dashArray:'8,5'}).addTo(mapa);
-  mapa.fitBounds(L.featureGroup(mMarkers).getBounds().pad(0.25));
-  // legenda
-  leg.innerHTML='';
-  found.forEach((c,i)=>{
-    const cor=PINCORES[i%PINCORES.length];
-    const t=TIPOS.find(x=>x.id===c.p.tipo)||TIPOS[5];
-    const item=document.createElement('div');item.className='mapa-leg-item';
-    item.innerHTML=`<div class="mapa-leg-num" style="background:${cor}">${i+1}</div>
-      <div><div class="mapa-leg-nome">${t.emoji} ${c.p.nome}${c.p.realizado?' ✓':''}</div>
-      <div class="mapa-leg-meta">${c.p.horario?'⏰ '+c.p.horario:''}${c.p.observacao?' · '+c.p.observacao.slice(0,45)+(c.p.observacao.length>45?'...':''):''}</div></div>`;
-    item.addEventListener('click',()=>{mapa.setView([c.lat,c.lng],15,{animate:true});mMarkers[i].openPopup();});
-    leg.appendChild(item);
-  });
-  const nf=coords.filter(c=>!c.ok);
-  if(nf.length){
-    const av=document.createElement('div');
-    av.style.cssText='font-size:10px;color:#444;padding:8px;background:var(--sur);border-radius:8px;margin-top:6px';
-    av.textContent='⚠️ Não localizados: '+nf.map(c=>c.p.nome).join(', ');
-    leg.appendChild(av);
+
+  // ── Header com botão de rota completa ──
+  const header=document.createElement('div');header.className='rota-header';
+  const rotaURL=buildGMapsRotaURL(paradas);
+  const comGmaps=paradas.filter(p=>p.gmaps_link||p.endereco).length;
+  header.innerHTML=`
+    <div class="rota-titulo">Dia ${dia.numero} · ${dia.titulo}</div>
+    <div class="rota-sub">${dtFmt} · ${paradas.length} parada${paradas.length!==1?'s':''} · ${comGmaps} com localização</div>`;
+  if(rotaURL){
+    const btn=document.createElement('a');btn.className='btn-rota-completa';
+    btn.href=rotaURL;btn.target='_blank';btn.rel='noopener';
+    btn.innerHTML='🗺️ Abrir rota completa no Google Maps';
+    header.appendChild(btn);
+  }else{
+    const aviso=document.createElement('div');
+    aviso.style.cssText='font-size:11px;color:var(--mut);text-align:center;padding:10px;background:var(--bg);border-radius:8px';
+    aviso.textContent='Adicione links do Google Maps nas paradas para ativar a rota';
+    header.appendChild(aviso);
   }
+  el.appendChild(header);
+
+  // ── Lista de paradas com botão individual ──
+  const lista=document.createElement('div');
+  lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:4px 14px';
+  paradas.forEach((p,i)=>{
+    const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
+    const cor=PINCORES[i%PINCORES.length];
+    const item=document.createElement('div');item.className='par-rota-item';
+
+    // linha timeline
+    const lh=document.createElement('div');lh.className='par-rota-linha';
+    const num=document.createElement('div');num.className='par-rota-num';
+    num.style.background=cor;num.textContent=i+1;lh.appendChild(num);
+    if(i<paradas.length-1){const ln=document.createElement('div');ln.className='par-rota-line';lh.appendChild(ln);}
+    item.appendChild(lh);
+
+    // info
+    const info=document.createElement('div');info.className='par-rota-info';
+    info.innerHTML=`<div class="par-rota-nome">${t.emoji} ${p.nome}${p.realizado?' <span style="color:var(--teal);font-size:11px">✓ realizado</span>':''}</div>
+      <div class="par-rota-meta">${p.horario?'⏰ '+p.horario+' · ':''}${t.label}</div>`;
+
+    // observação
+    if(p.observacao){
+      const obs=document.createElement('div');obs.className='par-obs-tag';obs.textContent='💬 '+p.observacao;info.appendChild(obs);
+      if(p.observacao.length>60){
+        const tog=document.createElement('span');tog.className='par-obs-tog';tog.textContent='ver mais ▾';
+        tog.addEventListener('click',()=>{
+          const open=obs.classList.toggle('open');tog.textContent=open?'ver menos ▴':'ver mais ▾';
+        });
+        info.appendChild(tog);
+      }
+    }
+
+    // botão Google Maps individual
+    if(p.gmaps_link||p.endereco||p.nome){
+      const url=p.gmaps_link||(
+        p.endereco
+          ?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.endereco)}`
+          :`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.nome+', Portugal')}`
+      );
+      const link=document.createElement('a');link.className='btn-gmaps';
+      link.href=url;link.target='_blank';link.rel='noopener';
+      link.innerHTML='📍 Ver no Maps';
+      info.appendChild(link);
+    }else{
+      const na=document.createElement('span');na.className='btn-gmaps-disabled';na.innerHTML='📍 Sem localização';
+      info.appendChild(na);
+    }
+
+    item.appendChild(info);lista.appendChild(item);
+  });
+  el.appendChild(lista);
 }
 
 // ── TABS ──────────────────────────────────────────────

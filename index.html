@@ -719,6 +719,13 @@ function renderRoteiro(){
           row.appendChild(info);
           // botões
           const btns=document.createElement('div');btns.className='par-btns';
+          // setas de ordem
+          const upBtn=document.createElement('button');upBtn.className='btn-i';upBtn.textContent='▲';
+          upBtn.style.cssText='font-size:12px;opacity:'+(i===0?'0.2':'0.8');upBtn.disabled=i===0;
+          upBtn.addEventListener('click',()=>moverParada(dia.id,i,-1));btns.appendChild(upBtn);
+          const dnBtn=document.createElement('button');dnBtn.className='btn-i';dnBtn.textContent='▼';
+          dnBtn.style.cssText='font-size:12px;opacity:'+(i===paradas.length-1?'0.2':'0.8');dnBtn.disabled=i===paradas.length-1;
+          dnBtn.addEventListener('click',()=>moverParada(dia.id,i,+1));btns.appendChild(dnBtn);
           const chk=document.createElement('button');chk.className='chk-btn'+(p.realizado?' done':'');
           chk.textContent=p.realizado?'✓':'';
           chk.addEventListener('click',()=>toggleReal(p.id,p.realizado));btns.appendChild(chk);
@@ -743,6 +750,34 @@ function renderRoteiro(){
     }
     el.appendChild(card);
   });
+}
+
+async function moverParada(diaId, idx, dir){
+  const paradas=rParadas.filter(p=>p.dia_id===diaId).sort((a,b)=>a.ordem-b.ordem);
+  const novoIdx=idx+dir;
+  if(novoIdx<0||novoIdx>=paradas.length)return;
+
+  // troca ordens na memória
+  const a=paradas[idx], b=paradas[novoIdx];
+  const tmpOrdem=a.ordem;
+  a.ordem=b.ordem; b.ordem=tmpOrdem;
+
+  // re-indexa para garantir sequência sem gaps
+  paradas.sort((x,y)=>x.ordem-y.ordem).forEach((p,i)=>p.ordem=i+1);
+
+  renderRoteiro();
+
+  // persiste no banco — atualiza os dois registros trocados
+  const [ra,rb]=await Promise.all([
+    sb.from('roteiro_paradas').update({ordem:a.ordem}).eq('id',a.id),
+    sb.from('roteiro_paradas').update({ordem:b.ordem}).eq('id',b.id),
+  ]);
+  if(ra.error||rb.error){
+    toast('Erro ao salvar ordem ⚠️');
+    await loadRoteiro(); // reverte do banco
+  }else{
+    toast('Ordem atualizada ✓');
+  }
 }
 
 async function toggleReal(id,atual){

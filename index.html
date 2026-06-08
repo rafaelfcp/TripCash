@@ -117,7 +117,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .m-btn{flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;font-size:11px;padding:7px 14px;cursor:pointer;color:var(--mut);white-space:nowrap;user-select:none}
 .m-btn.on{background:var(--teal);border-color:var(--teal);color:var(--bg);font-weight:700}
 #m-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+16px)}
-#m-map{width:100%;height:300px;background:var(--sur);border-radius:14px;margin:12px 0;flex-shrink:0}
+#m-map{width:100%;height:300px;background:var(--sur);border-radius:14px;margin:0 0 16px;flex-shrink:0;overflow:hidden}
 .m-status{padding:4px 0 8px;font-size:11px;color:var(--mut);text-align:center}
 .rc{background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:14px;margin-bottom:12px}
 .rc-t{font-size:15px;font-weight:700;margin-bottom:3px}
@@ -140,8 +140,8 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .leaflet-popup-content{margin:9px 12px!important;font-size:12px!important}
 
 /* ── FAB ── */
-.fab{position:fixed;bottom:calc(var(--sb)+22px);left:50%;transform:translateX(-50%);background:var(--teal);border:none;border-radius:99px;color:var(--bg);font-size:14px;font-weight:700;padding:13px 28px;cursor:pointer;box-shadow:0 4px 20px rgba(78,205,196,.4);z-index:50;white-space:nowrap}
-.fab.h{display:none}
+.fab{position:fixed;bottom:calc(var(--sb)+22px);left:50%;transform:translateX(-50%);background:var(--teal);border:none;border-radius:99px;color:var(--bg);font-size:14px;font-weight:700;padding:13px 28px;cursor:pointer;box-shadow:0 4px 20px rgba(78,205,196,.4);z-index:50;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.fab.h{display:none!important}
 
 /* ── MODAIS ── */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:flex-end;justify-content:center}

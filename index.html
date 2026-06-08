@@ -142,24 +142,8 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .leaflet-popup-tip{background:var(--sur)!important}
 .leaflet-popup-content{margin:9px 12px!important;font-size:12px!important}
 
-/* ── FAB — sempre no rodapé ── */
-.fab{
-  position:fixed;
-  bottom:calc(var(--sb)+22px);
-  left:50%;
-  transform:translateX(-50%);
-  background:var(--teal);
-  border:none;
-  border-radius:99px;
-  color:var(--bg);
-  font-size:14px;
-  font-weight:700;
-  padding:13px 28px;
-  cursor:pointer;
-  box-shadow:0 4px 20px rgba(78,205,196,.4);
-  z-index:10;
-  white-space:nowrap;
-}
+/* ── FAB — rodapé fixo ── */
+.fab{position:fixed;bottom:calc(var(--sb)+22px);left:50%;transform:translateX(-50%);background:var(--teal);border:none;border-radius:99px;color:var(--bg);font-size:14px;font-weight:700;padding:13px 28px;cursor:pointer;box-shadow:0 4px 20px rgba(78,205,196,.4);z-index:3;white-space:nowrap}
 .fab.h{display:none!important}
 
 /* ── MODAIS ── */

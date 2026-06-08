@@ -21,6 +21,11 @@
   --st:env(safe-area-inset-top,0px);
   --sb:env(safe-area-inset-bottom,0px);
 }
+body.light{
+  --bg:#F5F5F0;--sur:#FFFFFF;--bor:#E0DDD8;
+  --txt:#1A1A2E;--mut:#888899;--teal:#2BAF9F;
+  --yel:#D4A800;--red:#D44;
+}
 html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-system,sans-serif;overflow:hidden}
 
 /* SHELL */
@@ -215,11 +220,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <div>
         <div class="trip-lbl">Controle de Viagem</div>
         <div class="trip-nm" id="tnm"><span id="tnmt">—</span><span style="font-size:13px;opacity:.5">✏️</span></div>
-        <div class="chips" id="chips"></div>
-      </div>
+        <div class="chips" id="chips"></div>      </div>
       <div class="bud-box">
         <div class="bud-lbl">Orçamento</div>
         <div class="bud-val" id="bval">—</div>
+        <button id="theme-btn" onclick="toggleTheme()" style="margin-top:6px;background:none;border:none;font-size:18px;cursor:pointer;display:block;margin-left:auto">🌙</button>
       </div>
     </div>
     <div class="prog"><div class="prog-b" id="pb" style="width:0%"></div></div>
@@ -891,6 +896,17 @@ $('mback').onclick=()=>{
   $('pg-dash').classList.add('on');
   $('fab').classList.add('h');
 };
+
+function toggleTheme(){
+  const light=document.body.classList.toggle('light');
+  $('theme-btn').textContent=light?'☀️':'🌙';
+  localStorage.setItem('theme',light?'light':'dark');
+}
+// restaura tema salvo
+if(localStorage.getItem('theme')==='light'){
+  document.body.classList.add('light');
+  document.addEventListener('DOMContentLoaded',()=>{const b=$('theme-btn');if(b)b.textContent='☀️';});
+}
 
 function toast(msg,dur=2000){
   const el=$('toast');el.textContent=msg;el.classList.add('show');

@@ -192,8 +192,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <body>
 
 <div id="shell">
-  <div id="topbar">
-    <div class="tb-row">
+  <div id="topbar">    <div class="tb-row">
       <div>
         <div class="trip-lbl">Controle de Viagem</div>
         <div class="trip-nm" id="tnm"><span id="tnmt">—</span><span style="font-size:13px;opacity:.5">✏️</span></div>
@@ -227,9 +226,10 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     <div class="pg" id="pg-rot"><div id="rw"></div></div>
     <div class="pg" id="pg-mapa-placeholder"></div>
   </div>
-
-  <button class="fab h" id="fab">＋ Adicionar Gasto</button>
 </div>
+
+<!-- FAB fora do #shell — evita stacking context do position:fixed -->
+<button class="fab h" id="fab">＋ Adicionar Gasto</button>
 
 <!-- MAPA FULLSCREEN -->
 <div id="mapa-pg">

@@ -52,12 +52,12 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .tab{flex:1;background:var(--sur);border:1px solid var(--bor);border-radius:99px;color:var(--mut);font-size:11px;padding:7px 2px;cursor:pointer;text-align:center}
 .tab.on{background:var(--teal);border-color:var(--teal);color:var(--bg);font-weight:700}
 
-/* PAGES */
+/* ── PAGES ── */
 #pages{flex:1;overflow:hidden;position:relative;min-height:0}
 .pg{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:12px 16px calc(var(--sb)+80px);display:none}
 .pg.on{display:block}
 
-/* DASHBOARD */
+/* ── DASHBOARD ── */
 .sec{font-size:10px;letter-spacing:2px;color:var(--mut);text-transform:uppercase;margin-bottom:8px;margin-top:4px}
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
 .cat-card{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer}
@@ -74,19 +74,19 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .leg-r{display:flex;align-items:center;gap:6px;margin-bottom:5px;font-size:11px}
 .leg-d{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .bar-r{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-.bar-r .n{font-size:11px;width:76px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-r .n{font-size:11px;width:80px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar-t{flex:1;background:var(--sur);border-radius:99px;height:6px;overflow:hidden}
 .bar-f{height:100%;border-radius:99px}
-.bar-r .a{font-size:11px;width:76px;text-align:right;flex-shrink:0}
+.bar-r .a{font-size:11px;width:72px;text-align:right;flex-shrink:0}
 
-/* LANÇAMENTOS */
+/* ── LANÇAMENTOS ── */
 .lh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .gi{background:var(--sur);border:1px solid var(--bor);border-left:3px solid var(--c,var(--teal));border-radius:10px;padding:11px 12px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .gl{display:flex;align-items:center;gap:9px}
 .gr{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .bi{background:none;border:none;font-size:15px;cursor:pointer;padding:2px;color:var(--txt)}
 
-/* ROTEIRO */
+/* ── ROTEIRO ── */
 .dc{background:var(--sur);border:1px solid var(--bor);border-radius:14px;margin-bottom:12px;overflow:hidden}
 .dh{display:flex;align-items:center;padding:12px 14px;cursor:pointer;gap:8px}
 .db-g{background:var(--teal);color:var(--bg);border-radius:99px;font-size:9px;font-weight:700;padding:3px 9px;flex-shrink:0}
@@ -116,7 +116,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .da{display:flex;gap:6px;justify-content:flex-end;margin-top:10px;padding-top:8px;border-top:1px solid var(--bor)}
 .bs{background:var(--bg);border:1px solid var(--bor);border-radius:8px;color:var(--mut);font-size:11px;padding:6px 11px;cursor:pointer}
 
-/* MAPA PAGE — tela cheia separada */
+/* ── MAPA PAGE ── */
 #mapa-pg{position:fixed;inset:0;padding-top:var(--st);display:none;flex-direction:column;background:var(--bg);z-index:99}
 #mapa-pg.on{display:flex}
 .m-top{flex-shrink:0;padding:12px 16px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--bor)}
@@ -124,10 +124,9 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 .m-dias::-webkit-scrollbar{display:none}
 .m-btn{flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;font-size:11px;padding:7px 14px;cursor:pointer;color:var(--mut);white-space:nowrap;user-select:none}
 .m-btn.on{background:var(--teal);border-color:var(--teal);color:var(--bg);font-weight:700}
-/* scroll da lista — contém mapa + paradas */
+#m-map{flex-shrink:0;width:100%;height:240px;background:var(--sur);overflow:hidden}
 #m-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+16px)}
-.m-map-wrap{width:100%;height:300px;border-radius:14px;overflow:hidden;margin-bottom:12px;background:var(--sur)}
-.m-status{text-align:center;padding:10px;font-size:12px;color:var(--mut)}
+.m-status{padding:4px 0 8px;font-size:11px;color:var(--mut);text-align:center}
 .rc{background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:14px;margin-bottom:12px}
 .rc-t{font-size:15px;font-weight:700;margin-bottom:3px}
 .rc-s{font-size:11px;color:var(--mut);margin-bottom:10px}
@@ -171,7 +170,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:-apple-s
 }
 .fab.h{display:none!important}
 
-/* MODAIS */
+/* ── MODAIS ── */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:flex-end;justify-content:center}
 .ov.on{display:flex}
 .sh{background:var(--sur);border-radius:20px 20px 0 0;padding:18px 16px calc(var(--sb)+22px);width:100%;max-height:92dvh;overflow-y:auto;animation:sup .3s ease}
@@ -216,11 +215,13 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <body>
 
 <div id="shell">
-  <div id="topbar">    <div class="tb-row">
+  <div id="topbar">
+    <div class="tb-row">
       <div>
         <div class="trip-lbl">Controle de Viagem</div>
         <div class="trip-nm" id="tnm"><span id="tnmt">—</span><span style="font-size:13px;opacity:.5">✏️</span></div>
-        <div class="chips" id="chips"></div>      </div>
+        <div class="chips" id="chips"></div>
+      </div>
       <div class="bud-box">
         <div class="bud-lbl">Orçamento</div>
         <div class="bud-val" id="bval">—</div>
@@ -250,6 +251,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     <div class="pg" id="pg-rot"><div id="rw"></div></div>
     <div class="pg" id="pg-mapa-placeholder"></div>
   </div>
+
 </div>
 
 <!-- FAB fora do #shell — evita stacking context do position:fixed -->
@@ -262,6 +264,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     <div id="mhdr" style="font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 Rota do Dia</div>
   </div>
   <div class="m-dias" id="mdias"></div>
+  <div id="m-map"></div>
+  <div class="m-status" id="mst" style="display:none"></div>
   <div id="m-list"></div>
 </div>
 
@@ -349,6 +353,7 @@ let rDias=[],rPars=[],dopen={};
 let deid=null,peid=null,daid=null,rmod=false;
 let lmap=null,lmks=[],lln=null;
 
+// ── INIT ──────────────────────────────────────────────
 (async()=>{
   sb=supabase.createClient(
     'https://evvvzmnguhgqaopvquhs.supabase.co',
@@ -357,6 +362,7 @@ let lmap=null,lmks=[],lln=null;
   await loadViagens();
 })();
 
+// ── VIAGENS ───────────────────────────────────────────
 async function loadViagens(){
   const{data}=await sb.from('viagens').select('*').order('criado_em',{ascending:false});
   viagens=data||[];
@@ -375,8 +381,8 @@ function drawChips(){
   a.onclick=async()=>{
     const n=prompt('Nome:');if(!n)return;
     const o=parseFloat(prompt('Orçamento:')||'0');
-    const{data,error}=await sb.from('viagens').insert({nome:n,orcamento:o}).select().single();
-    if(error){toast('Erro');return;}viagens.unshift(data);vid=data.id;drawChips();await loadGastos();
+    const{data,e}=await sb.from('viagens').insert({nome:n,orcamento:o}).select().single();
+    if(e){toast('Erro');return;}viagens.unshift(data);vid=data.id;drawChips();await loadGastos();
   };el.appendChild(a);
 }
 $('tnm').onclick=()=>{
@@ -395,6 +401,7 @@ $('evok').onclick=async()=>{
   await sb.from('viagens').update({nome:n,orcamento:o}).eq('id',vid);
 };
 
+// ── GASTOS ────────────────────────────────────────────
 async function loadGastos(){
   const v=viagens.find(x=>x.id===vid);if(!v)return;
   $('tnmt').textContent=v.nome;
@@ -420,11 +427,13 @@ $('bval').onclick=async()=>{
   await sb.from('viagens').update({orcamento:n}).eq('id',vid);
 };
 
+// ── DASHBOARD ─────────────────────────────────────────
 function drawDash(){
   const el=$('pg-dash');el.innerHTML='';
   const tot=gastos.reduce((s,g)=>s+Number(g.valor),0);
   const bc=CATS.map(c=>({...c,tot:gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)}));
   const mx=Math.max(...bc.map(c=>c.tot),1);
+  // cat grid
   el.innerHTML+='<div class="sec">Por Categoria</div>';
   const gr=document.createElement('div');gr.className='cat-grid';
   bc.forEach(c=>{
@@ -433,6 +442,7 @@ function drawDash(){
     d.onclick=()=>openCat(c.id);gr.appendChild(d);
   });
   el.appendChild(gr);
+  // stats
   const v=viagens.find(x=>x.id===vid);const orc=v?.orcamento||0;
   const dias=[...new Set(gastos.map(g=>g.data))].length;
   const maior=gastos.length?gastos.reduce((a,b)=>Number(a.valor)>Number(b.valor)?a:b):null;
@@ -443,10 +453,12 @@ function drawDash(){
     <div class="sc"><div class="sl">Ticket Médio</div><div class="sv" style="color:var(--yel)">${gastos.length?R(tot/gastos.length):'—'}</div><div class="ss">por lançamento</div></div>
     <div class="sc"><div class="sl">Maior Gasto</div><div class="sv" style="color:var(--red)">${maior?R(maior.valor):'—'}</div><div class="ss">${maior?maior.descricao.slice(0,16):'—'}</div></div>`;
   el.appendChild(sg);
+  // donut
   el.innerHTML+='<div class="sec" style="margin-top:4px">Distribuição</div>';
   const dw=document.createElement('div');dw.className='donut-w';
   dw.innerHTML='<svg id="dsv" width="110" height="110" viewBox="0 0 110 110"></svg><div class="leg" id="dlg"></div>';
   el.appendChild(dw);buildDonut(bc,tot);
+  // bars
   el.innerHTML+='<div class="sec">Por Categoria</div>';
   const bw=document.createElement('div');
   bc.filter(c=>c.tot>0).sort((a,b)=>b.tot-a.tot).forEach(c=>{
@@ -478,6 +490,7 @@ function buildDonut(bc,tot){
   });
 }
 
+// ── CAT POPUP ─────────────────────────────────────────
 function openCat(cid){
   const c=CATS.find(x=>x.id===cid);
   const it=gastos.filter(g=>g.categoria===cid).sort((a,b)=>new Date(b.data)-new Date(a.data));
@@ -491,6 +504,7 @@ function openCat(cid){
 $('cmcl').onclick=()=>$('ocm').classList.remove('on');
 $('ocm').onclick=e=>{if(e.target===$('ocm'))$('ocm').classList.remove('on');};
 
+// ── LIST ──────────────────────────────────────────────
 function drawList(){
   const fl=fcat?gastos.filter(g=>g.categoria===fcat):gastos;
   const cat=fcat?CATS.find(c=>c.id===fcat):null;
@@ -509,6 +523,7 @@ function drawList(){
 }
 $('fcl').onclick=()=>{fcat=null;drawDash();drawList();};
 
+// ── MODAL GASTO ───────────────────────────────────────
 CATS.forEach(c=>{
   const p=document.createElement('div');p.className='pill';p.dataset.id=c.id;
   p.style.setProperty('--pc',c.c);p.innerHTML=`${c.e} ${c.label}`;
@@ -562,6 +577,7 @@ async function delG(id){
   if(error){gastos=bk;drawTop();drawDash();drawList();toast('Erro ⚠️');}
 }
 
+// ── ROTEIRO ───────────────────────────────────────────
 async function loadRot(){
   const{data:dias}=await sb.from('roteiro_dias').select('*').eq('viagem_id',vid).order('numero');
   rDias=dias||[];
@@ -612,6 +628,7 @@ function drawRot(){
             }
           }
           row.appendChild(info);
+          // botões
           const btns=document.createElement('div');btns.className='p-btns';
           const ar=document.createElement('div');ar.className='p-br';
           const u=document.createElement('button');u.className='ob';u.textContent='▲';u.disabled=i===0;
@@ -639,6 +656,7 @@ function drawRot(){
   });
 }
 
+// ── MOVER PARADA ──────────────────────────────────────
 async function moverP(diaId,parId,dir){
   const lista=[...rPars.filter(p=>p.dia_id===diaId)].sort((a,b)=>a.ordem-b.ordem);
   const idx=lista.findIndex(p=>p.id===parId);
@@ -652,15 +670,18 @@ async function moverP(diaId,parId,dir){
   drawRot();
   const r1=await sb.from('roteiro_paradas').update({ordem:oB}).eq('id',pA.id);
   const r2=await sb.from('roteiro_paradas').update({ordem:oA}).eq('id',pB.id);
-  if(r1.error||r2.error){rPars[iA].ordem=oA;rPars[iB].ordem=oB;drawRot();toast('Erro ao salvar ⚠️');}
-  else toast('Ordem atualizada ✓');
+  if(r1.error||r2.error){
+    rPars[iA].ordem=oA;rPars[iB].ordem=oB;drawRot();toast('Erro ao salvar ⚠️');
+  }else toast('Ordem atualizada ✓');
 }
+
 async function togReal(id,atual){
   const i=rPars.findIndex(p=>p.id===id);if(i===-1)return;
   rPars[i].realizado=!atual;drawRot();
   await sb.from('roteiro_paradas').update({realizado:!atual}).eq('id',id);
 }
 
+// ── MODAL DIA ─────────────────────────────────────────
 function openDia(id){
   deid=id;const dia=id?rDias.find(d=>d.id===id):null;
   $('odt').textContent=dia?'Editar Dia':'Novo Dia';
@@ -693,6 +714,7 @@ async function delDia(id){
   drawRot();toast('Dia excluído ✓');await sb.from('roteiro_dias').delete().eq('id',id);
 }
 
+// ── MODAL PARADA ──────────────────────────────────────
 TIPOS.forEach(t=>{
   const p=document.createElement('div');p.className='pill';p.dataset.id=t.id;
   p.style.setProperty('--pc',t.c);p.innerHTML=`${t.e} ${t.label}`;
@@ -743,58 +765,97 @@ async function delPar(id){
   await sb.from('roteiro_paradas').delete().eq('id',id);
 }
 
-// ── MAPA ─────────────────────────────────────────────
+// ── MAPA ──────────────────────────────────────────────
 async function initMapa(){
+  // inicializa (ou reinicializa) o mapa Leaflet
+  if(lmap){lmap.remove();lmap=null;lmks=[];lln=null;}
+  lmap=L.map('m-map',{zoomControl:true,attributionControl:false}).setView([39.4,-8.2],7);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(lmap);
   await loadRot();
   drawMDias();
   if(rDias.length) await drawMDia(rDias[0]);
   else $('m-list').innerHTML='<div style="text-align:center;padding:32px;color:#444">Nenhum dia no roteiro</div>';
 }
-
 function drawMDias(){
   const w=$('mdias');w.innerHTML='';
   rDias.forEach((dia,i)=>{
     const b=document.createElement('div');b.className='m-btn'+(i===0?' on':'');
     b.textContent=`Dia ${dia.numero} · ${dia.titulo.split('—')[0].split('&')[0].trim().slice(0,20)}`;
-    b.onclick=async()=>{
-      document.querySelectorAll('.m-btn').forEach(x=>x.classList.remove('on'));
-      b.classList.add('on');
-      await drawMDia(dia);
-    };
+    b.onclick=async()=>{document.querySelectorAll('.m-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');await drawMDia(dia);};
     w.appendChild(b);
   });
+}
+// ── EXTRAI LAT/LNG DE URL GOOGLE MAPS ─────────────────
+function extractCoordsFromGmaps(url){
+  if(!url)return null;
+  // formato: @lat,lng ou ?q=lat,lng ou /place/.../@lat,lng
+  let m;
+  // @lat,lng,zoom
+  m=url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if(m)return{lat:+m[1],lng:+m[2]};
+  // ?q=lat,lng
+  m=url.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if(m)return{lat:+m[1],lng:+m[2]};
+  // /maps/place/.../@lat,lng
+  m=url.match(/maps\/place\/[^/@]*\/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if(m)return{lat:+m[1],lng:+m[2]};
+  // ?ll=lat,lng
+  m=url.match(/[?&]ll=(-?\d+\.\d+),(-?\d+\.\d+)/);
+  if(m)return{lat:+m[1],lng:+m[2]};
+  return null;
+}
+
+// ── RESOLVE LINK ENCURTADO (goo.gl / maps.app.goo.gl) ─
+async function resolveShortLink(url){
+  if(!url)return url;
+  // links encurtados não contêm coordenadas — tentamos resolver via HEAD no Nominatim proxy
+  // como CORS bloqueia a maioria, usamos uma abordagem alternativa:
+  // extraímos o destino diretamente da URL se possível, senão retornamos null para cair no Nominatim
+  if(url.includes('maps.app.goo.gl')||url.includes('goo.gl/maps')){
+    // não conseguimos expandir no browser por CORS — retorna null para usar Nominatim
+    return null;
+  }
+  return url;
+}
+
+// ── MONTA URL DE ROTA GOOGLE MAPS COM WAYPOINTS ───────
+function buildRouteUrl(pars){
+  if(!pars.length)return null;
+  // para 1 parada: abre direto no link salvo ou busca por nome
+  if(pars.length===1){
+    const p=pars[0];
+    if(p.gmaps_link&&p.gmaps_link.startsWith('http'))return p.gmaps_link;
+    return`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((p.endereco||p.nome)+', Portugal')}`;
+  }
+  // para múltiplas: usa formato dir/?api=1 com origin, destination, waypoints (texto)
+  // este formato aceita nomes/endereços e funciona bem no mobile
+  const labels=pars.map(p=>p.endereco||(p.nome+', Portugal'));
+  const origin=encodeURIComponent(labels[0]);
+  const destination=encodeURIComponent(labels[labels.length-1]);
+  const waypoints=labels.slice(1,-1).map(l=>encodeURIComponent(l)).join('|');
+  let url=`https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}&travelmode=walking`;
+  if(waypoints)url+=`&waypoints=${waypoints}`;
+  return url;
 }
 
 async function drawMDia(dia){
   const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
   const el=$('m-list');el.innerHTML='';
   $('mhdr').textContent=`📍 Dia ${dia.numero} · ${dia.titulo}`;
-
-  // destrói mapa anterior se existir
-  if(lmap){lmks.forEach(m=>lmap.removeLayer(m));lmks=[];if(lln){lmap.removeLayer(lln);lln=null;}lmap.remove();lmap=null;}
-
-  if(!pars.length){
-    el.innerHTML='<div style="text-align:center;padding:32px;color:#444">Nenhuma parada neste dia</div>';
-    return;
-  }
-
-  // card rota Google Maps
+  // limpa mapa
+  lmks.forEach(m=>lmap.removeLayer(m));lmks=[];
+  if(lln){lmap.removeLayer(lln);lln=null;}
+  if(!pars.length){el.innerHTML='<div style="text-align:center;padding:32px;color:#444">Nenhuma parada neste dia</div>';return;}
+  // rota card
   const dtf=dia.data?new Date(dia.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'}):'';
-  const dest=pars.map(p=>p.gmaps_link&&p.gmaps_link.startsWith('http')
-    ?p.gmaps_link
-    :encodeURIComponent((p.endereco||p.nome)+', Portugal'));
-  const rurl=pars.length===1
-    ?(pars[0].gmaps_link||`https://www.google.com/maps/search/?api=1&query=${dest[0]}`)
-    :`https://www.google.com/maps/dir/${dest.join('/')}`;
+  const rurl=buildRouteUrl(pars);
   const rc=document.createElement('div');rc.className='rc';
   rc.innerHTML=`<div class="rc-t">Dia ${dia.numero} · ${dia.titulo}</div><div class="rc-s">${dtf} · ${pars.length} parada${pars.length!==1?'s':''}</div>`;
   const ra=document.createElement('a');ra.className='btn-gmaps-full';ra.href=rurl;ra.target='_blank';ra.rel='noopener';
   ra.innerHTML='🗺️ Abrir rota completa no Google Maps';
   rc.appendChild(ra);el.appendChild(rc);
-
-  // lista de paradas
-  const lista=document.createElement('div');
-  lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:4px 14px;margin-bottom:12px';
+  // lista
+  const lista=document.createElement('div');lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:4px 14px;margin-bottom:16px';
   pars.forEach((p,i)=>{
     const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];const cor=PC[i%PC.length];
     const item=document.createElement('div');item.className='mr';
@@ -803,66 +864,57 @@ async function drawMDia(dia){
     if(i<pars.length-1){const ln=document.createElement('div');ln.className='mr-ln';lh.appendChild(ln);}
     item.appendChild(lh);
     const info=document.createElement('div');info.className='mr-info';
-    info.innerHTML=`<div class="mr-nm">${t.e} ${p.nome}${p.realizado?' <span style="color:var(--teal);font-size:10px">✓</span>':''}</div><div class="mr-mt">${p.horario?'⏰ '+p.horario+' · ':''}${t.label}</div>`;
+    // badge de link disponível
+    const hasLink=p.gmaps_link&&p.gmaps_link.startsWith('http');
+    info.innerHTML=`<div class="mr-nm">${t.e} ${p.nome}${p.realizado?' <span style="color:var(--teal);font-size:10px">✓</span>':''}${hasLink?' <span style="font-size:9px;background:color-mix(in srgb,#1A73E8 18%,transparent);color:#6AB4F5;border-radius:4px;padding:1px 5px;border:1px solid color-mix(in srgb,#1A73E8 35%,transparent)">📌 link</span>':''}</div><div class="mr-mt">${p.horario?'⏰ '+p.horario+' · ':''}${t.label}</div>`;
     if(p.observacao){
       const ob=document.createElement('div');ob.className='mr-obs';ob.textContent='💬 '+p.observacao;info.appendChild(ob);
-      if(p.observacao.length>60){
-        const tg=document.createElement('span');tg.className='p-tog';tg.textContent='ver mais ▾';
-        tg.onclick=()=>{const op=ob.classList.toggle('open');tg.textContent=op?'ver menos ▴':'ver mais ▾';};
-        info.appendChild(tg);
-      }
+      if(p.observacao.length>60){const tg=document.createElement('span');tg.className='p-tog';tg.textContent='ver mais ▾';tg.onclick=()=>{const op=ob.classList.toggle('open');tg.textContent=op?'ver menos ▴':'ver mais ▾';};info.appendChild(tg);}
     }
-    const url=p.gmaps_link&&p.gmaps_link.startsWith('http')
-      ?p.gmaps_link
-      :`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((p.endereco||p.nome)+', Portugal')}`;
-    const lk=document.createElement('a');lk.className='btn-gm';lk.href=url;lk.target='_blank';lk.rel='noopener';lk.innerHTML='📍 Ver no Maps';
-    info.appendChild(lk);item.appendChild(info);lista.appendChild(item);
+    // botão individual: prioriza gmaps_link salvo, fallback para busca por nome
+    const url=hasLink?p.gmaps_link:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((p.endereco||p.nome)+', Portugal')}`;
+    const lk=document.createElement('a');lk.className='btn-gm';lk.href=url;lk.target='_blank';lk.rel='noopener';
+    lk.innerHTML=hasLink?'📍 Abrir no Maps':'🔍 Buscar no Maps';info.appendChild(lk);
+    item.appendChild(info);lista.appendChild(item);
   });
   el.appendChild(lista);
-
-  // div do mapa criado ANTES do geocoding
-  const mapWrap=document.createElement('div');mapWrap.className='m-map-wrap';
-  mapWrap.id='leaflet-map';
-  mapWrap.innerHTML='<div class="m-status">🔍 Localizando paradas no mapa...</div>';
-  el.appendChild(mapWrap);
-
-  // geocodifica
+  // geocodifica e plota no Leaflet
+  // prioridade: 1) coords extraídas da URL diretamente, 2) Nominatim
+  $('mst').style.display='block';$('mst').textContent='🔍 Localizando paradas no mapa...';
   const coords=[];
   for(let i=0;i<pars.length;i++){
     const p=pars[i];
+    // tenta extrair coordenadas direto da URL (funciona para links não-encurtados)
+    const directCoords=extractCoordsFromGmaps(p.gmaps_link);
+    if(directCoords){
+      coords.push({p,lat:directCoords.lat,lng:directCoords.lng,ok:true,src:'link'});
+      continue;
+    }
+    // fallback: Nominatim com nome+endereço
     const q=p.endereco?`${p.nome}, ${p.endereco}`:`${p.nome}, Portugal`;
     try{
-      const resp=await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`,
-        {headers:{'Accept-Language':'pt-BR'}}
-      );
-      const d=await resp.json();
-      coords.push(d.length?{p,lat:+d[0].lat,lng:+d[0].lon,ok:true}:{p,ok:false});
-    }catch{coords.push({p,ok:false});}
+      const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`,{headers:{'Accept-Language':'pt-BR'}});
+      const d=await r.json();
+      coords.push(d.length?{p,lat:+d[0].lat,lng:+d[0].lon,ok:true,src:'nominatim'}:{p,ok:false,src:'fail'});
+    }catch{coords.push({p,ok:false,src:'fail'});}
     if(i<pars.length-1)await new Promise(r=>setTimeout(r,350));
   }
-
+  $('mst').style.display='none';
   const found=coords.filter(c=>c.ok);
-  mapWrap.innerHTML=''; // limpa loading
-
-  if(!found.length){
-    mapWrap.innerHTML='<div class="m-status" style="padding:20px">📍 Localização não encontrada para as paradas</div>';
-    return;
-  }
-
-  // inicia Leaflet com o div já no DOM
-  lmap=L.map('leaflet-map',{zoomControl:true,attributionControl:false}).setView([39.5,-8],6);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(lmap);
-
+  if(!found.length)return;
   const lls=[];
   found.forEach((c,i)=>{
     const cor=PC[i%PC.length];const t=TIPOS.find(x=>x.id===c.p.tipo)||TIPOS[5];
+    // índice real na lista original (para numerar corretamente)
+    const realIdx=pars.findIndex(p=>p.id===c.p.id);
+    const num=realIdx>=0?realIdx+1:i+1;
     const icon=L.divIcon({
-      html:`<div style="width:28px;height:28px;background:${cor};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.8);box-shadow:0 2px 8px rgba(0,0,0,.5)"><span style="transform:rotate(45deg);font-size:11px;font-weight:700;color:#fff">${i+1}</span></div>`,
+      html:`<div style="width:28px;height:28px;background:${PC[(realIdx>=0?realIdx:i)%PC.length]};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.8);box-shadow:0 2px 8px rgba(0,0,0,.5)"><span style="transform:rotate(45deg);font-size:11px;font-weight:700;color:#fff">${num}</span></div>`,
       iconSize:[28,28],iconAnchor:[14,28],popupAnchor:[0,-30],className:''
     });
     const mk=L.marker([c.lat,c.lng],{icon}).addTo(lmap);
-    mk.bindPopup(`<strong>${i+1}. ${c.p.nome}</strong><br><span style="color:#888;font-size:11px">${t.e} ${t.label}${c.p.horario?' · ⏰ '+c.p.horario:''}</span>`);
+    const srcBadge=c.src==='link'?'<span style="color:#6AB4F5;font-size:10px"> 📌</span>':'';
+    mk.bindPopup(`<strong>${num}. ${c.p.nome}</strong>${srcBadge}<br><span style="color:#888;font-size:11px">${t.e} ${t.label}${c.p.horario?' · ⏰ '+c.p.horario:''}</span>`);
     lmks.push(mk);lls.push([c.lat,c.lng]);
   });
   if(lls.length>1)lln=L.polyline(lls,{color:'#4ECDC4',weight:3,opacity:.75,dashArray:'8,5'}).addTo(lmap);
@@ -870,7 +922,7 @@ async function drawMDia(dia){
   setTimeout(()=>lmap&&lmap.invalidateSize(),150);
 }
 
-// ── TABS ─────────────────────────────────────────────
+// ── TABS ──────────────────────────────────────────────
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=async()=>{
     const t=tab.dataset.t;
@@ -897,6 +949,7 @@ $('mback').onclick=()=>{
   $('fab').classList.add('h');
 };
 
+// ── TEMA ──────────────────────────────────────────────
 function toggleTheme(){
   const light=document.body.classList.toggle('light');
   $('theme-btn').textContent=light?'☀️':'🌙';
@@ -908,6 +961,7 @@ if(localStorage.getItem('theme')==='light'){
   document.addEventListener('DOMContentLoaded',()=>{const b=$('theme-btn');if(b)b.textContent='☀️';});
 }
 
+// ── TOAST ─────────────────────────────────────────────
 function toast(msg,dur=2000){
   const el=$('toast');el.textContent=msg;el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),dur);

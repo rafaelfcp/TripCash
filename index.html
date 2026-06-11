@@ -715,15 +715,20 @@ function drawDash(){
   const tot=gastos.reduce((s,g)=>s+Number(g.valor),0);
   const bc=CATS.map(c=>({...c,tot:gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)}));
   const mx=Math.max(...bc.map(c=>c.tot),1);
-  // cat grid
-  el.innerHTML+='<div class="sec">Por Categoria</div>';
+
+  // label "Por Categoria"
+  const sec1=document.createElement('div');sec1.className='sec';sec1.textContent='Por Categoria';el.appendChild(sec1);
+
+  // cat grid — todos os listeners preservados
   const gr=document.createElement('div');gr.className='cat-grid';
   bc.forEach(c=>{
     const d=document.createElement('div');d.className='cat-card';
     d.innerHTML=`<div class="i">${c.e}</div><div class="l">${c.label}</div><div class="v" style="color:${c.tot?c.c:'#333'}">${c.tot?R(c.tot):'—'}</div>`;
-    d.onclick=()=>openCat(c.id);gr.appendChild(d);
+    d.onclick=()=>openCat(c.id);
+    gr.appendChild(d);
   });
   el.appendChild(gr);
+
   // stats
   const v=viagens.find(x=>x.id===vid);const orc=v?.orcamento||0;
   const dias=[...new Set(gastos.map(g=>g.data))].length;
@@ -735,13 +740,15 @@ function drawDash(){
     <div class="sc"><div class="sl">Ticket Médio</div><div class="sv" style="color:var(--yel)">${gastos.length?R(tot/gastos.length):'—'}</div><div class="ss">por lançamento</div></div>
     <div class="sc"><div class="sl">Maior Gasto</div><div class="sv" style="color:var(--red)">${maior?R(maior.valor):'—'}</div><div class="ss">${maior?maior.descricao.slice(0,16):'—'}</div></div>`;
   el.appendChild(sg);
-  // donut
-  el.innerHTML+='<div class="sec" style="margin-top:4px">Distribuição</div>';
+
+  // label "Distribuição"
+  const sec2=document.createElement('div');sec2.className='sec';sec2.style.marginTop='4px';sec2.textContent='Distribuição';el.appendChild(sec2);
   const dw=document.createElement('div');dw.className='donut-w';
   dw.innerHTML='<svg id="dsv" width="110" height="110" viewBox="0 0 110 110"></svg><div class="leg" id="dlg"></div>';
   el.appendChild(dw);buildDonut(bc,tot);
-  // bars
-  el.innerHTML+='<div class="sec">Por Categoria</div>';
+
+  // label "Por Categoria" (barras)
+  const sec3=document.createElement('div');sec3.className='sec';sec3.textContent='Por Categoria';el.appendChild(sec3);
   const bw=document.createElement('div');
   bc.filter(c=>c.tot>0).sort((a,b)=>b.tot-a.tot).forEach(c=>{
     const p=c.tot/mx*100;
@@ -749,7 +756,7 @@ function drawDash(){
     rw.innerHTML=`<div class="n">${c.e} ${c.label}</div><div class="bar-t"><div class="bar-f" style="width:${p}%;background:${c.c}"></div></div><div class="a" style="color:${c.c}">${R(c.tot)}</div>`;
     bw.appendChild(rw);
   });
-  if(!bc.some(c=>c.tot>0))bw.innerHTML='<div style="color:#333;text-align:center;padding:16px;font-size:12px">Nenhum dado ainda</div>';
+  if(!bc.some(c=>c.tot>0))bw.innerHTML='<div style="color:var(--mut);text-align:center;padding:16px;font-size:12px">Nenhum dado ainda</div>';
   el.appendChild(bw);
 }
 function buildDonut(bc,tot){

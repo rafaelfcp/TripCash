@@ -915,72 +915,78 @@ async function drawMDia(dia){
   const pais=ehBrasil?'Brasil':'Portugal';
   const countrycodes=ehBrasil?'br':'pt';
 
-  // tenta extrair cidade do título do dia para usar como contexto de busca
-  // ex: "Dia 2 · Alfama & Belém" → "Lisboa"; "Dia 3 · Sintra" → "Sintra"
+  // mapa cidade → { nome, viewbox: "lon_min,lat_max,lon_max,lat_min" }
+  // viewbox delimita a área geográfica — bounded=1 força resultados DENTRO dessa área
   const cidadeMap={
-    'alfama':'Lisboa','belém':'Lisboa','lisboa':'Lisboa','sintra':'Sintra',
-    'cascais':'Cascais','évora':'Évora','evora':'Évora','porto':'Porto',
-    'alentejo':'Alentejo','funchal':'Funchal','madeira':'Funchal',
-    'óbidos':'Óbidos','obidos':'Óbidos','nazaré':'Nazaré','nazare':'Nazaré',
-    'esporão':'Reguengos de Monsaraz','aveiro':'Aveiro','coimbra':'Coimbra',
-    'braga':'Braga','guimarães':'Guimarães','guimaraes':'Guimarães',
-    'viracopos':'Campinas','campinas':'Campinas',
+    'alfama':   {nome:'Lisboa',   vb:'-9.25,38.80,-9.05,38.68'},
+    'belém':    {nome:'Lisboa',   vb:'-9.25,38.80,-9.05,38.68'},
+    'lisboa':   {nome:'Lisboa',   vb:'-9.25,38.80,-9.05,38.68'},
+    'sintra':   {nome:'Sintra',   vb:'-9.48,38.85,-9.30,38.75'},
+    'cascais':  {nome:'Cascais',  vb:'-9.45,38.73,-9.38,38.69'},
+    'évora':    {nome:'Évora',    vb:'-7.96,38.59,-7.86,38.55'},
+    'evora':    {nome:'Évora',    vb:'-7.96,38.59,-7.86,38.55'},
+    'porto':    {nome:'Porto',    vb:'-8.72,41.20,-8.56,41.12'},
+    'gaia':     {nome:'V.N.Gaia', vb:'-8.66,41.14,-8.58,41.10'},
+    'funchal':  {nome:'Funchal',  vb:'-16.97,32.67,-16.85,32.62'},
+    'madeira':  {nome:'Funchal',  vb:'-16.97,32.67,-16.85,32.62'},
+    'óbidos':   {nome:'Óbidos',   vb:'-9.18,39.38,-9.14,39.35'},
+    'obidos':   {nome:'Óbidos',   vb:'-9.18,39.38,-9.14,39.35'},
+    'nazaré':   {nome:'Nazaré',   vb:'-9.09,39.61,-9.05,39.59'},
+    'nazare':   {nome:'Nazaré',   vb:'-9.09,39.61,-9.05,39.59'},
+    'esporão':  {nome:'Reguengos',vb:'-7.58,38.45,-7.50,38.38'},
+    'aveiro':   {nome:'Aveiro',   vb:'-8.68,40.65,-8.62,40.62'},
+    'coimbra':  {nome:'Coimbra',  vb:'-8.47,40.22,-8.40,40.18'},
+    'braga':    {nome:'Braga',    vb:'-8.47,41.56,-8.40,41.53'},
+    'guimarães':{nome:'Guimarães',vb:'-8.32,41.46,-8.27,41.43'},
+    'guimaraes':{nome:'Guimarães',vb:'-8.32,41.46,-8.27,41.43'},
+    'alentejo': {nome:'Alentejo', vb:'-8.50,38.80,-6.80,37.40'},
+    'viracopos':{nome:'Campinas', vb:'-47.20,-22.80,-47.00,-23.00'},
+    'campinas': {nome:'Campinas', vb:'-47.20,-22.80,-47.00,-23.00'},
   };
   let cidadeCtx='';
+  let viewbox='';
   for(const [k,v] of Object.entries(cidadeMap)){
-    if(tituloLower.includes(k)){cidadeCtx=v;break;}
+    if(tituloLower.includes(k)){cidadeCtx=v.nome;viewbox=v.vb;break;}
   }
 
   const coords=[];
   for(let i=0;i<parsMap.length;i++){
     const p=parsMap[i];
 
-    // 1ª prioridade: extrair coords direto da URL (links não-encurtados)
+    // 1ª prioridade: coords direto da URL (links não-encurtados)
     const directCoords=extractCoordsFromGmaps(p.gmaps_link);
     if(directCoords){
       coords.push({p,lat:directCoords.lat,lng:directCoords.lng,ok:true,src:'link'});
       continue;
     }
 
-    // 2ª prioridade: Nominatim estruturado com contexto geográfico
-    // monta query: nome + cidade (se inferida) + país
-    let q;
-    if(p.endereco&&p.endereco.trim()){
-      q=p.endereco.trim();
-    } else if(cidadeCtx){
-      q=`${p.nome}, ${cidadeCtx}, ${pais}`;
-    } else {
-      q=`${p.nome}, ${pais}`;
-    }
+    // query base: endereço > nome+cidade > nome+país
+    const q=p.endereco?.trim()
+      ? p.endereco.trim()
+      : cidadeCtx ? `${p.nome}, ${cidadeCtx}` : `${p.nome}, ${pais}`;
 
-    // parâmetros extras para o Nominatim: limita ao país e retorna mais detalhes
-    const params=new URLSearchParams({
-      format:'json',limit:'3',q,
-      countrycodes,
-      'accept-language':'pt-BR',
-    });
+    // tentativa 1: com viewbox bounded=1 (só retorna resultados DENTRO da bbox)
+    const tryNominatim=async(extraParams={})=>{
+      const ps=new URLSearchParams({format:'json',limit:'5',q,countrycodes,'accept-language':'pt-BR',...extraParams});
+      const r=await fetch(`https://nominatim.openstreetmap.org/search?${ps}`,{headers:{'User-Agent':'TripCash/1.0'}});
+      return r.json();
+    };
 
     try{
-      const r=await fetch(
-        `https://nominatim.openstreetmap.org/search?${params}`,
-        {headers:{'User-Agent':'TripCash/1.0'}}
-      );
-      const d=await r.json();
-      if(d.length){
-        // se tiver cidade inferida, tenta priorizar resultado que mencione a cidade
-        let best=d[0];
-        if(cidadeCtx&&d.length>1){
-          const match=d.find(r=>(r.display_name||'').toLowerCase().includes(cidadeCtx.toLowerCase()));
-          if(match)best=match;
-        }
-        coords.push({p,lat:+best.lat,lng:+best.lon,ok:true,src:'nominatim'});
-      } else {
-        // retry só com nome + país, sem cidade
-        const params2=new URLSearchParams({format:'json',limit:'1',q:`${p.nome}, ${pais}`,countrycodes,'accept-language':'pt-BR'});
-        const r2=await fetch(`https://nominatim.openstreetmap.org/search?${params2}`,{headers:{'User-Agent':'TripCash/1.0'}});
-        const d2=await r2.json();
-        coords.push(d2.length?{p,lat:+d2[0].lat,lng:+d2[0].lon,ok:true,src:'nominatim-fallback'}:{p,ok:false,src:'fail'});
+      let d=[];
+      if(viewbox){
+        // tenta primeiro DENTRO do viewbox
+        d=await tryNominatim({viewbox,bounded:'1'});
       }
+      if(!d.length&&viewbox){
+        // tenta com viewbox mas sem bounded (prioriza a área mas não exclui outros)
+        d=await tryNominatim({viewbox,bounded:'0'});
+      }
+      if(!d.length){
+        // fallback: sem viewbox, só countrycodes
+        d=await tryNominatim();
+      }
+      coords.push(d.length?{p,lat:+d[0].lat,lng:+d[0].lon,ok:true,src:'nominatim'}:{p,ok:false,src:'fail'});
     }catch{coords.push({p,ok:false,src:'fail'});}
 
     if(i<parsMap.length-1)await new Promise(r=>setTimeout(r,400));

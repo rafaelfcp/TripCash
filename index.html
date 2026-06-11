@@ -768,6 +768,8 @@ async function delPar(id){
 }
 
 // ── MAPA ──────────────────────────────────────────────
+let lastDiaId=null; // persiste o último dia selecionado no mapa
+
 async function initMapa(){
   // inicializa (ou reinicializa) o mapa Leaflet
   if(lmap){lmap.remove();lmap=null;lmks=[];lln=null;}
@@ -775,15 +777,26 @@ async function initMapa(){
   L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(lmap);
   await loadRot();
   drawMDias();
-  if(rDias.length) await drawMDia(rDias[0]);
-  else $('m-list').innerHTML='<div style="text-align:center;padding:32px;color:#444">Nenhum dia no roteiro</div>';
+  if(rDias.length){
+    // retoma o dia que estava selecionado antes, ou o primeiro
+    const diaInicial=lastDiaId?rDias.find(d=>d.id===lastDiaId)||rDias[0]:rDias[0];
+    await drawMDia(diaInicial);
+  } else {
+    $('m-list').innerHTML='<div style="text-align:center;padding:32px;color:#444">Nenhum dia no roteiro</div>';
+  }
 }
 function drawMDias(){
   const w=$('mdias');w.innerHTML='';
-  rDias.forEach((dia,i)=>{
-    const b=document.createElement('div');b.className='m-btn'+(i===0?' on':'');
+  rDias.forEach((dia)=>{
+    const isActive=lastDiaId?dia.id===lastDiaId:rDias.indexOf(dia)===0;
+    const b=document.createElement('div');b.className='m-btn'+(isActive?' on':'');
     b.textContent=`Dia ${dia.numero} · ${dia.titulo.split('—')[0].split('&')[0].trim().slice(0,20)}`;
-    b.onclick=async()=>{document.querySelectorAll('.m-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');await drawMDia(dia);};
+    b.onclick=async()=>{
+      document.querySelectorAll('.m-btn').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      lastDiaId=dia.id;
+      await drawMDia(dia);
+    };
     w.appendChild(b);
   });
 }
@@ -841,6 +854,7 @@ function buildRouteUrl(pars){
 }
 
 async function drawMDia(dia){
+  lastDiaId=dia.id; // persiste para retomar ao voltar ao mapa
   const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
   const el=$('m-list');el.innerHTML='';
   $('mhdr').textContent=`📍 Dia ${dia.numero} · ${dia.titulo}`;
@@ -918,9 +932,9 @@ async function drawMDia(dia){
   // mapa cidade → { nome, viewbox: "lon_min,lat_max,lon_max,lat_min" }
   // viewbox delimita a área geográfica — bounded=1 força resultados DENTRO dessa área
   const cidadeMap={
-    'alfama':   {nome:'Lisboa',   vb:'-9.25,38.80,-9.05,38.68'},
-    'belém':    {nome:'Lisboa',   vb:'-9.25,38.80,-9.05,38.68'},
-    'lisboa':   {nome:'Lisboa',   vb:'-9.25,38.80,-9.05,38.68'},
+    'alfama':   {nome:'Lisboa',   vb:'-9.30,38.85,-8.95,38.60'},  // Lisboa metro alargada
+    'belém':    {nome:'Lisboa',   vb:'-9.30,38.85,-8.95,38.60'},
+    'lisboa':   {nome:'Lisboa',   vb:'-9.30,38.85,-8.95,38.60'},
     'sintra':   {nome:'Sintra',   vb:'-9.48,38.85,-9.30,38.75'},
     'cascais':  {nome:'Cascais',  vb:'-9.45,38.73,-9.38,38.69'},
     'évora':    {nome:'Évora',    vb:'-7.96,38.59,-7.86,38.55'},
@@ -945,9 +959,18 @@ async function drawMDia(dia){
   };
   let cidadeCtx='';
   let viewbox='';
+  let vbBounds=null; // {lonMin,latMin,lonMax,latMax} para validar coords retornadas
   for(const [k,v] of Object.entries(cidadeMap)){
-    if(tituloLower.includes(k)){cidadeCtx=v.nome;viewbox=v.vb;break;}
+    if(tituloLower.includes(k)){
+      cidadeCtx=v.nome;viewbox=v.vb;
+      const [lonMin,latMax,lonMax,latMin]=v.vb.split(',').map(Number);
+      vbBounds={lonMin,lonMax,latMin,latMax};
+      break;
+    }
   }
+
+  // verifica se coordenada está dentro da bbox
+  const dentroVB=(lat,lng)=>!vbBounds||(lat>=vbBounds.latMin&&lat<=vbBounds.latMax&&lng>=vbBounds.lonMin&&lng<=vbBounds.lonMax);
 
   const coords=[];
   for(let i=0;i<parsMap.length;i++){
@@ -965,7 +988,6 @@ async function drawMDia(dia){
       ? p.endereco.trim()
       : cidadeCtx ? `${p.nome}, ${cidadeCtx}` : `${p.nome}, ${pais}`;
 
-    // tentativa 1: com viewbox bounded=1 (só retorna resultados DENTRO da bbox)
     const tryNominatim=async(extraParams={})=>{
       const ps=new URLSearchParams({format:'json',limit:'5',q,countrycodes,'accept-language':'pt-BR',...extraParams});
       const r=await fetch(`https://nominatim.openstreetmap.org/search?${ps}`,{headers:{'User-Agent':'TripCash/1.0'}});
@@ -973,20 +995,29 @@ async function drawMDia(dia){
     };
 
     try{
-      let d=[];
+      let resultado=null;
+
       if(viewbox){
-        // tenta primeiro DENTRO do viewbox
-        d=await tryNominatim({viewbox,bounded:'1'});
+        // tentativa 1: bounded=1 — só dentro da bbox
+        const d1=await tryNominatim({viewbox,bounded:'1'});
+        if(d1.length)resultado={lat:+d1[0].lat,lng:+d1[0].lon};
       }
-      if(!d.length&&viewbox){
-        // tenta com viewbox mas sem bounded (prioriza a área mas não exclui outros)
-        d=await tryNominatim({viewbox,bounded:'0'});
+
+      if(!resultado&&viewbox){
+        // tentativa 2: bounded=0 — prioriza bbox mas aceita fora
+        // validamos manualmente: só aceita se a coord estiver dentro da bbox
+        const d2=await tryNominatim({viewbox,bounded:'0'});
+        const match=d2.find(r=>dentroVB(+r.lat,+r.lon));
+        if(match)resultado={lat:+match.lat,lng:+match.lon};
       }
-      if(!d.length){
-        // fallback: sem viewbox, só countrycodes
-        d=await tryNominatim();
+
+      if(!resultado){
+        // fallback final: sem viewbox, aceita qualquer resultado no país
+        const d3=await tryNominatim();
+        if(d3.length)resultado={lat:+d3[0].lat,lng:+d3[0].lon};
       }
-      coords.push(d.length?{p,lat:+d[0].lat,lng:+d[0].lon,ok:true,src:'nominatim'}:{p,ok:false,src:'fail'});
+
+      coords.push(resultado?{p,lat:resultado.lat,lng:resultado.lng,ok:true,src:'nominatim'}:{p,ok:false,src:'fail'});
     }catch{coords.push({p,ok:false,src:'fail'});}
 
     if(i<parsMap.length-1)await new Promise(r=>setTimeout(r,400));

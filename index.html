@@ -397,6 +397,84 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 @keyframes zin{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 ::-webkit-scrollbar{width:2px}::-webkit-scrollbar-thumb{background:var(--bor2);border-radius:99px}
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+
+/* ── POPUP CATEGORIA MELHORADO ── */
+.csh-hero{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 0 16px;border-bottom:1px solid var(--bor);margin-bottom:14px;
+}
+.csh-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.csh-kpi{flex:1}
+.csh-val{font-size:24px;font-weight:800;letter-spacing:-0.8px}
+.csh-meta{font-size:11px;color:var(--mut2);margin-top:2px;font-weight:500}
+.csh-pct-bar{height:4px;border-radius:99px;background:var(--sur2);margin-top:8px;overflow:hidden}
+.csh-pct-fill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.ci{
+  background:var(--bg);border:1px solid var(--bor);border-left:3px solid var(--c,var(--teal));
+  border-radius:var(--r-sm);padding:11px 12px;display:flex;justify-content:space-between;
+  align-items:center;margin-bottom:7px;gap:8px;
+}
+.ci-info{flex:1;min-width:0}
+.ci-desc{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-sub{font-size:10px;color:var(--mut2);margin-top:2px;font-weight:500}
+.ci-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ci-val{font-size:13px;font-weight:700}
+.ci-acts{display:flex;gap:2px}
+
+/* ── LANÇAMENTOS AGRUPADOS ── */
+.lanc-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:14px;gap:8px;
+}
+.lanc-mode{display:flex;background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:3px;gap:2px}
+.lanc-mode-btn{
+  flex:1;border:none;border-radius:8px;font-size:11px;font-weight:600;
+  padding:6px 10px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;
+  background:none;color:var(--mut2);transition:all .15s;
+}
+.lanc-mode-btn.on{background:var(--grd);color:#fff;box-shadow:0 2px 8px rgba(78,205,196,.3)}
+.lanc-cats-filter{display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;margin-bottom:12px}
+.lanc-cats-filter::-webkit-scrollbar{display:none}
+.lf-btn{
+  flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;
+  font-size:11px;padding:5px 11px;cursor:pointer;color:var(--mut2);
+  font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;transition:all .15s;white-space:nowrap;
+}
+.lf-btn.on{border-color:var(--teal);color:var(--teal);background:color-mix(in srgb,var(--teal) 10%,transparent);font-weight:700}
+
+/* grupo categoria na view agrupada */
+.cat-group{margin-bottom:14px}
+.cat-group-hdr{
+  display:flex;align-items:center;gap:9px;padding:10px 12px;
+  background:var(--sur);border:1px solid var(--bor);border-radius:var(--r-sm);
+  cursor:pointer;transition:background .12s;user-select:none;
+}
+.cat-group-hdr:active{background:var(--sur2)}
+.cat-group-hdr.open{border-radius:var(--r-sm) var(--r-sm) 0 0;border-bottom-color:transparent}
+.cat-group-icon{font-size:20px;flex-shrink:0}
+.cat-group-info{flex:1;min-width:0}
+.cat-group-name{font-size:13px;font-weight:700}
+.cat-group-sub{font-size:10px;color:var(--mut2);font-weight:500;margin-top:1px}
+.cat-group-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0}
+.cat-group-total{font-size:14px;font-weight:800;letter-spacing:-0.3px}
+.cat-group-bar{width:52px;height:3px;background:var(--bor2);border-radius:99px;overflow:hidden}
+.cat-group-bar-fill{height:100%;border-radius:99px}
+.cat-group-chev{font-size:10px;color:var(--mut);transition:transform .2s;flex-shrink:0}
+.cat-group-chev.open{transform:rotate(180deg)}
+.cat-group-items{
+  background:var(--sur);border:1px solid var(--bor);border-top:none;
+  border-radius:0 0 var(--r-sm) var(--r-sm);overflow:hidden;
+}
+.cat-group-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 12px;border-bottom:1px solid var(--bor);gap:8px;
+}
+.cat-group-item:last-child{border-bottom:none}
+.cgi-left{flex:1;min-width:0}
+.cgi-desc{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cgi-sub{font-size:10px;color:var(--mut2);font-weight:500;margin-top:1px}
+.cgi-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.cgi-val{font-size:13px;font-weight:700}
 </style>
 </head>
 <body>
@@ -432,7 +510,20 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div id="pages">
     <div class="pg on" id="pg-dash"></div>
     <div class="pg" id="pg-lanc">
-      <div class="lh"><span id="lc" style="font-size:11px;color:var(--mut)"></span><span id="fcl" style="font-size:11px;color:var(--teal);cursor:pointer;display:none">Limpar ×</span></div>
+      <!-- toolbar: modo + contador -->
+      <div class="lanc-toolbar">
+        <span id="lc" style="font-size:11px;color:var(--mut2);font-weight:500"></span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="fcl" style="font-size:11px;color:var(--teal);cursor:pointer;display:none;font-weight:600">Limpar ×</span>
+          <div class="lanc-mode">
+            <button class="lanc-mode-btn on" id="lm-group" onclick="setLancMode('group')">▤ Grupos</button>
+            <button class="lanc-mode-btn" id="lm-list" onclick="setLancMode('list')">≡ Lista</button>
+          </div>
+        </div>
+      </div>
+      <!-- filtros por categoria (só na mode lista) -->
+      <div class="lanc-cats-filter" id="lanc-filter" style="display:none"></div>
+      <!-- conteúdo -->
       <div id="gl"></div>
     </div>
     <div class="pg" id="pg-rot"><div id="rw"></div></div>
@@ -498,8 +589,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <!-- POPUP CAT -->
 <div class="cov" id="ocm"><div class="csh">
   <div class="hdl"></div>
-  <div class="csh-h"><div id="cmt" style="font-size:16px;font-weight:600;display:flex;align-items:center;gap:6px"></div><button class="bi" id="cmcl" style="font-size:18px;color:var(--mut)">✕</button></div>
-  <div class="csh-t" id="cmtot"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+    <div id="cmt" style="font-size:16px;font-weight:800;display:flex;align-items:center;gap:6px"></div>
+    <button class="bi" id="cmcl" style="font-size:18px;color:var(--mut2)">✕</button>
+  </div>
+  <div id="cmtot"></div>
   <div class="csh-l" id="cml"></div>
 </div></div>
 
@@ -684,32 +778,186 @@ function openCat(cid){
   const it=gastos.filter(g=>g.categoria===cid).sort((a,b)=>new Date(b.data)-new Date(a.data));
   const tc=it.reduce((s,g)=>s+Number(g.valor),0);
   const tg=gastos.reduce((s,g)=>s+Number(g.valor),0);
-  $('cmt').innerHTML=`<span>${c.e}</span><span>${c.label}</span>`;
-  $('cmtot').innerHTML=`<strong style="color:${c.c};font-size:18px">${R(tc)}</strong><span style="margin-left:8px">${it.length} lançamento${it.length!==1?'s':''} · ${tg?Math.round(tc/tg*100):0}%</span>`;
-  $('cml').innerHTML=it.map(g=>`<div class="ci" style="--c:${c.c}"><div><div style="font-size:13px">${g.descricao}</div><div style="font-size:10px;color:var(--mut)">${g.data?g.data.split('-').reverse().join('/'):''}${g.observacao?' · '+g.observacao:''}</div></div><div style="font-size:14px;font-weight:700;color:${c.c};margin-left:10px">${R(Number(g.valor))}</div></div>`).join('')||'<div style="text-align:center;padding:24px;color:#333">Nenhum gasto</div>';
+  const pct=tg?Math.round(tc/tg*100):0;
+
+  // hero com KPI
+  $('cmt').innerHTML=''; // limpa título antigo
+  const hero=document.createElement('div');hero.className='csh-hero';
+  hero.innerHTML=`
+    <div class="csh-icon" style="background:color-mix(in srgb,${c.c} 15%,transparent)">
+      <span>${c.e}</span>
+    </div>
+    <div class="csh-kpi">
+      <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--mut2);margin-bottom:4px">${c.label}</div>
+      <div class="csh-val" style="color:${c.c}">${R(tc)}</div>
+      <div class="csh-meta">${it.length} lançamento${it.length!==1?'s':''} · ${pct}% do total</div>
+      <div class="csh-pct-bar"><div class="csh-pct-fill" style="width:${pct}%;background:${c.c}"></div></div>
+    </div>`;
+  $('cmtot').innerHTML='';
+  $('cmtot').appendChild(hero);
+
+  // lista de itens com edit/delete
+  const lista=$('cml');lista.innerHTML='';
+  if(!it.length){
+    lista.innerHTML='<div style="text-align:center;padding:32px;color:var(--mut)"><div style="font-size:32px;margin-bottom:8px">${c.e}</div><div style="font-size:13px">Nenhum gasto nesta categoria</div></div>';
+  } else {
+    it.forEach(g=>{
+      const item=document.createElement('div');item.className='ci';item.style.setProperty('--c',c.c);
+      const dt=g.data?g.data.split('-').reverse().join('/'):'';
+      item.innerHTML=`
+        <div class="ci-info">
+          <div class="ci-desc">${g.descricao}</div>
+          <div class="ci-sub">${dt}${g.observacao?' · '+g.observacao:''}</div>
+        </div>
+        <div class="ci-right">
+          <span class="ci-val" style="color:${c.c}">${R(Number(g.valor))}</span>
+          <div class="ci-acts">
+            <button class="bi" style="font-size:14px">✏️</button>
+            <button class="bi" style="font-size:14px">🗑️</button>
+          </div>
+        </div>`;
+      item.querySelectorAll('.bi')[0].onclick=()=>{$('ocm').classList.remove('on');editG(g.id);};
+      item.querySelectorAll('.bi')[1].onclick=async()=>{
+        if(!confirm('Excluir?'))return;
+        await delG(g.id);
+        // reabre popup atualizado
+        openCat(cid);
+      };
+      lista.appendChild(item);
+    });
+  }
   $('ocm').classList.add('on');
 }
 $('cmcl').onclick=()=>$('ocm').classList.remove('on');
 $('ocm').onclick=e=>{if(e.target===$('ocm'))$('ocm').classList.remove('on');};
 
-// ── LIST ──────────────────────────────────────────────
-function drawList(){
-  const fl=fcat?gastos.filter(g=>g.categoria===fcat):gastos;
-  const cat=fcat?CATS.find(c=>c.id===fcat):null;
-  $('lc').textContent=cat?`${cat.e} ${cat.label} — ${fl.length} lançamento${fl.length!==1?'s':''}`:`${fl.length} lançamento${fl.length!==1?'s':''}`;
-  $('fcl').style.display=fcat?'':'none';
-  const el=$('gl');el.innerHTML='';
-  if(!fl.length){el.innerHTML='<div style="text-align:center;padding:40px 0;color:#444"><div style="font-size:36px;margin-bottom:10px">🗺️</div><div style="font-size:13px">Nenhum lançamento</div></div>';return;}
-  fl.forEach(g=>{
-    const c=CATS.find(x=>x.id===g.categoria)||CATS[5];
-    const d=document.createElement('div');d.className='gi';d.style.setProperty('--c',c.c);
-    d.innerHTML=`<div class="gl"><span style="font-size:20px">${c.e}</span><div><div style="font-size:13px;font-weight:500">${g.descricao}</div><div style="font-size:10px;color:var(--mut)">${g.data?g.data.split('-').reverse().join('/'):''}${g.observacao?' · '+g.observacao:''}</div></div></div><div class="gr"><span style="font-size:14px;font-weight:700;color:${c.c}">${R(Number(g.valor))}</span><div style="display:flex;gap:4px"><button class="bi">✏️</button><button class="bi">🗑️</button></div></div>`;
-    d.querySelectorAll('.bi')[0].onclick=()=>editG(g.id);
-    d.querySelectorAll('.bi')[1].onclick=()=>delG(g.id);
-    el.appendChild(d);
+// ── LANÇAMENTOS — modo e filtro ────────────────────────
+let lancMode='group'; // 'group' | 'list'
+function setLancMode(m){
+  lancMode=m;
+  $('lm-group').classList.toggle('on',m==='group');
+  $('lm-list').classList.toggle('on',m==='list');
+  $('lanc-filter').style.display=m==='list'?'flex':'none';
+  drawList();
+}
+
+// constrói barra de filtros de categoria (modo lista)
+function buildLancFilter(){
+  const fb=$('lanc-filter');fb.innerHTML='';
+  const all=document.createElement('button');all.className='lf-btn'+(fcat===null?' on':'');
+  all.textContent='Todos';all.onclick=()=>{fcat=null;buildLancFilter();drawList();};
+  fb.appendChild(all);
+  CATS.forEach(c=>{
+    const has=gastos.some(g=>g.categoria===c.id);if(!has)return;
+    const b=document.createElement('button');b.className='lf-btn'+(fcat===c.id?' on':'');
+    b.textContent=`${c.e} ${c.label}`;
+    b.onclick=()=>{fcat=c.id;buildLancFilter();drawList();};
+    fb.appendChild(b);
   });
 }
-$('fcl').onclick=()=>{fcat=null;drawDash();drawList();};
+
+// ── LIST ──────────────────────────────────────────────
+function drawList(){
+  const el=$('gl');el.innerHTML='';
+  const tot=gastos.reduce((s,g)=>s+Number(g.valor),0);
+  const maxCat=Math.max(...CATS.map(c=>gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)),1);
+
+  if(lancMode==='group'){
+    // ── MODO AGRUPADO ──────────────────────────────────
+    $('lc').textContent=`${gastos.length} lançamento${gastos.length!==1?'s':', '} · ${R(tot)}`;
+    $('fcl').style.display='none';
+    $('lanc-filter').style.display='none';
+    const cats=CATS.map(c=>{
+      const items=gastos.filter(g=>g.categoria===c.id).sort((a,b)=>new Date(b.data)-new Date(a.data));
+      return{...c,items,total:items.reduce((s,g)=>s+Number(g.valor),0)};
+    }).filter(c=>c.items.length>0).sort((a,b)=>b.total-a.total);
+
+    if(!cats.length){
+      el.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--mut)"><div style="font-size:36px;margin-bottom:10px">💸</div><div style="font-size:13px">Nenhum lançamento ainda</div></div>';
+      return;
+    }
+    cats.forEach(c=>{
+      const pct=tot?Math.round(c.total/tot*100):0;
+      const barPct=maxCat?Math.round(c.total/maxCat*100):0;
+      const grp=document.createElement('div');grp.className='cat-group';
+      const hdr=document.createElement('div');hdr.className='cat-group-hdr';
+      hdr.innerHTML=`
+        <span class="cat-group-icon">${c.e}</span>
+        <div class="cat-group-info">
+          <div class="cat-group-name">${c.label}</div>
+          <div class="cat-group-sub">${c.items.length} lançamento${c.items.length!==1?'s':''} · ${pct}%</div>
+        </div>
+        <div class="cat-group-right">
+          <span class="cat-group-total" style="color:${c.c}">${R(c.total)}</span>
+          <div class="cat-group-bar"><div class="cat-group-bar-fill" style="width:${barPct}%;background:${c.c}"></div></div>
+        </div>
+        <span class="cat-group-chev">▼</span>`;
+      // toggle expand
+      let open=false;
+      const itemsDiv=document.createElement('div');itemsDiv.className='cat-group-items';itemsDiv.style.display='none';
+      c.items.forEach(g=>{
+        const row=document.createElement('div');row.className='cat-group-item';
+        const dt=g.data?g.data.split('-').reverse().join('/'):'';
+        row.innerHTML=`
+          <div class="cgi-left">
+            <div class="cgi-desc">${g.descricao}</div>
+            <div class="cgi-sub">${dt}${g.observacao?' · '+g.observacao:''}</div>
+          </div>
+          <div class="cgi-right">
+            <span class="cgi-val" style="color:${c.c}">${R(Number(g.valor))}</span>
+            <button class="bi" style="font-size:14px">✏️</button>
+            <button class="bi" style="font-size:14px">🗑️</button>
+          </div>`;
+        row.querySelectorAll('.bi')[0].onclick=e=>{e.stopPropagation();editG(g.id);};
+        row.querySelectorAll('.bi')[1].onclick=e=>{e.stopPropagation();delG(g.id);};
+        itemsDiv.appendChild(row);
+      });
+      hdr.onclick=()=>{
+        open=!open;
+        itemsDiv.style.display=open?'block':'none';
+        hdr.classList.toggle('open',open);
+        hdr.querySelector('.cat-group-chev').classList.toggle('open',open);
+      };
+      grp.appendChild(hdr);grp.appendChild(itemsDiv);el.appendChild(grp);
+    });
+
+  } else {
+    // ── MODO LISTA ─────────────────────────────────────
+    buildLancFilter();
+    const fl=fcat?gastos.filter(g=>g.categoria===fcat):gastos;
+    const cat=fcat?CATS.find(c=>c.id===fcat):null;
+    $('lc').textContent=cat
+      ?`${cat.e} ${cat.label} — ${fl.length} item${fl.length!==1?'s':''} · ${R(fl.reduce((s,g)=>s+Number(g.valor),0))}`
+      :`${fl.length} lançamento${fl.length!==1?'s':''} · ${R(tot)}`;
+    $('fcl').style.display=fcat?'inline':'none';
+    if(!fl.length){
+      el.innerHTML='<div style="text-align:center;padding:40px 0;color:var(--mut)"><div style="font-size:36px;margin-bottom:10px">🔍</div><div style="font-size:13px">Nenhum lançamento</div></div>';
+      return;
+    }
+    fl.forEach(g=>{
+      const c=CATS.find(x=>x.id===g.categoria)||CATS[5];
+      const d=document.createElement('div');d.className='gi';d.style.setProperty('--c',c.c);
+      const dt=g.data?g.data.split('-').reverse().join('/'):'';
+      d.innerHTML=`
+        <div class="gl"><span style="font-size:20px">${c.e}</span>
+          <div>
+            <div style="font-size:13px;font-weight:600">${g.descricao}</div>
+            <div style="font-size:10px;color:var(--mut2);font-weight:500">${dt}${g.observacao?' · '+g.observacao:''}</div>
+          </div>
+        </div>
+        <div class="gr">
+          <span style="font-size:14px;font-weight:700;color:${c.c}">${R(Number(g.valor))}</span>
+          <div style="display:flex;gap:4px">
+            <button class="bi">✏️</button><button class="bi">🗑️</button>
+          </div>
+        </div>`;
+      d.querySelectorAll('.bi')[0].onclick=()=>editG(g.id);
+      d.querySelectorAll('.bi')[1].onclick=()=>delG(g.id);
+      el.appendChild(d);
+    });
+  }
+}
+$('fcl').onclick=()=>{fcat=null;buildLancFilter();drawDash();drawList();};
 
 // ── MODAL GASTO ───────────────────────────────────────
 CATS.forEach(c=>{

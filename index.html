@@ -842,81 +842,145 @@ async function drawMDia(dia){
   const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
   const el=$('m-list');el.innerHTML='';
   $('mhdr').textContent=`📍 Dia ${dia.numero} · ${dia.titulo}`;
+
   // limpa mapa
   lmks.forEach(m=>lmap.removeLayer(m));lmks=[];
   if(lln){lmap.removeLayer(lln);lln=null;}
-  if(!pars.length){el.innerHTML='<div style="text-align:center;padding:32px;color:#444">Nenhuma parada neste dia</div>';return;}
-  // rota card
+  if(!pars.length){
+    el.innerHTML='<div style="text-align:center;padding:32px;color:#444">Nenhuma parada neste dia</div>';
+    return;
+  }
+
+  // paradas pendentes (não realizadas) — só essas vão pro mapa
+  const parsMap=pars.filter(p=>!p.realizado);
+
+  // rota card — usa apenas pendentes para a rota
   const dtf=dia.data?new Date(dia.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'}):'';
-  const rurl=buildRouteUrl(pars);
+  const rurl=buildRouteUrl(parsMap.length?parsMap:pars);
   const rc=document.createElement('div');rc.className='rc';
-  rc.innerHTML=`<div class="rc-t">Dia ${dia.numero} · ${dia.titulo}</div><div class="rc-s">${dtf} · ${pars.length} parada${pars.length!==1?'s':''}</div>`;
+  const totTxt=`${pars.length} parada${pars.length!==1?'s':''}`;
+  const realTxt=pars.filter(p=>p.realizado).length?` · ✅ ${pars.filter(p=>p.realizado).length} realizada${pars.filter(p=>p.realizado).length!==1?'s':''}`:'' ;
+  rc.innerHTML=`<div class="rc-t">Dia ${dia.numero} · ${dia.titulo}</div><div class="rc-s">${dtf} · ${totTxt}${realTxt}</div>`;
   const ra=document.createElement('a');ra.className='btn-gmaps-full';ra.href=rurl;ra.target='_blank';ra.rel='noopener';
   ra.innerHTML='🗺️ Abrir rota completa no Google Maps';
   rc.appendChild(ra);el.appendChild(rc);
-  // lista
-  const lista=document.createElement('div');lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:4px 14px;margin-bottom:16px';
+
+  // ── LISTA COMPLETA (todas as paradas, realizadas aparecem riscadas) ──
+  const lista=document.createElement('div');
+  lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:4px 14px;margin-bottom:16px';
   pars.forEach((p,i)=>{
-    const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];const cor=PC[i%PC.length];
+    const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
     const item=document.createElement('div');item.className='mr';
+    // número sequencial na lista (cor esmaecida se realizado)
+    const cor=p.realizado?'#444':PC[i%PC.length];
     const lh=document.createElement('div');lh.className='mr-lh';
-    const n=document.createElement('div');n.className='mr-n';n.style.background=cor;n.textContent=i+1;lh.appendChild(n);
+    const n=document.createElement('div');n.className='mr-n';
+    n.style.cssText=`background:${cor};${p.realizado?'opacity:.4':''}`;
+    n.textContent=i+1;lh.appendChild(n);
     if(i<pars.length-1){const ln=document.createElement('div');ln.className='mr-ln';lh.appendChild(ln);}
     item.appendChild(lh);
     const info=document.createElement('div');info.className='mr-info';
-    // badge de link disponível
+    if(p.realizado)info.style.opacity='.45';
     const hasLink=p.gmaps_link&&p.gmaps_link.startsWith('http');
-    info.innerHTML=`<div class="mr-nm">${t.e} ${p.nome}${p.realizado?' <span style="color:var(--teal);font-size:10px">✓</span>':''}${hasLink?' <span style="font-size:9px;background:color-mix(in srgb,#1A73E8 18%,transparent);color:#6AB4F5;border-radius:4px;padding:1px 5px;border:1px solid color-mix(in srgb,#1A73E8 35%,transparent)">📌 link</span>':''}</div><div class="mr-mt">${p.horario?'⏰ '+p.horario+' · ':''}${t.label}</div>`;
+    const realBadge=p.realizado?'<span style="font-size:9px;background:color-mix(in srgb,var(--teal) 15%,transparent);color:var(--teal);border-radius:4px;padding:1px 5px;border:1px solid color-mix(in srgb,var(--teal) 30%,transparent)">✓ feito</span> ':'';
+    const linkBadge=hasLink?'<span style="font-size:9px;background:color-mix(in srgb,#1A73E8 18%,transparent);color:#6AB4F5;border-radius:4px;padding:1px 5px;border:1px solid color-mix(in srgb,#1A73E8 35%,transparent)">📌 link</span>':'';
+    info.innerHTML=`<div class="mr-nm" style="${p.realizado?'text-decoration:line-through':''}">${t.e} ${p.nome} ${realBadge}${linkBadge}</div><div class="mr-mt">${p.horario?'⏰ '+p.horario+' · ':''}${t.label}</div>`;
     if(p.observacao){
       const ob=document.createElement('div');ob.className='mr-obs';ob.textContent='💬 '+p.observacao;info.appendChild(ob);
       if(p.observacao.length>60){const tg=document.createElement('span');tg.className='p-tog';tg.textContent='ver mais ▾';tg.onclick=()=>{const op=ob.classList.toggle('open');tg.textContent=op?'ver menos ▴':'ver mais ▾';};info.appendChild(tg);}
     }
-    // botão individual: prioriza gmaps_link salvo, fallback para busca por nome
     const url=hasLink?p.gmaps_link:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((p.endereco||p.nome)+', Portugal')}`;
     const lk=document.createElement('a');lk.className='btn-gm';lk.href=url;lk.target='_blank';lk.rel='noopener';
     lk.innerHTML=hasLink?'📍 Abrir no Maps':'🔍 Buscar no Maps';info.appendChild(lk);
     item.appendChild(info);lista.appendChild(item);
   });
   el.appendChild(lista);
-  // geocodifica e plota no Leaflet
-  // prioridade: 1) coords extraídas da URL diretamente, 2) Nominatim
-  $('mst').style.display='block';$('mst').textContent='🔍 Localizando paradas no mapa...';
+
+  // ── GEOCODIFICAÇÃO — apenas paradas NÃO realizadas ──
+  if(!parsMap.length){
+    $('mst').style.display='block';
+    $('mst').textContent='✅ Todas as paradas já foram realizadas';
+    setTimeout(()=>{ $('mst').style.display='none'; },3000);
+    return;
+  }
+
+  $('mst').style.display='block';
+  $('mst').textContent=`🔍 Localizando ${parsMap.length} parada${parsMap.length!==1?'s':''} no mapa...`;
+
+  // tenta inferir país/região pelo nome do dia (heurística simples)
+  const tituloLower=(dia.titulo||'').toLowerCase();
+  const ehBrasil=/brasil|brazil|campinas|viracopos|são paulo|rio|brasília|bh|fortaleza|manaus|salvador/.test(tituloLower);
+  const pais=ehBrasil?'Brasil':'Portugal';
+
   const coords=[];
-  for(let i=0;i<pars.length;i++){
-    const p=pars[i];
-    // tenta extrair coordenadas direto da URL (funciona para links não-encurtados)
+  for(let i=0;i<parsMap.length;i++){
+    const p=parsMap[i];
+
+    // 1ª prioridade: extrair coords direto da URL (links não-encurtados)
     const directCoords=extractCoordsFromGmaps(p.gmaps_link);
     if(directCoords){
       coords.push({p,lat:directCoords.lat,lng:directCoords.lng,ok:true,src:'link'});
       continue;
     }
-    // fallback: Nominatim com nome+endereço
-    const q=p.endereco?`${p.nome}, ${p.endereco}`:`${p.nome}, Portugal`;
+
+    // 2ª prioridade: Nominatim com contexto geográfico correto
+    // usa endereço se disponível, senão nome + cidade/país inferido
+    let q;
+    if(p.endereco&&p.endereco.trim()){
+      // endereço completo já tem contexto suficiente
+      q=p.endereco.trim();
+    } else {
+      // nome + país inferido — evita ambiguidades tipo "Funchal" vs "Funchal, Madeira"
+      q=`${p.nome}, ${pais}`;
+    }
+
     try{
-      const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`,{headers:{'Accept-Language':'pt-BR'}});
+      const r=await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(q)}`,
+        {headers:{'Accept-Language':'pt-BR','User-Agent':'TripCash/1.0'}}
+      );
       const d=await r.json();
-      coords.push(d.length?{p,lat:+d[0].lat,lng:+d[0].lon,ok:true,src:'nominatim'}:{p,ok:false,src:'fail'});
+      if(d.length){
+        coords.push({p,lat:+d[0].lat,lng:+d[0].lon,ok:true,src:'nominatim'});
+      } else {
+        // retry sem o país caso falhe (ex: nome genérico)
+        const r2=await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(p.nome)}`,
+          {headers:{'Accept-Language':'pt-BR','User-Agent':'TripCash/1.0'}}
+        );
+        const d2=await r2.json();
+        coords.push(d2.length?{p,lat:+d2[0].lat,lng:+d2[0].lon,ok:true,src:'nominatim-fallback'}:{p,ok:false,src:'fail'});
+      }
     }catch{coords.push({p,ok:false,src:'fail'});}
-    if(i<pars.length-1)await new Promise(r=>setTimeout(r,350));
+
+    if(i<parsMap.length-1)await new Promise(r=>setTimeout(r,400));
   }
+
   $('mst').style.display='none';
   const found=coords.filter(c=>c.ok);
-  if(!found.length)return;
+  if(!found.length){
+    $('mst').style.display='block';
+    $('mst').textContent='📍 Não foi possível localizar as paradas no mapa';
+    setTimeout(()=>{ $('mst').style.display='none'; },3000);
+    return;
+  }
+
   const lls=[];
+  // numeração no mapa = posição na lista original (mantém consistência com a lista)
   found.forEach((c,i)=>{
-    const cor=PC[i%PC.length];const t=TIPOS.find(x=>x.id===c.p.tipo)||TIPOS[5];
-    // índice real na lista original (para numerar corretamente)
-    const realIdx=pars.findIndex(p=>p.id===c.p.id);
-    const num=realIdx>=0?realIdx+1:i+1;
+    const t=TIPOS.find(x=>x.id===c.p.tipo)||TIPOS[5];
+    const listIdx=pars.findIndex(p=>p.id===c.p.id);
+    const num=listIdx>=0?listIdx+1:i+1;
+    const cor=PC[listIdx>=0?listIdx%PC.length:i%PC.length];
     const icon=L.divIcon({
-      html:`<div style="width:28px;height:28px;background:${PC[(realIdx>=0?realIdx:i)%PC.length]};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.8);box-shadow:0 2px 8px rgba(0,0,0,.5)"><span style="transform:rotate(45deg);font-size:11px;font-weight:700;color:#fff">${num}</span></div>`,
+      html:`<div style="width:28px;height:28px;background:${cor};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.8);box-shadow:0 2px 8px rgba(0,0,0,.5)"><span style="transform:rotate(45deg);font-size:11px;font-weight:700;color:#fff">${num}</span></div>`,
       iconSize:[28,28],iconAnchor:[14,28],popupAnchor:[0,-30],className:''
     });
     const mk=L.marker([c.lat,c.lng],{icon}).addTo(lmap);
-    const srcBadge=c.src==='link'?'<span style="color:#6AB4F5;font-size:10px"> 📌</span>':'';
-    mk.bindPopup(`<strong>${num}. ${c.p.nome}</strong>${srcBadge}<br><span style="color:#888;font-size:11px">${t.e} ${t.label}${c.p.horario?' · ⏰ '+c.p.horario:''}</span>`);
+    mk.bindPopup(`<strong>${num}. ${c.p.nome}</strong><br><span style="color:#888;font-size:11px">${t.e} ${t.label}${c.p.horario?' · ⏰ '+c.p.horario:''}</span>`);
     lmks.push(mk);lls.push([c.lat,c.lng]);
   });
+
   if(lls.length>1)lln=L.polyline(lls,{color:'#4ECDC4',weight:3,opacity:.75,dashArray:'8,5'}).addTo(lmap);
   lmap.fitBounds(L.featureGroup(lmks).getBounds().pad(0.3));
   setTimeout(()=>lmap&&lmap.invalidateSize(),150);

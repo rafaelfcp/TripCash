@@ -1034,7 +1034,7 @@ function drawRot(){
   if(!rDias.length){el.innerHTML+='<div style="text-align:center;padding:40px 0;color:#444"><div style="font-size:36px;margin-bottom:10px">🗺️</div><div>Nenhum dia</div></div>';return;}
   rDias.forEach(dia=>{
     const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
-    const ab2=dopen[dia.id]!==false;
+    const ab2=dopen[dia.id]!==true;
     const dtf=dia.data?new Date(dia.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}):'';
     const card=document.createElement('div');card.className='dc';
     const hdr=document.createElement('div');hdr.className='dh';

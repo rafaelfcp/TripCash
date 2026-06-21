@@ -200,8 +200,16 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 .p-dot{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px}
 .p-line{width:2px;flex:1;min-height:12px;background:linear-gradient(180deg,var(--bor2),transparent);margin-top:3px}
 .p-info{flex:1;min-width:0}
-.p-nm{font-size:13px;font-weight:700;line-height:1.3;letter-spacing:-0.1px}
+.p-nm{font-size:13px;font-weight:700;line-height:1.3;letter-spacing:-0.1px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .p-nm.done{text-decoration:line-through;opacity:.35}
+.p-gm-badge{
+  display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;
+  background:color-mix(in srgb,#1A73E8 18%,transparent);color:#6AB4F5;
+  border:1px solid color-mix(in srgb,#1A73E8 35%,transparent);
+  border-radius:5px;padding:1px 6px;letter-spacing:.1px;flex-shrink:0;
+  text-decoration:none!important;cursor:pointer;
+}
+.p-gm-badge:active{background:color-mix(in srgb,#1A73E8 30%,transparent)}
 .p-hor{
   display:inline-flex;align-items:center;gap:3px;font-size:10px;
   color:var(--teal);font-weight:700;margin-top:4px;
@@ -243,37 +251,88 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
   border-bottom:1px solid var(--bor);
   background:var(--bg);
 }
-.m-dias{flex-shrink:0;display:flex;gap:6px;padding:10px 16px;overflow-x:auto;border-bottom:1px solid var(--bor)}
+.m-dias{flex-shrink:0;display:flex;gap:6px;padding:10px 16px;overflow-x:auto;border-bottom:1px solid var(--bor);scroll-snap-type:x proximity}
 .m-dias::-webkit-scrollbar{display:none}
 .m-btn{
   flex-shrink:0;background:var(--sur);border:1px solid var(--bor);border-radius:99px;
-  font-size:11px;padding:7px 14px;cursor:pointer;color:var(--mut2);
+  font-size:11px;padding:8px 15px;cursor:pointer;color:var(--mut2);
   white-space:nowrap;user-select:none;font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;
-  transition:all .15s;
+  transition:all .15s;scroll-snap-align:start;min-height:34px;display:flex;align-items:center;
 }
 .m-btn.on{background:var(--grd);border-color:transparent;color:#fff;font-weight:700;box-shadow:var(--shadow-teal)}
-#m-map{flex-shrink:0;width:100%;height:240px;background:var(--sur);overflow:hidden}
+.m-btn.all{color:var(--teal);border-style:dashed;border-color:var(--teal2)}
+.m-btn.all.on{border-style:solid}
+
+/* toggle Mapa / Lista — ação primária, zona do polegar */
+.m-switch{flex-shrink:0;display:flex;gap:4px;padding:8px 16px;background:var(--bg)}
+.m-sw-btn{
+  flex:1;background:var(--sur);border:1px solid var(--bor);border-radius:var(--r-sm);
+  color:var(--mut2);font-size:12px;font-weight:600;padding:9px 0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;
+}
+.m-sw-btn.on{background:var(--grd);border-color:transparent;color:#fff;box-shadow:var(--shadow-teal)}
+
+/* seletor de estilo do mapa (dark / claro / satélite) — só visível na view Mapa */
+.m-style{flex-shrink:0;display:flex;gap:4px;padding:0 16px 8px;background:var(--bg)}
+.m-style.h{display:none!important}
+.m-style-btn{
+  flex:1;background:var(--sur);border:1px solid var(--bor);border-radius:var(--r-sm);
+  color:var(--mut2);font-size:11px;font-weight:600;padding:7px 0;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;
+}
+.m-style-btn.on{border-color:var(--teal);color:var(--teal);background:color-mix(in srgb,var(--teal) 10%,transparent)}
+
+/* leaflet — variantes por estilo de mapa (data-map-style no #m-map) */
+.leaflet-container{background:#0C0C18!important}
+#m-map[data-map-style="light"] .leaflet-container,
+#m-map[data-map-style="sat"] .leaflet-container{background:#E8E6E0!important}
+.leaflet-popup-content-wrapper{background:var(--sur)!important;color:var(--txt)!important;border:1px solid var(--bor2)!important;border-radius:12px!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important}
+#m-map[data-map-style="light"] .leaflet-popup-content-wrapper,
+#m-map[data-map-style="sat"] .leaflet-popup-content-wrapper{background:#fff!important;color:#1A1830!important;border:1px solid #E2DFEE!important;box-shadow:0 8px 28px rgba(0,0,0,.25)!important}
+.leaflet-popup-tip{background:var(--sur)!important}
+#m-map[data-map-style="light"] .leaflet-popup-tip,
+#m-map[data-map-style="sat"] .leaflet-popup-tip{background:#fff!important}
+.leaflet-popup-content{margin:10px 13px!important;font-size:12px!important;font-family:'Plus Jakarta Sans',sans-serif!important}
+#m-map[data-map-style="light"] .leaflet-popup-content strong,
+#m-map[data-map-style="sat"] .leaflet-popup-content strong{color:#1A1830!important}
+
+#m-map{flex-shrink:0;width:100%;height:240px;background:var(--sur);overflow:hidden;position:relative}
 #m-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+16px)}
-.m-status{padding:4px 0 8px;font-size:11px;color:var(--mut2);text-align:center;font-weight:500}
+#m-map.h,#m-list.h{display:none!important}
+.m-status{padding:4px 0 8px;font-size:11px;color:var(--mut2);text-align:center;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
+.m-spin{width:11px;height:11px;border:2px solid var(--bor2);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* skeletons — feedback imediato ao trocar de dia */
+.sk-rc{background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.sk-ln{height:12px;border-radius:6px;background:linear-gradient(90deg,var(--bor) 25%,var(--sur2) 50%,var(--bor) 75%);background-size:200% 100%;animation:sk 1.2s ease-in-out infinite}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-mr{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--bor)}
+.sk-mr:last-child{border-bottom:none}
+.sk-dot{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:var(--bor2)}
+
 .rc{
   background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);
   padding:14px;margin-bottom:12px;position:relative;overflow:hidden;
 }
 .rc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grd)}
-.rc-t{font-size:15px;font-weight:800;margin-bottom:3px;letter-spacing:-0.3px}
+.rc-t{font-size:15px;font-weight:800;margin-bottom:3px;letter-spacing:-0.3px;display:flex;align-items:center;gap:7px}
 .rc-s{font-size:11px;color:var(--mut2);margin-bottom:11px;font-weight:500}
 .btn-gmaps-full{
   display:flex;align-items:center;justify-content:center;gap:8px;
   background:linear-gradient(135deg,#1557B0,#1A73E8);
   border:none;border-radius:var(--r-sm);color:#fff;font-size:13px;font-weight:700;
-  padding:12px;cursor:pointer;text-decoration:none;width:100%;
+  padding:12px;cursor:pointer;text-decoration:none;width:100%;min-height:44px;
   font-family:'Plus Jakarta Sans',sans-serif;
   box-shadow:0 4px 12px rgba(26,115,232,.3);
 }
 .mr{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-bottom:1px solid var(--bor)}
 .mr:last-child{border-bottom:none}
 .mr-lh{display:flex;flex-direction:column;align-items:center;flex-shrink:0}
-.mr-n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.mr-n{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;border:2px solid transparent}
+.mr-n.start,.mr-n.end{border-color:rgba(255,255,255,.85)}
 .mr-ln{width:2px;flex:1;min-height:16px;background:linear-gradient(180deg,var(--bor2),transparent);margin-top:3px}
 .mr-info{flex:1;min-width:0}
 .mr-nm{font-size:13px;font-weight:700;margin-bottom:2px;letter-spacing:-0.1px}
@@ -289,13 +348,9 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
   display:inline-flex;align-items:center;gap:4px;
   background:linear-gradient(135deg,#1557B0,#1A73E8);
   border:none;border-radius:7px;color:#fff;font-size:11px;font-weight:600;
-  padding:5px 10px;cursor:pointer;text-decoration:none;margin-top:6px;
+  padding:7px 11px;cursor:pointer;text-decoration:none;margin-top:6px;min-height:30px;
   font-family:'Plus Jakarta Sans',sans-serif;
 }
-.leaflet-container{background:#0C0C18!important}
-.leaflet-popup-content-wrapper{background:var(--sur)!important;color:var(--txt)!important;border:1px solid var(--bor2)!important;border-radius:12px!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important}
-.leaflet-popup-tip{background:var(--sur)!important}
-.leaflet-popup-content{margin:10px 13px!important;font-size:12px!important;font-family:'Plus Jakarta Sans',sans-serif!important}
 
 /* ── FAB ── */
 .fab{
@@ -539,6 +594,15 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     <div id="mhdr" style="font-size:13px;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">📍 Rota do Dia</div>
   </div>
   <div class="m-dias" id="mdias"></div>
+  <div class="m-switch">
+    <button class="m-sw-btn on" id="msw-map">🗺️ Mapa</button>
+    <button class="m-sw-btn" id="msw-list">📋 Lista</button>
+  </div>
+  <div class="m-style" id="mstyle">
+    <button class="m-style-btn" id="mst-dark">🌙 Escuro</button>
+    <button class="m-style-btn" id="mst-light">☀️ Claro</button>
+    <button class="m-style-btn" id="mst-sat">🛰️ Satélite</button>
+  </div>
   <div id="m-map"></div>
   <div class="m-status" id="mst" style="display:none"></div>
   <div id="m-list"></div>
@@ -630,6 +694,10 @@ let fcat=null,egid=null;
 let rDias=[],rPars=[],dopen={};
 let deid=null,peid=null,daid=null,rmod=false;
 let lmap=null,lmks=[],lln=null;
+let mapReqToken=0;          // token incremental — invalida respostas async obsoletas (corrige pontos do dia errado)
+const geoCache=new Map();   // chave: parada.id → resultado geocodificado — evita regeocodificar ao revisitar um dia
+let mView='map';            // 'map' | 'list' — toggle de visualização
+let mSelDia=null;           // 'all' ou objeto dia atualmente selecionado
 
 // ── INIT ──────────────────────────────────────────────
 (async()=>{
@@ -1056,7 +1124,15 @@ function drawRot(){
           if(i<pars.length-1){const ln=document.createElement('div');ln.className='p-line';lh.appendChild(ln);}
           row.appendChild(lh);
           const info=document.createElement('div');info.className='p-info';
-          const nm=document.createElement('div');nm.className='p-nm'+(p.realizado?' done':'');nm.textContent=p.nome;info.appendChild(nm);
+          const nm=document.createElement('div');nm.className='p-nm'+(p.realizado?' done':'');
+          const nmTxt=document.createElement('span');nmTxt.textContent=p.nome;nm.appendChild(nmTxt);
+          if(p.gmaps_link&&p.gmaps_link.startsWith('http')){
+            const gmB=document.createElement('a');gmB.className='p-gm-badge';
+            gmB.href=p.gmaps_link;gmB.target='_blank';gmB.rel='noopener';
+            gmB.innerHTML='📌 link';gmB.onclick=e=>e.stopPropagation();
+            nm.appendChild(gmB);
+          }
+          info.appendChild(nm);
           if(p.horario){const hb=document.createElement('div');hb.className='p-hor';hb.textContent='⏰ '+p.horario;info.appendChild(hb);}
           if(p.endereco){const en=document.createElement('div');en.className='p-end';en.textContent='📍 '+p.endereco;info.appendChild(en);}
           if(p.observacao){
@@ -1207,37 +1283,119 @@ async function delPar(id){
 
 // ── MAPA ──────────────────────────────────────────────
 let lastDiaId=null; // persiste o último dia selecionado no mapa
+let curTileLayer=null; // tile layer ativo no Leaflet — troca ao mudar de estilo
+
+// estilos de mapa disponíveis — todos gratuitos, sem API key
+const MAP_STYLES={
+  dark:{
+    url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    attribution:'',maxZoom:19
+  },
+  light:{
+    url:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    attribution:'',maxZoom:19
+  },
+  sat:{
+    url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution:'',maxZoom:19
+  }
+};
+let mapStyle=localStorage.getItem('mapStyle')||'dark'; // dark | light | sat — persiste entre sessões
+
+function applyMapStyle(style){
+  mapStyle=style;
+  localStorage.setItem('mapStyle',style);
+  $('m-map').dataset.mapStyle=style;
+  document.querySelectorAll('.m-style-btn').forEach(b=>b.classList.remove('on'));
+  $(`mst-${style}`).classList.add('on');
+  if(curTileLayer&&lmap){lmap.removeLayer(curTileLayer);}
+  if(lmap){
+    const cfg=MAP_STYLES[style];
+    curTileLayer=L.tileLayer(cfg.url,{maxZoom:cfg.maxZoom,attribution:cfg.attribution}).addTo(lmap);
+  }
+}
+$('mst-dark').onclick=()=>applyMapStyle('dark');
+$('mst-light').onclick=()=>applyMapStyle('light');
+$('mst-sat').onclick=()=>applyMapStyle('sat');
 
 async function initMapa(){
   // inicializa (ou reinicializa) o mapa Leaflet
-  if(lmap){lmap.remove();lmap=null;lmks=[];lln=null;}
+  if(lmap){lmap.remove();lmap=null;}
+  lmks=[];lln=null;curTileLayer=null;
   lmap=L.map('m-map',{zoomControl:true,attributionControl:false}).setView([39.4,-8.2],7);
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(lmap);
+  applyMapStyle(mapStyle); // aplica o estilo salvo (ou dark por padrão)
+  mView='map';
+  $('msw-map').classList.add('on');$('msw-list').classList.remove('on');
+  $('m-map').classList.remove('h');$('m-list').classList.remove('h');
+  $('mstyle').classList.remove('h');
   await loadRot();
   drawMDias();
   if(rDias.length){
     // retoma o dia que estava selecionado antes, ou o primeiro
     const diaInicial=lastDiaId?rDias.find(d=>d.id===lastDiaId)||rDias[0]:rDias[0];
-    await drawMDia(diaInicial);
+    await selectDia(diaInicial);
   } else {
+    mSelDia=null;
     $('m-list').innerHTML='<div style="text-align:center;padding:32px;color:#444">Nenhum dia no roteiro</div>';
   }
 }
+
+// ── SELEÇÃO DE DIA (feedback imediato antes do I/O) ───
+async function selectDia(diaOrAll){
+  mSelDia=diaOrAll;
+  lastDiaId=diaOrAll==='all'?lastDiaId:diaOrAll.id;
+  document.querySelectorAll('.m-btn').forEach(x=>x.classList.remove('on'));
+  const key=diaOrAll==='all'?'all':diaOrAll.id;
+  const btn=document.querySelector(`.m-btn[data-key="${key}"]`);
+  if(btn)btn.classList.add('on');
+  renderSkeleton();
+  if(diaOrAll==='all')await drawTodosDias();
+  else await drawMDia(diaOrAll);
+}
+
+function renderSkeleton(){
+  $('m-list').innerHTML=`
+    <div class="sk-rc">
+      <div class="sk-ln" style="width:60%;margin-bottom:8px"></div>
+      <div class="sk-ln" style="width:40%;height:9px;margin-bottom:12px"></div>
+      <div class="sk-ln" style="height:38px;border-radius:10px"></div>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:4px 14px">
+      ${[1,2,3].map(()=>`<div class="sk-mr"><div class="sk-dot"></div><div style="flex:1"><div class="sk-ln" style="width:70%;margin-bottom:6px"></div><div class="sk-ln" style="width:40%;height:9px"></div></div></div>`).join('')}
+    </div>`;
+  $('mst').style.display='flex';
+  $('mst').innerHTML='<span class="m-spin"></span> Carregando paradas...';
+}
+
 function drawMDias(){
   const w=$('mdias');w.innerHTML='';
+  // "Ver todos os dias" — opção explícita; padrão é dia único, evita confundir contextos
+  const all=document.createElement('div');all.className='m-btn all';all.dataset.key='all';
+  all.textContent='Todos os dias';
+  all.onclick=()=>selectDia('all');
+  w.appendChild(all);
   rDias.forEach((dia)=>{
     const isActive=lastDiaId?dia.id===lastDiaId:rDias.indexOf(dia)===0;
-    const b=document.createElement('div');b.className='m-btn'+(isActive?' on':'');
+    const b=document.createElement('div');b.className='m-btn'+(isActive?' on':'');b.dataset.key=dia.id;
     b.textContent=`Dia ${dia.numero} · ${dia.titulo.split('—')[0].split('&')[0].trim().slice(0,20)}`;
-    b.onclick=async()=>{
-      document.querySelectorAll('.m-btn').forEach(x=>x.classList.remove('on'));
-      b.classList.add('on');
-      lastDiaId=dia.id;
-      await drawMDia(dia);
-    };
+    b.onclick=()=>selectDia(dia);
     w.appendChild(b);
   });
 }
+
+// ── TOGGLE MAPA / LISTA ────────────────────────────────
+$('msw-map').onclick=()=>{
+  mView='map';
+  $('msw-map').classList.add('on');$('msw-list').classList.remove('on');
+  $('m-map').classList.remove('h');$('mstyle').classList.remove('h');
+  setTimeout(()=>lmap&&lmap.invalidateSize(),50);
+};
+$('msw-list').onclick=()=>{
+  mView='list';
+  $('msw-list').classList.add('on');$('msw-map').classList.remove('on');
+  $('m-map').classList.add('h');$('mstyle').classList.add('h');
+};
+
 // ── EXTRAI LAT/LNG DE URL GOOGLE MAPS ─────────────────
 function extractCoordsFromGmaps(url){
   if(!url)return null;
@@ -1256,19 +1414,6 @@ function extractCoordsFromGmaps(url){
   m=url.match(/[?&]ll=(-?\d+\.\d+),(-?\d+\.\d+)/);
   if(m)return{lat:+m[1],lng:+m[2]};
   return null;
-}
-
-// ── RESOLVE LINK ENCURTADO (goo.gl / maps.app.goo.gl) ─
-async function resolveShortLink(url){
-  if(!url)return url;
-  // links encurtados não contêm coordenadas — tentamos resolver via HEAD no Nominatim proxy
-  // como CORS bloqueia a maioria, usamos uma abordagem alternativa:
-  // extraímos o destino diretamente da URL se possível, senão retornamos null para cair no Nominatim
-  if(url.includes('maps.app.goo.gl')||url.includes('goo.gl/maps')){
-    // não conseguimos expandir no browser por CORS — retorna null para usar Nominatim
-    return null;
-  }
-  return url;
 }
 
 // ── MONTA URL DE ROTA GOOGLE MAPS COM WAYPOINTS ───────
@@ -1291,8 +1436,219 @@ function buildRouteUrl(pars){
   return url;
 }
 
+// ── CONTEXTO GEOGRÁFICO (país + cidade/viewbox) PARA UM TÍTULO DE DIA ──
+// mapa cidade → { nome, viewbox: "lon_min,lat_max,lon_max,lat_min" }
+// viewbox delimita a área geográfica — bounded=1 força resultados DENTRO dessa área
+const CIDADE_MAP={
+  'alfama':   {nome:'Lisboa',   vb:'-9.30,38.85,-8.95,38.60'},  // Lisboa metro alargada
+  'belém':    {nome:'Lisboa',   vb:'-9.30,38.85,-8.95,38.60'},
+  'lisboa':   {nome:'Lisboa',   vb:'-9.30,38.85,-8.95,38.60'},
+  'sintra':   {nome:'Sintra',   vb:'-9.48,38.85,-9.30,38.75'},
+  'cascais':  {nome:'Cascais',  vb:'-9.45,38.73,-9.38,38.69'},
+  'évora':    {nome:'Évora',    vb:'-7.96,38.59,-7.86,38.55'},
+  'evora':    {nome:'Évora',    vb:'-7.96,38.59,-7.86,38.55'},
+  'porto':    {nome:'Porto',    vb:'-8.72,41.20,-8.56,41.12'},
+  'gaia':     {nome:'V.N.Gaia', vb:'-8.66,41.14,-8.58,41.10'},
+  'funchal':  {nome:'Funchal',  vb:'-16.97,32.67,-16.85,32.62'},
+  'madeira':  {nome:'Funchal',  vb:'-16.97,32.67,-16.85,32.62'},
+  'óbidos':   {nome:'Óbidos',   vb:'-9.18,39.38,-9.14,39.35'},
+  'obidos':   {nome:'Óbidos',   vb:'-9.18,39.38,-9.14,39.35'},
+  'nazaré':   {nome:'Nazaré',   vb:'-9.09,39.61,-9.05,39.59'},
+  'nazare':   {nome:'Nazaré',   vb:'-9.09,39.61,-9.05,39.59'},
+  'esporão':  {nome:'Reguengos',vb:'-7.58,38.45,-7.50,38.38'},
+  'aveiro':   {nome:'Aveiro',   vb:'-8.68,40.65,-8.62,40.62'},
+  'coimbra':  {nome:'Coimbra',  vb:'-8.47,40.22,-8.40,40.18'},
+  'braga':    {nome:'Braga',    vb:'-8.47,41.56,-8.40,41.53'},
+  'guimarães':{nome:'Guimarães',vb:'-8.32,41.46,-8.27,41.43'},
+  'guimaraes':{nome:'Guimarães',vb:'-8.32,41.46,-8.27,41.43'},
+  'alentejo': {nome:'Alentejo', vb:'-8.50,38.80,-6.80,37.40'},
+  'viracopos':{nome:'Campinas', vb:'-47.20,-22.80,-47.00,-23.00'},
+  'campinas': {nome:'Campinas', vb:'-47.20,-22.80,-47.00,-23.00'},
+};
+function geoContextoDeTitulo(titulo){
+  const tituloLower=(titulo||'').toLowerCase();
+  const ehBrasil=/brasil|brazil|campinas|viracopos|são paulo|rio|brasília|bh|fortaleza|manaus|salvador/.test(tituloLower);
+  const pais=ehBrasil?'Brasil':'Portugal';
+  const countrycodes=ehBrasil?'br':'pt';
+  let cidadeCtx='',viewbox='',vbBounds=null;
+  for(const [k,v] of Object.entries(CIDADE_MAP)){
+    if(tituloLower.includes(k)){
+      cidadeCtx=v.nome;viewbox=v.vb;
+      const [lonMin,latMax,lonMax,latMin]=v.vb.split(',').map(Number);
+      vbBounds={lonMin,lonMax,latMin,latMax};
+      break;
+    }
+  }
+  return{pais,countrycodes,cidadeCtx,viewbox,vbBounds};
+}
+
+// ── GEOCODIFICA UMA PARADA (com cache, viewbox e cascata de tentativas) ──
+async function geocodeParada(p,ctx){
+  if(geoCache.has(p.id))return geoCache.get(p.id);
+
+  // 1ª prioridade: coords direto da URL (links não-encurtados)
+  const directCoords=extractCoordsFromGmaps(p.gmaps_link);
+  if(directCoords){
+    const r={lat:directCoords.lat,lng:directCoords.lng,ok:true,src:'link'};
+    geoCache.set(p.id,r);return r;
+  }
+
+  const{pais,countrycodes,cidadeCtx,viewbox,vbBounds}=ctx;
+  const dentroVB=(lat,lng)=>!vbBounds||(lat>=vbBounds.latMin&&lat<=vbBounds.latMax&&lng>=vbBounds.lonMin&&lng<=vbBounds.lonMax);
+  const q=p.endereco?.trim()
+    ? p.endereco.trim()
+    : cidadeCtx ? `${p.nome}, ${cidadeCtx}` : `${p.nome}, ${pais}`;
+
+  const tryNominatim=async(extraParams={})=>{
+    const ps=new URLSearchParams({format:'json',limit:'5',q,countrycodes,'accept-language':'pt-BR',...extraParams});
+    const r=await fetch(`https://nominatim.openstreetmap.org/search?${ps}`,{headers:{'User-Agent':'TripCash/1.0'}});
+    return r.json();
+  };
+
+  try{
+    let resultado=null;
+    if(viewbox){
+      const d1=await tryNominatim({viewbox,bounded:'1'});
+      if(d1.length)resultado={lat:+d1[0].lat,lng:+d1[0].lon};
+    }
+    if(!resultado&&viewbox){
+      const d2=await tryNominatim({viewbox,bounded:'0'});
+      const match=d2.find(r=>dentroVB(+r.lat,+r.lon));
+      if(match)resultado={lat:+match.lat,lng:+match.lon};
+    }
+    if(!resultado){
+      const d3=await tryNominatim();
+      if(d3.length)resultado={lat:+d3[0].lat,lng:+d3[0].lon};
+    }
+    const r=resultado?{lat:resultado.lat,lng:resultado.lng,ok:true,src:'nominatim'}:{ok:false,src:'fail'};
+    geoCache.set(p.id,r);return r;
+  }catch{
+    const r={ok:false,src:'fail'};geoCache.set(p.id,r);return r;
+  }
+}
+
+// ── GEOCODIFICA UM LOTE EM PARALELO (concorrência limitada) ──
+async function geocodeBatch(pars,ctx,concurrency=4){
+  const results=new Array(pars.length);
+  let idx=0;
+  async function worker(){
+    while(idx<pars.length){
+      const i=idx++;
+      results[i]=await geocodeParada(pars[i],ctx);
+    }
+  }
+  await Promise.all(Array.from({length:Math.min(concurrency,pars.length)},worker));
+  return results;
+}
+
+function renderParadaRow(container,p,i,total,corOverride){
+  const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
+  const isStart=i===0,isEnd=i===total-1&&total>1;
+  const cor=p.realizado?'#444':(corOverride||PC[i%PC.length]);
+  const item=document.createElement('div');item.className='mr';
+  const lh=document.createElement('div');lh.className='mr-lh';
+  const n=document.createElement('div');n.className='mr-n'+(isStart?' start':'')+(isEnd?' end':'');
+  n.style.cssText=`background:${cor};${p.realizado?'opacity:.4':''}`;
+  n.textContent=isStart?'A':(isEnd?'B':String(i+1));
+  lh.appendChild(n);
+  if(i<total-1){const ln=document.createElement('div');ln.className='mr-ln';lh.appendChild(ln);}
+  item.appendChild(lh);
+  const info=document.createElement('div');info.className='mr-info';
+  if(p.realizado)info.style.opacity='.45';
+  const hasLink=p.gmaps_link&&p.gmaps_link.startsWith('http');
+  const realBadge=p.realizado?'<span style="font-size:9px;background:color-mix(in srgb,var(--teal) 15%,transparent);color:var(--teal);border-radius:4px;padding:1px 5px;border:1px solid color-mix(in srgb,var(--teal) 30%,transparent)">✓ feito</span> ':'';
+  const linkBadge=hasLink?'<span style="font-size:9px;background:color-mix(in srgb,#1A73E8 18%,transparent);color:#6AB4F5;border-radius:4px;padding:1px 5px;border:1px solid color-mix(in srgb,#1A73E8 35%,transparent)">📌 link</span>':'';
+  const startEndLbl=isStart?'<span style="font-size:9px;color:var(--mut2)">· início</span>':(isEnd?'<span style="font-size:9px;color:var(--mut2)">· fim</span>':'');
+  info.innerHTML=`<div class="mr-nm" style="${p.realizado?'text-decoration:line-through':''}">${t.e} ${p.nome} ${realBadge}${linkBadge}</div><div class="mr-mt">${p.horario?'⏰ '+p.horario+' · ':''}${t.label} ${startEndLbl}</div>`;
+  if(p.observacao){
+    const ob=document.createElement('div');ob.className='mr-obs';ob.textContent='💬 '+p.observacao;info.appendChild(ob);
+    if(p.observacao.length>60){const tg=document.createElement('span');tg.className='p-tog';tg.textContent='ver mais ▾';tg.onclick=()=>{const op=ob.classList.toggle('open');tg.textContent=op?'ver menos ▴':'ver mais ▾';};info.appendChild(tg);}
+  }
+  const url=hasLink?p.gmaps_link:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((p.endereco||p.nome)+', Portugal')}`;
+  const lk=document.createElement('a');lk.className='btn-gm';lk.href=url;lk.target='_blank';lk.rel='noopener';
+  lk.innerHTML=hasLink?'📍 Abrir no Maps':'🔍 Buscar no Maps';info.appendChild(lk);
+  item.appendChild(info);container.appendChild(item);
+}
+
+// ── VISÃO "TODOS OS DIAS" ──────────────────────────────
+async function drawTodosDias(){
+  const myToken=++mapReqToken;
+  const el=$('m-list');
+  $('mhdr').textContent=`📍 Roteiro completo · ${rDias.length} dia${rDias.length!==1?'s':''}`;
+
+  lmks.forEach(m=>lmap.removeLayer(m));lmks=[];
+  if(lln){lmap.removeLayer(lln);lln=null;}
+
+  if(!rDias.length){
+    el.innerHTML='<div style="text-align:center;padding:32px;color:#444">Nenhum dia no roteiro</div>';
+    $('mst').style.display='none';
+    return;
+  }
+
+  el.innerHTML='';
+  const lls=[];
+  let totalParadas=0;
+
+  for(const dia of rDias){
+    const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
+    if(!pars.length)continue;
+    totalParadas+=pars.length;
+
+    const head=document.createElement('div');
+    head.style.cssText='font-size:11px;font-weight:700;color:var(--teal);letter-spacing:1px;text-transform:uppercase;margin:14px 0 6px;padding-left:2px;font-family:\'Plus Jakarta Sans\',sans-serif';
+    head.textContent=`Dia ${dia.numero} · ${dia.titulo}`;
+    el.appendChild(head);
+
+    const lista=document.createElement('div');
+    lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:4px 14px;margin-bottom:8px';
+    pars.forEach((p,i)=>renderParadaRow(lista,p,i,pars.length,PC[rDias.indexOf(dia)%PC.length]));
+    el.appendChild(lista);
+  }
+
+  if(mapReqToken!==myToken)return; // seleção trocou durante a montagem da lista
+
+  $('mst').style.display='flex';
+  $('mst').innerHTML=`<span class="m-spin"></span> Localizando ${totalParadas} parada${totalParadas!==1?'s':''} no mapa...`;
+
+  let markerNum=0;
+  for(const dia of rDias){
+    const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem).filter(p=>!p.realizado);
+    if(!pars.length)continue;
+    const ctx=geoContextoDeTitulo(dia.titulo);
+    const coords=await geocodeBatch(pars,ctx);
+    if(mapReqToken!==myToken)return; // resultado obsoleto — usuário já trocou de seleção
+
+    const diaCor=PC[rDias.indexOf(dia)%PC.length];
+    const diaLls=[];
+    pars.forEach((p,i)=>{
+      const c=coords[i];if(!c.ok)return;
+      markerNum++;
+      const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
+      const icon=L.divIcon({
+        html:`<div style="width:26px;height:26px;background:${diaCor};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.8);box-shadow:0 2px 8px rgba(0,0,0,.5)"><span style="transform:rotate(45deg);font-size:10px;font-weight:700;color:#fff">${markerNum}</span></div>`,
+        iconSize:[26,26],iconAnchor:[13,26],popupAnchor:[0,-28],className:''
+      });
+      const mk=L.marker([c.lat,c.lng],{icon}).addTo(lmap);
+      mk.bindPopup(`<strong>${markerNum}. ${p.nome}</strong><br><span style="color:#888;font-size:11px">Dia ${dia.numero} · ${t.e} ${t.label}</span>`);
+      lmks.push(mk);diaLls.push([c.lat,c.lng]);lls.push([c.lat,c.lng]);
+    });
+    if(diaLls.length>1)L.polyline(diaLls,{color:diaCor,weight:3,opacity:.7,dashArray:'8,5'}).addTo(lmap);
+  }
+
+  if(mapReqToken!==myToken)return;
+  $('mst').style.display='none';
+  if(lls.length){
+    lmap.fitBounds(L.featureGroup(lmks).getBounds().pad(0.25));
+    setTimeout(()=>lmap&&lmap.invalidateSize(),150);
+  }
+}
+
 async function drawMDia(dia){
-  lastDiaId=dia.id; // persiste para retomar ao voltar ao mapa
+  // token de requisição — qualquer geocodificação que resolver depois de uma nova seleção
+  // de dia é descartada antes de tocar o mapa, o que elimina o bug de pontos do dia
+  // anterior aparecendo sobre o dia atual
+  const myToken=++mapReqToken;
+
   const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
   const el=$('m-list');el.innerHTML='';
   $('mhdr').textContent=`📍 Dia ${dia.numero} · ${dia.titulo}`;
@@ -1300,6 +1656,8 @@ async function drawMDia(dia){
   // limpa mapa
   lmks.forEach(m=>lmap.removeLayer(m));lmks=[];
   if(lln){lmap.removeLayer(lln);lln=null;}
+  $('mst').style.display='none';
+
   if(!pars.length){
     el.innerHTML='<div style="text-align:center;padding:32px;color:#444">Nenhuma parada neste dia</div>';
     return;
@@ -1313,172 +1671,56 @@ async function drawMDia(dia){
   const rurl=buildRouteUrl(parsMap.length?parsMap:pars);
   const rc=document.createElement('div');rc.className='rc';
   const totTxt=`${pars.length} parada${pars.length!==1?'s':''}`;
-  const realTxt=pars.filter(p=>p.realizado).length?` · ✅ ${pars.filter(p=>p.realizado).length} realizada${pars.filter(p=>p.realizado).length!==1?'s':''}`:'' ;
+  const realCount=pars.filter(p=>p.realizado).length;
+  const realTxt=realCount?` · ✅ ${realCount} realizada${realCount!==1?'s':''}`:'';
   rc.innerHTML=`<div class="rc-t">Dia ${dia.numero} · ${dia.titulo}</div><div class="rc-s">${dtf} · ${totTxt}${realTxt}</div>`;
   const ra=document.createElement('a');ra.className='btn-gmaps-full';ra.href=rurl;ra.target='_blank';ra.rel='noopener';
   ra.innerHTML='🗺️ Abrir rota completa no Google Maps';
   rc.appendChild(ra);el.appendChild(rc);
 
-  // ── LISTA COMPLETA (todas as paradas, realizadas aparecem riscadas) ──
+  // ── LISTA COMPLETA (ordem sequencial, início/fim marcados, realizadas riscadas) ──
   const lista=document.createElement('div');
-  lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:4px 14px;margin-bottom:16px';
-  pars.forEach((p,i)=>{
-    const t=TIPOS.find(x=>x.id===p.tipo)||TIPOS[5];
-    const item=document.createElement('div');item.className='mr';
-    // número sequencial na lista (cor esmaecida se realizado)
-    const cor=p.realizado?'#444':PC[i%PC.length];
-    const lh=document.createElement('div');lh.className='mr-lh';
-    const n=document.createElement('div');n.className='mr-n';
-    n.style.cssText=`background:${cor};${p.realizado?'opacity:.4':''}`;
-    n.textContent=i+1;lh.appendChild(n);
-    if(i<pars.length-1){const ln=document.createElement('div');ln.className='mr-ln';lh.appendChild(ln);}
-    item.appendChild(lh);
-    const info=document.createElement('div');info.className='mr-info';
-    if(p.realizado)info.style.opacity='.45';
-    const hasLink=p.gmaps_link&&p.gmaps_link.startsWith('http');
-    const realBadge=p.realizado?'<span style="font-size:9px;background:color-mix(in srgb,var(--teal) 15%,transparent);color:var(--teal);border-radius:4px;padding:1px 5px;border:1px solid color-mix(in srgb,var(--teal) 30%,transparent)">✓ feito</span> ':'';
-    const linkBadge=hasLink?'<span style="font-size:9px;background:color-mix(in srgb,#1A73E8 18%,transparent);color:#6AB4F5;border-radius:4px;padding:1px 5px;border:1px solid color-mix(in srgb,#1A73E8 35%,transparent)">📌 link</span>':'';
-    info.innerHTML=`<div class="mr-nm" style="${p.realizado?'text-decoration:line-through':''}">${t.e} ${p.nome} ${realBadge}${linkBadge}</div><div class="mr-mt">${p.horario?'⏰ '+p.horario+' · ':''}${t.label}</div>`;
-    if(p.observacao){
-      const ob=document.createElement('div');ob.className='mr-obs';ob.textContent='💬 '+p.observacao;info.appendChild(ob);
-      if(p.observacao.length>60){const tg=document.createElement('span');tg.className='p-tog';tg.textContent='ver mais ▾';tg.onclick=()=>{const op=ob.classList.toggle('open');tg.textContent=op?'ver menos ▴':'ver mais ▾';};info.appendChild(tg);}
-    }
-    const url=hasLink?p.gmaps_link:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((p.endereco||p.nome)+', Portugal')}`;
-    const lk=document.createElement('a');lk.className='btn-gm';lk.href=url;lk.target='_blank';lk.rel='noopener';
-    lk.innerHTML=hasLink?'📍 Abrir no Maps':'🔍 Buscar no Maps';info.appendChild(lk);
-    item.appendChild(info);lista.appendChild(item);
-  });
+  lista.style.cssText='background:var(--sur);border:1px solid var(--bor);border-radius:var(--r);padding:4px 14px;margin-bottom:16px';
+  pars.forEach((p,i)=>renderParadaRow(lista,p,i,pars.length));
   el.appendChild(lista);
 
-  // ── GEOCODIFICAÇÃO — apenas paradas NÃO realizadas ──
+  // ── GEOCODIFICAÇÃO — apenas paradas NÃO realizadas, com cache + paralelo ──
   if(!parsMap.length){
-    $('mst').style.display='block';
-    $('mst').textContent='✅ Todas as paradas já foram realizadas';
-    setTimeout(()=>{ $('mst').style.display='none'; },3000);
+    $('mst').style.display='flex';
+    $('mst').innerHTML='✅ Todas as paradas já foram realizadas';
+    setTimeout(()=>{ if(mapReqToken===myToken)$('mst').style.display='none'; },3000);
     return;
   }
 
-  $('mst').style.display='block';
-  $('mst').textContent=`🔍 Localizando ${parsMap.length} parada${parsMap.length!==1?'s':''} no mapa...`;
+  $('mst').style.display='flex';
+  $('mst').innerHTML=`<span class="m-spin"></span> Localizando ${parsMap.length} parada${parsMap.length!==1?'s':''} no mapa...`;
 
-  // tenta inferir país/região pelo nome do dia (heurística simples)
-  const tituloLower=(dia.titulo||'').toLowerCase();
-  const ehBrasil=/brasil|brazil|campinas|viracopos|são paulo|rio|brasília|bh|fortaleza|manaus|salvador/.test(tituloLower);
-  const pais=ehBrasil?'Brasil':'Portugal';
-  const countrycodes=ehBrasil?'br':'pt';
+  const ctx=geoContextoDeTitulo(dia.titulo);
+  const coordsRaw=await geocodeBatch(parsMap,ctx);
 
-  // mapa cidade → { nome, viewbox: "lon_min,lat_max,lon_max,lat_min" }
-  // viewbox delimita a área geográfica — bounded=1 força resultados DENTRO dessa área
-  const cidadeMap={
-    'alfama':   {nome:'Lisboa',   vb:'-9.30,38.85,-8.95,38.60'},  // Lisboa metro alargada
-    'belém':    {nome:'Lisboa',   vb:'-9.30,38.85,-8.95,38.60'},
-    'lisboa':   {nome:'Lisboa',   vb:'-9.30,38.85,-8.95,38.60'},
-    'sintra':   {nome:'Sintra',   vb:'-9.48,38.85,-9.30,38.75'},
-    'cascais':  {nome:'Cascais',  vb:'-9.45,38.73,-9.38,38.69'},
-    'évora':    {nome:'Évora',    vb:'-7.96,38.59,-7.86,38.55'},
-    'evora':    {nome:'Évora',    vb:'-7.96,38.59,-7.86,38.55'},
-    'porto':    {nome:'Porto',    vb:'-8.72,41.20,-8.56,41.12'},
-    'gaia':     {nome:'V.N.Gaia', vb:'-8.66,41.14,-8.58,41.10'},
-    'funchal':  {nome:'Funchal',  vb:'-16.97,32.67,-16.85,32.62'},
-    'madeira':  {nome:'Funchal',  vb:'-16.97,32.67,-16.85,32.62'},
-    'óbidos':   {nome:'Óbidos',   vb:'-9.18,39.38,-9.14,39.35'},
-    'obidos':   {nome:'Óbidos',   vb:'-9.18,39.38,-9.14,39.35'},
-    'nazaré':   {nome:'Nazaré',   vb:'-9.09,39.61,-9.05,39.59'},
-    'nazare':   {nome:'Nazaré',   vb:'-9.09,39.61,-9.05,39.59'},
-    'esporão':  {nome:'Reguengos',vb:'-7.58,38.45,-7.50,38.38'},
-    'aveiro':   {nome:'Aveiro',   vb:'-8.68,40.65,-8.62,40.62'},
-    'coimbra':  {nome:'Coimbra',  vb:'-8.47,40.22,-8.40,40.18'},
-    'braga':    {nome:'Braga',    vb:'-8.47,41.56,-8.40,41.53'},
-    'guimarães':{nome:'Guimarães',vb:'-8.32,41.46,-8.27,41.43'},
-    'guimaraes':{nome:'Guimarães',vb:'-8.32,41.46,-8.27,41.43'},
-    'alentejo': {nome:'Alentejo', vb:'-8.50,38.80,-6.80,37.40'},
-    'viracopos':{nome:'Campinas', vb:'-47.20,-22.80,-47.00,-23.00'},
-    'campinas': {nome:'Campinas', vb:'-47.20,-22.80,-47.00,-23.00'},
-  };
-  let cidadeCtx='';
-  let viewbox='';
-  let vbBounds=null; // {lonMin,latMin,lonMax,latMax} para validar coords retornadas
-  for(const [k,v] of Object.entries(cidadeMap)){
-    if(tituloLower.includes(k)){
-      cidadeCtx=v.nome;viewbox=v.vb;
-      const [lonMin,latMax,lonMax,latMin]=v.vb.split(',').map(Number);
-      vbBounds={lonMin,lonMax,latMin,latMax};
-      break;
-    }
-  }
-
-  // verifica se coordenada está dentro da bbox
-  const dentroVB=(lat,lng)=>!vbBounds||(lat>=vbBounds.latMin&&lat<=vbBounds.latMax&&lng>=vbBounds.lonMin&&lng<=vbBounds.lonMax);
-
-  const coords=[];
-  for(let i=0;i<parsMap.length;i++){
-    const p=parsMap[i];
-
-    // 1ª prioridade: coords direto da URL (links não-encurtados)
-    const directCoords=extractCoordsFromGmaps(p.gmaps_link);
-    if(directCoords){
-      coords.push({p,lat:directCoords.lat,lng:directCoords.lng,ok:true,src:'link'});
-      continue;
-    }
-
-    // query base: endereço > nome+cidade > nome+país
-    const q=p.endereco?.trim()
-      ? p.endereco.trim()
-      : cidadeCtx ? `${p.nome}, ${cidadeCtx}` : `${p.nome}, ${pais}`;
-
-    const tryNominatim=async(extraParams={})=>{
-      const ps=new URLSearchParams({format:'json',limit:'5',q,countrycodes,'accept-language':'pt-BR',...extraParams});
-      const r=await fetch(`https://nominatim.openstreetmap.org/search?${ps}`,{headers:{'User-Agent':'TripCash/1.0'}});
-      return r.json();
-    };
-
-    try{
-      let resultado=null;
-
-      if(viewbox){
-        // tentativa 1: bounded=1 — só dentro da bbox
-        const d1=await tryNominatim({viewbox,bounded:'1'});
-        if(d1.length)resultado={lat:+d1[0].lat,lng:+d1[0].lon};
-      }
-
-      if(!resultado&&viewbox){
-        // tentativa 2: bounded=0 — prioriza bbox mas aceita fora
-        // validamos manualmente: só aceita se a coord estiver dentro da bbox
-        const d2=await tryNominatim({viewbox,bounded:'0'});
-        const match=d2.find(r=>dentroVB(+r.lat,+r.lon));
-        if(match)resultado={lat:+match.lat,lng:+match.lon};
-      }
-
-      if(!resultado){
-        // fallback final: sem viewbox, aceita qualquer resultado no país
-        const d3=await tryNominatim();
-        if(d3.length)resultado={lat:+d3[0].lat,lng:+d3[0].lon};
-      }
-
-      coords.push(resultado?{p,lat:resultado.lat,lng:resultado.lng,ok:true,src:'nominatim'}:{p,ok:false,src:'fail'});
-    }catch{coords.push({p,ok:false,src:'fail'});}
-
-    if(i<parsMap.length-1)await new Promise(r=>setTimeout(r,400));
-  }
+  // se outra seleção de dia ocorreu nesse meio tempo, descarta — corrige cross-day markers
+  if(mapReqToken!==myToken)return;
 
   $('mst').style.display='none';
-  const found=coords.filter(c=>c.ok);
+  const found=coordsRaw.map((c,i)=>({...c,p:parsMap[i]})).filter(c=>c.ok);
   if(!found.length){
-    $('mst').style.display='block';
-    $('mst').textContent='📍 Não foi possível localizar as paradas no mapa';
-    setTimeout(()=>{ $('mst').style.display='none'; },3000);
+    $('mst').style.display='flex';
+    $('mst').innerHTML='📍 Não foi possível localizar as paradas no mapa';
+    setTimeout(()=>{ if(mapReqToken===myToken)$('mst').style.display='none'; },3000);
     return;
   }
 
   const lls=[];
-  // numeração no mapa = posição na lista original (mantém consistência com a lista)
-  found.forEach((c,i)=>{
+  // numeração no mapa = posição na lista original (mantém consistência com a lista); A/B em início/fim
+  found.forEach(c=>{
     const t=TIPOS.find(x=>x.id===c.p.tipo)||TIPOS[5];
     const listIdx=pars.findIndex(p=>p.id===c.p.id);
-    const num=listIdx>=0?listIdx+1:i+1;
-    const cor=PC[listIdx>=0?listIdx%PC.length:i%PC.length];
+    const num=listIdx>=0?listIdx+1:1;
+    const isStart=listIdx===0,isEnd=listIdx===pars.length-1&&pars.length>1;
+    const cor=PC[listIdx>=0?listIdx%PC.length:0];
+    const label=isStart?'A':(isEnd?'B':String(num));
     const icon=L.divIcon({
-      html:`<div style="width:28px;height:28px;background:${cor};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.8);box-shadow:0 2px 8px rgba(0,0,0,.5)"><span style="transform:rotate(45deg);font-size:11px;font-weight:700;color:#fff">${num}</span></div>`,
+      html:`<div style="width:28px;height:28px;background:${cor};border-radius:50% 50% 50% 0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,.85);box-shadow:0 2px 8px rgba(0,0,0,.5)"><span style="transform:rotate(45deg);font-size:11px;font-weight:700;color:#fff">${label}</span></div>`,
       iconSize:[28,28],iconAnchor:[14,28],popupAnchor:[0,-30],className:''
     });
     const mk=L.marker([c.lat,c.lng],{icon}).addTo(lmap);
@@ -1487,8 +1729,10 @@ async function drawMDia(dia){
   });
 
   if(lls.length>1)lln=L.polyline(lls,{color:'#4ECDC4',weight:3,opacity:.75,dashArray:'8,5'}).addTo(lmap);
-  lmap.fitBounds(L.featureGroup(lmks).getBounds().pad(0.3));
-  setTimeout(()=>lmap&&lmap.invalidateSize(),150);
+  if(mapReqToken===myToken){
+    lmap.fitBounds(L.featureGroup(lmks).getBounds().pad(0.3));
+    setTimeout(()=>lmap&&lmap.invalidateSize(),150);
+  }
 }
 
 // ── TABS ──────────────────────────────────────────────

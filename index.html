@@ -210,6 +210,10 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
   text-decoration:none!important;cursor:pointer;
 }
 .p-gm-badge:active{background:color-mix(in srgb,#1A73E8 30%,transparent)}
+.anexo-badge{
+  display:inline-flex;align-items:center;font-size:11px;
+  cursor:pointer;vertical-align:middle;padding:0 2px;
+}
 .p-hor{
   display:inline-flex;align-items:center;gap:3px;font-size:10px;
   color:var(--teal);font-weight:700;margin-top:4px;
@@ -678,6 +682,16 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div class="csh-l" id="cml"></div>
 </div></div>
 
+<!-- POPUP ANEXOS RÁPIDO -->
+<div class="cov" id="oan"><div class="csh">
+  <div class="hdl"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="font-size:16px;font-weight:800;display:flex;align-items:center;gap:6px">📎 Anexos</div>
+    <button class="bi" id="ancl" style="font-size:18px;color:var(--mut2)">✕</button>
+  </div>
+  <div class="doc-list" id="anlist"></div>
+</div></div>
+
 <!-- EDIT VIAGEM -->
 <div class="eov" id="oev"><div class="ebox">
   <h3>✏️ Editar Viagem</h3>
@@ -722,6 +736,7 @@ let fcat=null,egid=null;
 let rDias=[],rPars=[],dopen={};
 let deid=null,peid=null,daid=null,rmod=false;
 let documentos=[];
+let gastosComAnexo=new Set();
 const DOC_BUCKET='documentos-viagem';
 let lmap=null,lmks=[],lln=null;
 let mapReqToken=0;          // token incremental — invalida respostas async obsoletas (corrige pontos do dia errado)
@@ -782,7 +797,13 @@ async function loadGastos(){
   const v=viagens.find(x=>x.id===vid);if(!v)return;
   $('tnmt').textContent=v.nome;
   const{data}=await sb.from('gastos').select('*').eq('viagem_id',vid).order('data',{ascending:false});
-  gastos=data||[];drawTop();drawDash();drawList();
+  gastos=data||[];
+  await loadGastosComAnexo();
+  drawTop();drawDash();drawList();
+}
+async function loadGastosComAnexo(){
+  const{data,error}=await sb.from('documentos').select('gasto_id').eq('viagem_id',vid).not('gasto_id','is',null);
+  gastosComAnexo=error?new Set():new Set((data||[]).map(d=>d.gasto_id));
 }
 function drawTop(){
   const v=viagens.find(x=>x.id===vid);
@@ -1000,9 +1021,10 @@ function drawList(){
       c.items.forEach(g=>{
         const row=document.createElement('div');row.className='cat-group-item';
         const dt=g.data?g.data.split('-').reverse().join('/'):'';
+        const temAnexo=gastosComAnexo.has(g.id);
         row.innerHTML=`
           <div class="cgi-left">
-            <div class="cgi-desc">${g.descricao}</div>
+            <div class="cgi-desc">${g.descricao}${temAnexo?' <span class="anexo-badge">📎</span>':''}</div>
             <div class="cgi-sub">${dt}${g.observacao?' · '+g.observacao:''}</div>
           </div>
           <div class="cgi-right">
@@ -1012,6 +1034,10 @@ function drawList(){
           </div>`;
         row.querySelectorAll('.bi')[0].onclick=e=>{e.stopPropagation();editG(g.id);};
         row.querySelectorAll('.bi')[1].onclick=e=>{e.stopPropagation();delG(g.id);};
+        if(temAnexo){
+          const badge=row.querySelector('.anexo-badge');
+          badge.onclick=e=>{e.stopPropagation();verAnexosDoGasto(g.id);};
+        }
         itemsDiv.appendChild(row);
       });
       hdr.onclick=()=>{
@@ -1040,10 +1066,11 @@ function drawList(){
       const c=CATS.find(x=>x.id===g.categoria)||CATS[5];
       const d=document.createElement('div');d.className='gi';d.style.setProperty('--c',c.c);
       const dt=g.data?g.data.split('-').reverse().join('/'):'';
+      const temAnexo=gastosComAnexo.has(g.id);
       d.innerHTML=`
         <div class="gl"><span style="font-size:20px">${c.e}</span>
           <div>
-            <div style="font-size:13px;font-weight:600">${g.descricao}</div>
+            <div style="font-size:13px;font-weight:600">${g.descricao}${temAnexo?' <span class="anexo-badge">📎</span>':''}</div>
             <div style="font-size:10px;color:var(--mut2);font-weight:500">${dt}${g.observacao?' · '+g.observacao:''}</div>
           </div>
         </div>
@@ -1055,6 +1082,10 @@ function drawList(){
         </div>`;
       d.querySelectorAll('.bi')[0].onclick=()=>editG(g.id);
       d.querySelectorAll('.bi')[1].onclick=()=>delG(g.id);
+      if(temAnexo){
+        const badge=d.querySelector('.anexo-badge');
+        badge.onclick=e=>{e.stopPropagation();verAnexosDoGasto(g.id);};
+      }
       el.appendChild(d);
     });
   }
@@ -1179,8 +1210,39 @@ async function excluirDocumento(doc){
   await sb.storage.from(DOC_BUCKET).remove([doc.storage_path]);
   const{error}=await sb.from('documentos').delete().eq('id',doc.id);
   if(error){documentos=bk;drawDocList();toast('Erro ao excluir ⚠️');}
-  else toast('Anexo excluído ✓');
+  else{
+    toast('Anexo excluído ✓');
+    if(doc.gasto_id && !documentos.some(d=>d.gasto_id===doc.gasto_id)){
+      gastosComAnexo.delete(doc.gasto_id);drawList();
+    }
+  }
 }
+
+async function verAnexosDoGasto(gastoId){
+  const{data,error}=await sb.from('documentos').select('*').eq('gasto_id',gastoId).order('criado_em',{ascending:false});
+  const docs=error?[]:(data||[]);
+  const el=$('anlist');el.innerHTML='';
+  if(!docs.length){
+    const e=document.createElement('div');e.className='doc-empty';e.textContent='Nenhum anexo encontrado';el.appendChild(e);
+  }else{
+    docs.forEach(doc=>{
+      const t=TIPOS_DOC.find(x=>x.id===doc.tipo_doc)||TIPOS_DOC[5];
+      const item=document.createElement('div');item.className='doc-item';
+      const info=document.createElement('div');info.className='doc-info';
+      const nm=document.createElement('div');nm.className='doc-nm';nm.textContent=`${t.e} ${doc.nome_original}`;info.appendChild(nm);
+      const meta=document.createElement('div');meta.className='doc-meta';
+      meta.textContent=`${t.label} · ${fmtBytes(doc.tamanho_bytes)} · ${fmtDataDoc(doc.criado_em)}`;
+      info.appendChild(meta);
+      item.appendChild(info);
+      const ob=document.createElement('button');ob.className='bi';ob.textContent='⬇️';ob.style.fontSize='16px';
+      ob.onclick=()=>abrirDocumento(doc);item.appendChild(ob);
+      el.appendChild(item);
+    });
+  }
+  $('oan').classList.add('on');
+}
+$('ancl').onclick=()=>$('oan').classList.remove('on');
+$('oan').onclick=e=>{if(e.target===$('oan'))$('oan').classList.remove('on');};
 
 async function uploadDocumento(file){
   if(!egid){toast('Salve o gasto primeiro ⚠️');return;}
@@ -1203,6 +1265,7 @@ async function uploadDocumento(file){
     toast('Erro ao salvar anexo ⚠️');return;
   }
   documentos.unshift(ins);drawDocList();toast('Anexo adicionado ✓');
+  gastosComAnexo.add(egid);drawList();
 }
 $('docupbtn').onclick=()=>$('docfile').click();
 $('docfile').onchange=(e)=>{

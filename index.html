@@ -394,6 +394,16 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .tpills{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.dpills{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.doc-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.doc-item{display:flex;align-items:center;gap:8px;background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:9px 10px}
+.doc-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.doc-nm{font-size:12px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.doc-meta{font-size:10px;color:var(--mut)}
+.doc-btns{display:flex;gap:2px;flex-shrink:0}
+.doc-empty{font-size:11px;color:var(--mut);padding:6px 0;text-align:center}
+.doc-upbtn{width:100%;margin-bottom:12px;padding:10px;color:var(--teal);border-color:var(--teal);font-size:13px;font-weight:600}
+.doc-disabled-msg{font-size:11px;color:var(--mut);padding:10px;text-align:center;background:var(--sur);border-radius:10px;margin-bottom:12px}
 .pill{
   background:var(--bg);border:1px solid var(--bor);border-radius:10px;
   color:var(--txt);padding:8px 10px;font-size:11px;cursor:pointer;
@@ -619,6 +629,16 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <label class="fl">OBSERVAÇÃO</label><input class="fi" id="fo" type="text" autocomplete="off" placeholder="Detalhes..."/>
   <label class="fl">CATEGORIA</label>
   <div class="pills" id="cpills"></div>
+
+  <label class="fl">📎 ANEXOS</label>
+  <div id="doc-disabled-msg" class="doc-disabled-msg" style="display:none">Salve o gasto primeiro para anexar documentos</div>
+  <div id="doc-section" style="display:none">
+    <div class="doc-list" id="doclist"></div>
+    <div class="dpills" id="dpills"></div>
+    <input type="file" id="docfile" accept="application/pdf" style="display:none"/>
+    <button class="bs doc-upbtn" id="docupbtn" type="button">+ Anexar PDF</button>
+  </div>
+
   <button class="bok" id="gok" style="width:100%" disabled>Salvar</button>
 </div></div>
 
@@ -686,6 +706,14 @@ const TIPOS=[
   {id:'outro',      label:'Outro',      e:'📍',c:'#C3B1E1'},
 ];
 const PC=['#FF6B6B','#4ECDC4','#FFE66D','#A8E6CF','#FF8B94','#C3B1E1','#F7DC6F','#82E0AA','#F1948A','#85C1E9'];
+const TIPOS_DOC=[
+  {id:'passagem',   label:'Passagem',   e:'✈️',c:'#4ECDC4'},
+  {id:'hospedagem', label:'Hospedagem', e:'🏨',c:'#FF6B6B'},
+  {id:'veiculo',    label:'Veículo',    e:'🚗',c:'#A8E6CF'},
+  {id:'seguro',     label:'Seguro',     e:'🛡️',c:'#FFE66D'},
+  {id:'voucher',    label:'Voucher',    e:'🎫',c:'#FF8B94'},
+  {id:'outro',      label:'Outro',      e:'📄',c:'#C3B1E1'},
+];
 const R=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
 const $=id=>document.getElementById(id);
 
@@ -693,6 +721,8 @@ let sb,vid=null,gastos=[],viagens=[];
 let fcat=null,egid=null;
 let rDias=[],rPars=[],dopen={};
 let deid=null,peid=null,daid=null,rmod=false;
+let documentos=[];
+const DOC_BUCKET='documentos-viagem';
 let lmap=null,lmks=[],lln=null;
 let mapReqToken=0;          // token incremental — invalida respostas async obsoletas (corrige pontos do dia errado)
 const geoCache=new Map();   // chave: parada.id → resultado geocodificado — evita regeocodificar ao revisitar um dia
@@ -1048,6 +1078,8 @@ $('fab').onclick=()=>{
   $('fdt').value=new Date().toISOString().split('T')[0];
   document.querySelectorAll('#cpills .pill').forEach(x=>x.classList.remove('on'));
   document.querySelector('#cpills .pill').classList.add('on');
+  documentos=[];drawDocList();
+  $('doc-section').style.display='none';$('doc-disabled-msg').style.display='block';
   chkg();$('og').classList.add('on');setTimeout(()=>$('fd').focus(),100);
 };
 $('og').onclick=e=>{if(e.target===$('og'))$('og').classList.remove('on');};
@@ -1057,6 +1089,8 @@ function editG(id){
   $('fd').value=g.descricao;$('fv').value=Number(g.valor);
   $('fo').value=g.observacao||'';$('fdt').value=g.data;
   document.querySelectorAll('#cpills .pill').forEach(p=>p.classList.toggle('on',p.dataset.id===g.categoria));
+  $('doc-section').style.display='block';$('doc-disabled-msg').style.display='none';
+  loadDocumentos(id);
   chkg();$('og').classList.add('on');
 }
 $('gok').onclick=async()=>{
@@ -1075,7 +1109,7 @@ $('gok').onclick=async()=>{
     drawTop();drawDash();drawList();$('og').classList.remove('on');toast('Adicionado ✓');
     const{data:ins,error}=await sb.from('gastos').insert({viagem_id:vid,descricao,valor,observacao,data,categoria}).select().single();
     if(error){gastos=gastos.filter(g=>g.id!==tmp);drawTop();drawDash();drawList();toast('Erro ⚠️');}
-    else{const i=gastos.findIndex(g=>g.id===tmp);if(i!==-1)gastos[i]=ins;}
+    else{const i=gastos.findIndex(g=>g.id===tmp);if(i!==-1)gastos[i]=ins;egid=ins.id;}
   }
 };
 async function delG(id){
@@ -1084,6 +1118,98 @@ async function delG(id){
   const{error}=await sb.from('gastos').delete().eq('id',id);
   if(error){gastos=bk;drawTop();drawDash();drawList();toast('Erro ⚠️');}
 }
+
+// ── ANEXOS (DOCUMENTOS PDF) ───────────────────────────
+TIPOS_DOC.forEach(t=>{
+  const p=document.createElement('div');p.className='pill';p.dataset.id=t.id;
+  p.style.setProperty('--pc',t.c);p.innerHTML=`${t.e} ${t.label}`;
+  p.onclick=()=>{document.querySelectorAll('#dpills .pill').forEach(x=>x.classList.remove('on'));p.classList.add('on');};
+  $('dpills').appendChild(p);
+});
+document.querySelector('#dpills .pill').classList.add('on');
+
+function fmtBytes(b){
+  if(b<1024)return b+' B';
+  if(b<1024*1024)return (b/1024).toFixed(0)+' KB';
+  return (b/(1024*1024)).toFixed(1)+' MB';
+}
+function fmtDataDoc(iso){
+  return new Date(iso).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
+}
+
+async function loadDocumentos(gastoId){
+  const{data,error}=await sb.from('documentos').select('*').eq('gasto_id',gastoId).order('criado_em',{ascending:false});
+  documentos=error?[]:(data||[]);
+  drawDocList();
+}
+
+function drawDocList(){
+  const el=$('doclist');el.innerHTML='';
+  if(!documentos.length){
+    const e=document.createElement('div');e.className='doc-empty';e.textContent='Nenhum anexo ainda';el.appendChild(e);
+    return;
+  }
+  documentos.forEach(doc=>{
+    const t=TIPOS_DOC.find(x=>x.id===doc.tipo_doc)||TIPOS_DOC[5];
+    const item=document.createElement('div');item.className='doc-item';
+    const info=document.createElement('div');info.className='doc-info';
+    const nm=document.createElement('div');nm.className='doc-nm';nm.textContent=`${t.e} ${doc.nome_original}`;info.appendChild(nm);
+    const meta=document.createElement('div');meta.className='doc-meta';
+    meta.textContent=`${t.label} · ${fmtBytes(doc.tamanho_bytes)} · ${fmtDataDoc(doc.criado_em)}`;
+    info.appendChild(meta);
+    item.appendChild(info);
+    const btns=document.createElement('div');btns.className='doc-btns';
+    const ob=document.createElement('button');ob.className='bi';ob.textContent='⬇️';ob.style.fontSize='14px';
+    ob.onclick=()=>abrirDocumento(doc);btns.appendChild(ob);
+    const db=document.createElement('button');db.className='bi';db.textContent='🗑️';db.style.fontSize='14px';
+    db.onclick=()=>excluirDocumento(doc);btns.appendChild(db);
+    item.appendChild(btns);
+    el.appendChild(item);
+  });
+}
+
+function abrirDocumento(doc){
+  const{data}=sb.storage.from(DOC_BUCKET).getPublicUrl(doc.storage_path);
+  window.open(data.publicUrl,'_blank');
+}
+
+async function excluirDocumento(doc){
+  if(!confirm('Excluir este anexo?'))return;
+  const bk=[...documentos];documentos=documentos.filter(d=>d.id!==doc.id);drawDocList();
+  await sb.storage.from(DOC_BUCKET).remove([doc.storage_path]);
+  const{error}=await sb.from('documentos').delete().eq('id',doc.id);
+  if(error){documentos=bk;drawDocList();toast('Erro ao excluir ⚠️');}
+  else toast('Anexo excluído ✓');
+}
+
+async function uploadDocumento(file){
+  if(!egid){toast('Salve o gasto primeiro ⚠️');return;}
+  if(file.type!=='application/pdf'){toast('Apenas arquivos PDF ⚠️');return;}
+  const MAX_BYTES=20*1024*1024;
+  if(file.size>MAX_BYTES){toast('Arquivo acima de 20MB ⚠️');return;}
+  const tipo_doc=document.querySelector('#dpills .pill.on')?.dataset.id||'outro';
+  const docId=(crypto.randomUUID?crypto.randomUUID():'d'+Date.now()+Math.random().toString(16).slice(2));
+  const path=`${vid}/${docId}.pdf`;
+  toast('Enviando...');
+  const{error:upErr}=await sb.storage.from(DOC_BUCKET).upload(path,file,{contentType:'application/pdf'});
+  if(upErr){toast('Erro no upload ⚠️');return;}
+  const{data:ins,error:dbErr}=await sb.from('documentos').insert({
+    id:docId,viagem_id:vid,gasto_id:egid,tipo_doc,
+    nome_original:file.name,storage_path:path,
+    mime_type:file.type,tamanho_bytes:file.size
+  }).select().single();
+  if(dbErr){
+    await sb.storage.from(DOC_BUCKET).remove([path]);
+    toast('Erro ao salvar anexo ⚠️');return;
+  }
+  documentos.unshift(ins);drawDocList();toast('Anexo adicionado ✓');
+}
+$('docupbtn').onclick=()=>$('docfile').click();
+$('docfile').onchange=(e)=>{
+  const file=e.target.files[0];
+  if(file)uploadDocumento(file);
+  e.target.value='';
+};
 
 // ── ROTEIRO ───────────────────────────────────────────
 async function loadRot(){

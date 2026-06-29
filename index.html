@@ -1106,7 +1106,12 @@ function drawRot(){
     const dtf=dia.data?new Date(dia.data+'T12:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}):'';
     const card=document.createElement('div');card.className='dc';
     const hdr=document.createElement('div');hdr.className='dh';
-    hdr.innerHTML=`<span class="db-g">Dia ${dia.numero}</span><span class="db-t">${dia.titulo}</span><span class="db-d">${dtf}</span><span style="color:var(--mut);font-size:10px;flex-shrink:0">${ab2?'▲':'▼'}</span>`;
+    const hg=document.createElement('span');hg.className='db-g';hg.textContent='Dia '+dia.numero;hdr.appendChild(hg);
+    const ht=document.createElement('span');ht.className='db-t';ht.textContent=dia.titulo;hdr.appendChild(ht);
+    const hd=document.createElement('span');hd.className='db-d';hd.textContent=dtf;hdr.appendChild(hd);
+    const heb=document.createElement('button');heb.className='bi';heb.textContent='✏️';heb.style.cssText='font-size:14px;flex-shrink:0';
+    heb.onclick=e=>{e.stopPropagation();openDia(dia.id);};hdr.appendChild(heb);
+    const hchev=document.createElement('span');hchev.style.cssText='color:var(--mut);font-size:10px;flex-shrink:0';hchev.textContent=ab2?'▲':'▼';hdr.appendChild(hchev);
     hdr.onclick=()=>{dopen[dia.id]=!ab2;drawRot();};card.appendChild(hdr);
     if(ab2){
       const body=document.createElement('div');body.className='db-body';

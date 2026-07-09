@@ -544,6 +544,62 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .cgi-sub{font-size:10px;color:var(--mut2);font-weight:500;margin-top:1px}
 .cgi-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
 .cgi-val{font-size:13px;font-weight:700}
+/* ── FASE 1: distância entre paradas ── */
+.p-dist{font-size:10px;color:var(--mut2);padding:2px 0 4px 34px;opacity:.75}
+
+/* ── FASE 2: reservas ── */
+.rsv-wrap{margin-bottom:18px}
+.rsv-add{background:none;border:1px solid var(--teal);color:var(--teal);border-radius:99px;font-size:11px;font-weight:600;padding:4px 12px;cursor:pointer}
+.rsv-strip{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 4px;scrollbar-width:none}
+.rsv-strip::-webkit-scrollbar{display:none}
+.rsv-card{flex:0 0 auto;min-width:190px;max-width:220px;background:var(--sur);border:1px solid var(--bor);border-radius:var(--r-sm);padding:10px 12px;cursor:pointer;border-left:3px solid var(--rc)}
+.rsv-hdr{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.rsv-ic{font-size:15px}
+.rsv-ttl{font-size:12px;font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rsv-status{font-size:9px;background:color-mix(in srgb,var(--teal) 15%,transparent);color:var(--teal);border-radius:4px;padding:1px 5px;border:1px solid color-mix(in srgb,var(--teal) 30%,transparent);flex-shrink:0}
+.rsv-pin{font-size:11px;flex-shrink:0}
+.rsv-route{font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px}
+.rsv-arrow{color:var(--mut2);font-size:11px}
+.rsv-sub{font-size:10px;color:var(--mut2);margin-top:2px}
+
+/* ── FASE 4: explorar arredores ── */
+.m-explore-btn{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:150;background:var(--grd);border:none;border-radius:99px;color:#fff;font-weight:700;font-size:13px;padding:10px 20px;box-shadow:var(--shadow-teal)}
+.m-explore-sheet{display:none;position:fixed;left:0;right:0;bottom:0;background:var(--sur);border-radius:20px 20px 0 0;padding:16px;max-height:60vh;overflow-y:auto;z-index:160}
+.m-explore-sheet.on{display:block}
+.m-explore-cats{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px}
+.m-explore-cat-btn{flex:0 0 auto;background:var(--sur2);border:1px solid var(--bor);border-radius:99px;padding:6px 14px;font-size:12px;color:var(--txt)}
+.m-explore-cat-btn.on{background:var(--teal);color:#000;font-weight:700}
+.m-explore-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--bor)}
+.mei-info{min-width:0}
+.mei-nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mei-sub{font-size:10px;color:var(--mut2)}
+.mei-add{background:none;border:1px solid var(--teal);color:var(--teal);border-radius:99px;font-size:11px;padding:4px 10px;flex-shrink:0}
+
+/* ── FASE 5: respiro + hierarquia tipográfica ── */
+:root{
+  --fs-caption:11px;
+  --fs-title:15px;
+  --fs-display:22px;
+  --sp-card:16px;
+}
+.dc{padding:var(--sp-card) var(--sp-card) 14px;margin-bottom:14px}
+.pi{padding:12px 0}
+.cat-card{padding:var(--sp-card) 14px}
+.sc{padding:var(--sp-card) 14px}
+.cat-group-item{padding:13px 14px}
+.gi{padding:14px 0}
+.sh{padding:24px 20px 20px}
+.db-t,.p-nm,.cgi-desc{font-size:var(--fs-title);font-weight:700;letter-spacing:-.1px}
+.trip-nm{font-size:19px;font-weight:800;letter-spacing:-.3px}
+.db-d,.p-hor,.p-end,.mr-mt,.cgi-sub{font-size:var(--fs-caption);font-weight:500;color:var(--mut2);line-height:1.45}
+/* ── FASE 6: configurações de categorias ── */
+.cfg-cat-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--bor)}
+.cfg-cat-ic{font-size:16px;flex-shrink:0}
+.cfg-cat-nm{flex:1;font-size:13px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cfg-cat-nm.inativa{color:var(--mut2);text-decoration:line-through;font-weight:500}
+.cfg-color-pick{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.cfg-color-sw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}
+.cfg-color-sw.on{border-color:var(--txt);box-shadow:0 0 0 2px var(--sur),0 0 0 3px var(--txt)}
 </style>
 </head>
 <body>
@@ -554,6 +610,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <div>
         <div class="trip-lbl">Controle de Viagem</div>
         <div class="trip-nm" id="tnm"><span id="tnmt">—</span><span style="font-size:13px;opacity:.5">✏️</span></div>
+        <button id="cfg-btn" style="background:none;border:none;font-size:14px;opacity:.6;cursor:pointer;padding:2px 4px 2px 0" title="Configurações de categorias">⚙️</button>
         <div class="chips" id="chips"></div>
       </div>
       <div class="bud-box">
@@ -623,6 +680,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div id="m-map"></div>
   <div class="m-status" id="mst" style="display:none"></div>
   <div id="m-list"></div>
+  <button class="m-explore-btn" id="mexp-btn">🔍 Explorar arredores</button>
+  <div class="m-explore-sheet" id="mexp-sheet">
+    <div class="m-explore-cats" id="mexp-cats"></div>
+    <div id="mexp-list"></div>
+  </div>
 </div>
 
 <!-- MODAL GASTO -->
@@ -647,6 +709,51 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 
   <button class="bok" id="gok" style="width:100%" disabled>Salvar</button>
+</div></div>
+
+<!-- MODAL RESERVA -->
+<div class="ov" id="orv"><div class="sh">
+  <div class="hdl"></div><div class="mtit" id="orvt">Nova Reserva</div>
+  <label class="fl">TIPO</label>
+  <div class="pills" id="rvpills">
+    <div class="pill" data-id="voo">✈️ Voo</div>
+    <div class="pill" data-id="hotel">🏨 Hotel</div>
+  </div>
+  <label class="fl">TÍTULO</label><input class="fi" id="rvt" type="text" autocomplete="off" placeholder="Ex: Hawaiian HA 623"/>
+  <label class="fl">STATUS</label><input class="fi" id="rvst" type="text" autocomplete="off" placeholder="Ex: On schedule"/>
+  <div class="g2">
+    <div><label class="fl">INÍCIO</label><input class="fi" id="rvi" type="datetime-local" style="color-scheme:dark"/></div>
+    <div><label class="fl">FIM</label><input class="fi" id="rvf" type="datetime-local" style="color-scheme:dark"/></div>
+  </div>
+  <div id="rv-voo-fields">
+    <div class="g2">
+      <div><label class="fl">CIA AÉREA</label><input class="fi" id="rvcia" type="text" autocomplete="off"/></div>
+      <div><label class="fl">Nº VOO</label><input class="fi" id="rvnv" type="text" autocomplete="off"/></div>
+    </div>
+    <div class="g2">
+      <div><label class="fl">ORIGEM (COD)</label><input class="fi" id="rvor" type="text" maxlength="4" style="text-transform:uppercase"/></div>
+      <div><label class="fl">DESTINO (COD)</label><input class="fi" id="rvde" type="text" maxlength="4" style="text-transform:uppercase"/></div>
+    </div>
+    <div class="g2">
+      <div><label class="fl">TERM. ORIGEM</label><input class="fi" id="rvto" type="text" autocomplete="off"/></div>
+      <div><label class="fl">TERM. DESTINO</label><input class="fi" id="rvtd" type="text" autocomplete="off"/></div>
+    </div>
+  </div>
+  <div id="rv-hotel-fields" style="display:none">
+    <label class="fl">ENDEREÇO</label><input class="fi" id="rvend" type="text" autocomplete="off"/>
+    <label class="fl">Nº DA RESERVA</label><input class="fi" id="rvnr" type="text" autocomplete="off"/>
+  </div>
+
+  <label class="fl">📎 ANEXOS</label>
+  <div id="doc-disabled-msg2" class="doc-disabled-msg" style="display:none">Salve a reserva primeiro para anexar documentos</div>
+  <div id="doc-section2" style="display:none">
+    <div class="doc-list" id="doclist2"></div>
+    <div class="dpills" id="dpills2"></div>
+    <input type="file" id="docfile2" accept="application/pdf" style="display:none"/>
+    <button class="bs doc-upbtn" id="docupbtn2" type="button">+ Anexar PDF</button>
+  </div>
+
+  <div class="br"><button class="bc" id="rvcnc">Cancelar</button><button class="bok" id="rvok">Salvar Reserva</button></div>
 </div></div>
 
 <!-- MODAL DIA -->
@@ -703,17 +810,24 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div class="br"><button class="bc" id="evcnc">Cancelar</button><button class="bok" id="evok">Salvar</button></div>
 </div></div>
 
+<!-- MODAL CONFIGURAÇÕES DE CATEGORIAS -->
+<div class="ov" id="ocfg"><div class="sh">
+  <div class="hdl"></div><div class="mtit">⚙️ Categorias</div>
+  <div id="cfg-list"></div>
+  <label class="fl" style="margin-top:14px">NOVA CATEGORIA</label>
+  <div class="g2">
+    <input class="fi" id="cfgemoji" type="text" maxlength="4" placeholder="🎯" style="text-align:center"/>
+    <input class="fi" id="cfglabel" type="text" autocomplete="off" placeholder="Nome da categoria"/>
+  </div>
+  <div class="cfg-color-pick" id="cfgcolors"></div>
+  <button class="bs" id="cfgaddbtn" style="width:100%;color:var(--teal);border-color:var(--teal);font-weight:600;margin-bottom:12px">+ Adicionar categoria</button>
+  <div class="br"><button class="bc" id="cfgcnc" style="width:100%">Fechar</button></div>
+</div></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
-const CATS=[
-  {id:'hospedagem', label:'Hospedagem', e:'🏨',c:'#FF6B6B'},
-  {id:'transporte', label:'Transporte', e:'✈️',c:'#4ECDC4'},
-  {id:'alimentacao',label:'Alimentação',e:'🍽️',c:'#FFE66D'},
-  {id:'passeios',   label:'Passeios',  e:'🎡',c:'#A8E6CF'},
-  {id:'compras',    label:'Compras',   e:'🛍️',c:'#FF8B94'},
-  {id:'outros',     label:'Outros',    e:'📦',c:'#C3B1E1'},
-];
+let categorias=[]; // carregado do banco via loadCategorias() — ver Fase 6 (Configurações)
 const TIPOS=[
   {id:'hotel',      label:'Hotel',      e:'🏨',c:'#FF6B6B'},
   {id:'restaurante',label:'Restaurante',e:'🍽️',c:'#FFE66D'},
@@ -731,6 +845,16 @@ const TIPOS_DOC=[
   {id:'voucher',    label:'Voucher',    e:'🎫',c:'#FF8B94'},
   {id:'outro',      label:'Outro',      e:'📄',c:'#C3B1E1'},
 ];
+const TIPOS_RESERVA={
+  voo:{e:'✈️',label:'Voo',c:'#4ECDC4'},
+  hotel:{e:'🏨',label:'Hospedagem',c:'#FF6B6B'}
+};
+const EXPLORE_CATS=[
+  {id:'restaurante',label:'Restaurantes',e:'🍽️',q:'node["amenity"="restaurant"]'},
+  {id:'cafe',       label:'Cafés',       e:'☕', q:'node["amenity"="cafe"]'},
+  {id:'atracao',    label:'Atrações',    e:'🎡',q:'node["tourism"~"attraction|museum|viewpoint"]'},
+  {id:'bar',        label:'Bares',       e:'🍸',q:'node["amenity"="bar"]'},
+];
 const R=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v);
 const $=id=>document.getElementById(id);
 
@@ -741,6 +865,10 @@ let deid=null,peid=null,daid=null,rmod=false;
 let documentos=[];
 let gastosComAnexo=new Set();
 const DOC_BUCKET='documentos-viagem';
+let reservas=[],ervid=null;
+let reservasComAnexo=new Set();
+let anexoAlvo=null; // {tipo:'gasto'|'reserva', id}
+let docBind={list:'doclist',pills:'dpills',file:'docfile',btn:'docupbtn',section:'doc-section',disabled:'doc-disabled-msg'};
 let lmap=null,lmks=[],lln=null;
 let mapReqToken=0;          // token incremental — invalida respostas async obsoletas (corrige pontos do dia errado)
 const geoCache=new Map();   // chave: parada.id → resultado geocodificado — evita regeocodificar ao revisitar um dia
@@ -753,8 +881,97 @@ let mSelDia=null;           // 'all' ou objeto dia atualmente selecionado
     'https://evvvzmnguhgqaopvquhs.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2dnZ6bW5ndWhncWFvcHZxdWhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMTMzODYsImV4cCI6MjA5NDc4OTM4Nn0.FSuRZjedHmJs4QRiCrk_DS1tzEO-tOU3pN8HG15Iw5g'
   );
+  await loadCategorias();
+  renderCatPills(null);
   await loadViagens();
 })();
+async function loadCategorias(){
+  const{data,error}=await sb.from('categorias').select('*').order('ordem');
+  categorias=error?[]:(data||[]).map(r=>({id:r.id,label:r.label,e:r.emoji,c:r.cor,ordem:r.ordem,ativo:r.ativo}));
+}
+
+// ── CONFIGURAÇÕES DE CATEGORIAS (Fase 6) ───────────────
+let cfgSelectedColor=PC[0];
+function drawCfgList(){
+  const el=$('cfg-list');el.innerHTML='';
+  if(!categorias.length){el.innerHTML='<div style="text-align:center;padding:16px;color:var(--mut2);font-size:12px">Nenhuma categoria</div>';return;}
+  categorias.forEach((c,i)=>{
+    const row=document.createElement('div');row.className='cfg-cat-row';
+    const ic=document.createElement('span');ic.className='cfg-cat-ic';ic.textContent=c.e;row.appendChild(ic);
+    const nm=document.createElement('span');nm.className='cfg-cat-nm'+(c.ativo?'':' inativa');nm.textContent=c.label;row.appendChild(nm);
+    const ar=document.createElement('div');ar.className='p-br';
+    const u=document.createElement('button');u.className='ob';u.textContent='▲';u.disabled=i===0;
+    u.onclick=()=>moverCategoria(i,-1);
+    const d=document.createElement('button');d.className='ob';d.textContent='▼';d.disabled=i===categorias.length-1;
+    d.onclick=()=>moverCategoria(i,1);
+    ar.appendChild(u);ar.appendChild(d);row.appendChild(ar);
+    const sw=document.createElement('div');sw.className='tg-sw'+(c.ativo?' on':'');
+    sw.title=c.ativo?'Ativa — clique para desativar':'Inativa — clique para reativar';
+    sw.onclick=()=>toggleCategoriaAtiva(c);row.appendChild(sw);
+    const del=document.createElement('button');del.className='bi';del.textContent='🗑️';del.style.fontSize='14px';
+    del.onclick=()=>excluirCategoria(c);row.appendChild(del);
+    el.appendChild(row);
+  });
+}
+function drawCfgColorPicker(){
+  const el=$('cfgcolors');el.innerHTML='';
+  PC.forEach(color=>{
+    const sw=document.createElement('div');sw.className='cfg-color-sw'+(color===cfgSelectedColor?' on':'');
+    sw.style.background=color;
+    sw.onclick=()=>{cfgSelectedColor=color;drawCfgColorPicker();};
+    el.appendChild(sw);
+  });
+}
+async function toggleCategoriaAtiva(c){
+  const novoAtivo=!c.ativo;
+  const i=categorias.findIndex(x=>x.id===c.id);
+  categorias[i]={...categorias[i],ativo:novoAtivo};
+  drawCfgList();drawDash();drawList();
+  renderCatPills(document.querySelector('#cpills .pill.on')?.dataset.id||null);
+  await sb.from('categorias').update({ativo:novoAtivo}).eq('id',c.id);
+}
+async function moverCategoria(idx,dir){
+  const ni=idx+dir;if(ni<0||ni>=categorias.length)return;
+  const a=categorias[idx],b=categorias[ni];
+  const oa=a.ordem,ob=b.ordem;
+  categorias[idx]={...a,ordem:ob};categorias[ni]={...b,ordem:oa};
+  categorias.sort((x,y)=>x.ordem-y.ordem);
+  drawCfgList();drawDash();drawList();
+  await sb.from('categorias').update({ordem:ob}).eq('id',a.id);
+  await sb.from('categorias').update({ordem:oa}).eq('id',b.id);
+}
+async function excluirCategoria(c){
+  const{count}=await sb.from('gastos').select('id',{count:'exact',head:true}).eq('categoria',c.id);
+  if(count>0){toast(`Em uso em ${count} lançamento${count!==1?'s':''} — desative em vez de excluir ⚠️`);return;}
+  if(!confirm(`Excluir a categoria "${c.label}"? Não pode ser desfeito.`))return;
+  const bk=[...categorias];categorias=categorias.filter(x=>x.id!==c.id);
+  drawCfgList();drawDash();drawList();renderCatPills(null);
+  const{error}=await sb.from('categorias').delete().eq('id',c.id);
+  if(error){categorias=bk;drawCfgList();toast('Erro ao excluir ⚠️');}
+  else toast('Categoria excluída ✓');
+}
+$('cfg-btn').onclick=()=>{
+  drawCfgList();drawCfgColorPicker();
+  $('cfgemoji').value='';$('cfglabel').value='';
+  $('ocfg').classList.add('on');
+};
+$('cfgcnc').onclick=()=>$('ocfg').classList.remove('on');
+$('ocfg').onclick=e=>{if(e.target===$('ocfg'))$('ocfg').classList.remove('on');};
+$('cfgaddbtn').onclick=async()=>{
+  const emoji=$('cfgemoji').value.trim()||'📦';
+  const label=$('cfglabel').value.trim();
+  if(!label){toast('Digite um nome ⚠️');return;}
+  const slug=(label.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''))||('cat_'+Date.now());
+  if(categorias.some(c=>c.id===slug)){toast('Já existe uma categoria com esse nome ⚠️');return;}
+  const ordem=categorias.length?Math.max(...categorias.map(c=>c.ordem))+1:1;
+  const payload={id:slug,label,emoji,cor:cfgSelectedColor,ordem,ativo:true};
+  categorias.push({id:slug,label,e:emoji,c:cfgSelectedColor,ordem,ativo:true});
+  drawCfgList();renderCatPills(document.querySelector('#cpills .pill.on')?.dataset.id||null);drawDash();
+  $('cfgemoji').value='';$('cfglabel').value='';
+  toast('Categoria adicionada ✓');
+  const{error}=await sb.from('categorias').insert(payload);
+  if(error){categorias=categorias.filter(c=>c.id!==slug);drawCfgList();toast('Erro ao salvar ⚠️');}
+};
 
 // ── VIAGENS ───────────────────────────────────────────
 async function loadViagens(){
@@ -802,11 +1019,21 @@ async function loadGastos(){
   const{data}=await sb.from('gastos').select('*').eq('viagem_id',vid).order('data',{ascending:false});
   gastos=data||[];
   await loadGastosComAnexo();
+  await loadReservas();
+  await loadReservasComAnexo();
   drawTop();drawDash();drawList();
 }
 async function loadGastosComAnexo(){
   const{data,error}=await sb.from('documentos').select('gasto_id').eq('viagem_id',vid).not('gasto_id','is',null);
   gastosComAnexo=error?new Set():new Set((data||[]).map(d=>d.gasto_id));
+}
+async function loadReservas(){
+  const{data}=await sb.from('reservas').select('*').eq('viagem_id',vid).order('data_inicio',{ascending:true,nullsFirst:false});
+  reservas=data||[];
+}
+async function loadReservasComAnexo(){
+  const{data,error}=await sb.from('documentos').select('reserva_id').eq('viagem_id',vid).not('reserva_id','is',null);
+  reservasComAnexo=error?new Set():new Set((data||[]).map(d=>d.reserva_id));
 }
 function drawTop(){
   const v=viagens.find(x=>x.id===vid);
@@ -829,18 +1056,64 @@ $('bval').onclick=async()=>{
 };
 
 // ── DASHBOARD ─────────────────────────────────────────
+// ── RESERVAS (Fase 2) ────────────────────────────────
+function fmtDataHora(iso){
+  if(!iso)return'';
+  return new Date(iso).toLocaleString('pt-BR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+}
+function renderReservaCard(r){
+  const t=TIPOS_RESERVA[r.tipo]||TIPOS_RESERVA.voo;
+  const card=document.createElement('div');card.className='rsv-card';
+  card.style.setProperty('--rc',t.c);
+  card.onclick=()=>openReserva(r.id);
+
+  const hdr=document.createElement('div');hdr.className='rsv-hdr';
+  const ic=document.createElement('span');ic.className='rsv-ic';ic.textContent=t.e;hdr.appendChild(ic);
+  const ttl=document.createElement('span');ttl.className='rsv-ttl';ttl.textContent=r.titulo;hdr.appendChild(ttl);
+  if(r.status){const st=document.createElement('span');st.className='rsv-status';st.textContent=r.status;hdr.appendChild(st);}
+  if(reservasComAnexo.has(r.id)){const pin=document.createElement('span');pin.className='rsv-pin';pin.textContent='📎';hdr.appendChild(pin);}
+  card.appendChild(hdr);
+
+  const body=document.createElement('div');body.className='rsv-body';
+  if(r.tipo==='voo'){
+    body.innerHTML=`<div class="rsv-route"><span>${r.origem_codigo||'—'}</span><span class="rsv-arrow">✈</span><span>${r.destino_codigo||'—'}</span></div>
+      <div class="rsv-sub">${r.cia_aerea||''} ${r.numero_voo||''}</div>
+      <div class="rsv-sub">${fmtDataHora(r.data_inicio)}${r.terminal_origem?' · Term. '+r.terminal_origem:''}</div>`;
+  }else{
+    body.innerHTML=`<div class="rsv-sub">${r.endereco||''}</div>
+      <div class="rsv-sub">${fmtDataHora(r.data_inicio)} → ${fmtDataHora(r.data_fim)}</div>
+      ${r.numero_reserva?`<div class="rsv-sub">Reserva #${r.numero_reserva}</div>`:''}`;
+  }
+  card.appendChild(body);
+  return card;
+}
+function drawReservasStrip(container){
+  const wrap=document.createElement('div');wrap.className='rsv-wrap';
+  const hdr=document.createElement('div');hdr.className='sec';hdr.style.cssText='display:flex;justify-content:space-between;align-items:center';
+  hdr.innerHTML='<span>Reservas</span>';
+  const addBtn=document.createElement('button');addBtn.className='rsv-add';addBtn.textContent='+ Adicionar';
+  addBtn.onclick=()=>openReserva(null);
+  hdr.appendChild(addBtn);wrap.appendChild(hdr);
+
+  const strip=document.createElement('div');strip.className='rsv-strip';
+  if(!reservas.length)strip.innerHTML='<div style="color:var(--mut);font-size:12px;padding:8px 2px">Nenhuma reserva ainda</div>';
+  else reservas.forEach(r=>strip.appendChild(renderReservaCard(r)));
+  wrap.appendChild(strip);container.appendChild(wrap);
+}
+
 function drawDash(){
   const el=$('pg-dash');el.innerHTML='';
+  drawReservasStrip(el);
   const tot=gastos.reduce((s,g)=>s+Number(g.valor),0);
-  const bc=CATS.map(c=>({...c,tot:gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)}));
+  const bc=categorias.map(c=>({...c,tot:gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)}));
   const mx=Math.max(...bc.map(c=>c.tot),1);
 
   // label "Por Categoria"
   const sec1=document.createElement('div');sec1.className='sec';sec1.textContent='Por Categoria';el.appendChild(sec1);
 
-  // cat grid — todos os listeners preservados
+  // cat grid — mostra ativas sempre; inativas só se tiverem gasto histórico
   const gr=document.createElement('div');gr.className='cat-grid';
-  bc.forEach(c=>{
+  bc.filter(c=>c.ativo||c.tot>0).forEach(c=>{
     const d=document.createElement('div');d.className='cat-card';
     d.innerHTML=`<div class="i">${c.e}</div><div class="l">${c.label}</div><div class="v" style="color:${c.tot?c.c:'#333'}">${c.tot?R(c.tot):'—'}</div>`;
     d.onclick=()=>openCat(c.id);
@@ -900,7 +1173,7 @@ function buildDonut(bc,tot){
 
 // ── CAT POPUP ─────────────────────────────────────────
 function openCat(cid){
-  const c=CATS.find(x=>x.id===cid);
+  const c=categorias.find(x=>x.id===cid);
   const it=gastos.filter(g=>g.categoria===cid).sort((a,b)=>new Date(b.data)-new Date(a.data));
   const tc=it.reduce((s,g)=>s+Number(g.valor),0);
   const tg=gastos.reduce((s,g)=>s+Number(g.valor),0);
@@ -973,7 +1246,7 @@ function buildLancFilter(){
   const all=document.createElement('button');all.className='lf-btn'+(fcat===null?' on':'');
   all.textContent='Todos';all.onclick=()=>{fcat=null;buildLancFilter();drawList();};
   fb.appendChild(all);
-  CATS.forEach(c=>{
+  categorias.forEach(c=>{
     const has=gastos.some(g=>g.categoria===c.id);if(!has)return;
     const b=document.createElement('button');b.className='lf-btn'+(fcat===c.id?' on':'');
     b.textContent=`${c.e} ${c.label}`;
@@ -986,14 +1259,14 @@ function buildLancFilter(){
 function drawList(){
   const el=$('gl');el.innerHTML='';
   const tot=gastos.reduce((s,g)=>s+Number(g.valor),0);
-  const maxCat=Math.max(...CATS.map(c=>gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)),1);
+  const maxCat=Math.max(...categorias.map(c=>gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)),1);
 
   if(lancMode==='group'){
     // ── MODO AGRUPADO ──────────────────────────────────
     $('lc').textContent=`${gastos.length} lançamento${gastos.length!==1?'s':', '} · ${R(tot)}`;
     $('fcl').style.display='none';
     $('lanc-filter').style.display='none';
-    const cats=CATS.map(c=>{
+    const cats=categorias.map(c=>{
       const items=gastos.filter(g=>g.categoria===c.id).sort((a,b)=>new Date(b.data)-new Date(a.data));
       return{...c,items,total:items.reduce((s,g)=>s+Number(g.valor),0)};
     }).filter(c=>c.items.length>0).sort((a,b)=>b.total-a.total);
@@ -1056,7 +1329,7 @@ function drawList(){
     // ── MODO LISTA ─────────────────────────────────────
     buildLancFilter();
     const fl=fcat?gastos.filter(g=>g.categoria===fcat):gastos;
-    const cat=fcat?CATS.find(c=>c.id===fcat):null;
+    const cat=fcat?categorias.find(c=>c.id===fcat):null;
     $('lc').textContent=cat
       ?`${cat.e} ${cat.label} — ${fl.length} item${fl.length!==1?'s':''} · ${R(fl.reduce((s,g)=>s+Number(g.valor),0))}`
       :`${fl.length} lançamento${fl.length!==1?'s':''} · ${R(tot)}`;
@@ -1066,7 +1339,7 @@ function drawList(){
       return;
     }
     fl.forEach(g=>{
-      const c=CATS.find(x=>x.id===g.categoria)||CATS[5];
+      const c=categorias.find(x=>x.id===g.categoria)||categorias.find(x=>x.id==='outros')||{e:'📦',label:'Outro',c:'#C3B1E1'};
       const d=document.createElement('div');d.className='gi';d.style.setProperty('--c',c.c);
       const dt=g.data?g.data.split('-').reverse().join('/'):'';
       const temAnexo=gastosComAnexo.has(g.id);
@@ -1096,23 +1369,27 @@ function drawList(){
 $('fcl').onclick=()=>{fcat=null;buildLancFilter();drawDash();drawList();};
 
 // ── MODAL GASTO ───────────────────────────────────────
-CATS.forEach(c=>{
-  const p=document.createElement('div');p.className='pill';p.dataset.id=c.id;
-  p.style.setProperty('--pc',c.c);p.innerHTML=`${c.e} ${c.label}`;
-  p.onclick=()=>{document.querySelectorAll('#cpills .pill').forEach(x=>x.classList.remove('on'));p.classList.add('on');chkg();};
-  $('cpills').appendChild(p);
-});
+function renderCatPills(selectedId){
+  const el=$('cpills');el.innerHTML='';
+  categorias.filter(c=>c.ativo||c.id===selectedId).forEach(c=>{
+    const p=document.createElement('div');p.className='pill'+(c.id===selectedId?' on':'');p.dataset.id=c.id;
+    p.style.setProperty('--pc',c.c);p.innerHTML=`${c.e} ${c.label}`;
+    p.onclick=()=>{document.querySelectorAll('#cpills .pill').forEach(x=>x.classList.remove('on'));p.classList.add('on');chkg();};
+    el.appendChild(p);
+  });
+  if(!selectedId&&el.firstChild)el.firstChild.classList.add('on');
+}
 $('fdt').value=new Date().toISOString().split('T')[0];
-document.querySelector('#cpills .pill').classList.add('on');
 function chkg(){$('gok').disabled=!($('fd').value.trim()&&$('fv').value>0);}
 ['fd','fv','fo'].forEach(id=>$(id).oninput=chkg);
 $('fab').onclick=()=>{
   egid=null;$('ogt').textContent='Novo Gasto';
   $('fd').value='';$('fv').value='';$('fo').value='';
   $('fdt').value=new Date().toISOString().split('T')[0];
-  document.querySelectorAll('#cpills .pill').forEach(x=>x.classList.remove('on'));
-  document.querySelector('#cpills .pill').classList.add('on');
-  documentos=[];drawDocList();
+  renderCatPills(null);
+  documentos=[];anexoAlvo=null;
+  docBind={list:'doclist',pills:'dpills',file:'docfile',btn:'docupbtn',section:'doc-section',disabled:'doc-disabled-msg'};
+  drawDocList();
   $('doc-section').style.display='none';$('doc-disabled-msg').style.display='block';
   chkg();$('og').classList.add('on');setTimeout(()=>$('fd').focus(),100);
 };
@@ -1122,9 +1399,11 @@ function editG(id){
   egid=id;$('ogt').textContent='Editar Gasto';
   $('fd').value=g.descricao;$('fv').value=Number(g.valor);
   $('fo').value=g.observacao||'';$('fdt').value=g.data;
-  document.querySelectorAll('#cpills .pill').forEach(p=>p.classList.toggle('on',p.dataset.id===g.categoria));
+  renderCatPills(g.categoria);
+  anexoAlvo={tipo:'gasto',id};
+  docBind={list:'doclist',pills:'dpills',file:'docfile',btn:'docupbtn',section:'doc-section',disabled:'doc-disabled-msg'};
   $('doc-section').style.display='block';$('doc-disabled-msg').style.display='none';
-  loadDocumentos(id);
+  loadDocumentos(id,'gasto');
   chkg();$('og').classList.add('on');
 }
 $('gok').onclick=async()=>{
@@ -1161,6 +1440,13 @@ TIPOS_DOC.forEach(t=>{
   $('dpills').appendChild(p);
 });
 document.querySelector('#dpills .pill').classList.add('on');
+TIPOS_DOC.forEach(t=>{
+  const p=document.createElement('div');p.className='pill';p.dataset.id=t.id;
+  p.style.setProperty('--pc',t.c);p.innerHTML=`${t.e} ${t.label}`;
+  p.onclick=()=>{document.querySelectorAll('#dpills2 .pill').forEach(x=>x.classList.remove('on'));p.classList.add('on');};
+  $('dpills2').appendChild(p);
+});
+document.querySelector('#dpills2 .pill').classList.add('on');
 
 function fmtBytes(b){
   if(b<1024)return b+' B';
@@ -1171,14 +1457,15 @@ function fmtDataDoc(iso){
   return new Date(iso).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'});
 }
 
-async function loadDocumentos(gastoId){
-  const{data,error}=await sb.from('documentos').select('*').eq('gasto_id',gastoId).order('criado_em',{ascending:false});
+async function loadDocumentos(id,tipo='gasto'){
+  const filtro=tipo==='reserva'?{reserva_id:id}:{gasto_id:id};
+  const{data,error}=await sb.from('documentos').select('*').match(filtro).order('criado_em',{ascending:false});
   documentos=error?[]:(data||[]);
   drawDocList();
 }
 
 function drawDocList(){
-  const el=$('doclist');el.innerHTML='';
+  const el=$(docBind.list);el.innerHTML='';
   if(!documentos.length){
     const e=document.createElement('div');e.className='doc-empty';e.textContent='Nenhum anexo ainda';el.appendChild(e);
     return;
@@ -1248,33 +1535,110 @@ $('ancl').onclick=()=>$('oan').classList.remove('on');
 $('oan').onclick=e=>{if(e.target===$('oan'))$('oan').classList.remove('on');};
 
 async function uploadDocumento(file){
-  if(!egid){toast('Salve o gasto primeiro ⚠️');return;}
+  if(!anexoAlvo?.id){toast('Salve o registro primeiro ⚠️');return;}
   if(file.type!=='application/pdf'){toast('Apenas arquivos PDF ⚠️');return;}
   const MAX_BYTES=20*1024*1024;
   if(file.size>MAX_BYTES){toast('Arquivo acima de 20MB ⚠️');return;}
-  const tipo_doc=document.querySelector('#dpills .pill.on')?.dataset.id||'outro';
+  const tipo_doc=document.querySelector('#'+docBind.pills+' .pill.on')?.dataset.id||'outro';
   const docId=(crypto.randomUUID?crypto.randomUUID():'d'+Date.now()+Math.random().toString(16).slice(2));
   const path=`${vid}/${docId}.pdf`;
   toast('Enviando...');
   const{error:upErr}=await sb.storage.from(DOC_BUCKET).upload(path,file,{contentType:'application/pdf'});
   if(upErr){toast('Erro no upload ⚠️');return;}
-  const{data:ins,error:dbErr}=await sb.from('documentos').insert({
-    id:docId,viagem_id:vid,gasto_id:egid,tipo_doc,
-    nome_original:file.name,storage_path:path,
-    mime_type:file.type,tamanho_bytes:file.size
-  }).select().single();
+  const payload={id:docId,viagem_id:vid,tipo_doc,nome_original:file.name,storage_path:path,mime_type:file.type,tamanho_bytes:file.size};
+  if(anexoAlvo.tipo==='reserva')payload.reserva_id=anexoAlvo.id;
+  else payload.gasto_id=anexoAlvo.id;
+  const{data:ins,error:dbErr}=await sb.from('documentos').insert(payload).select().single();
   if(dbErr){
     await sb.storage.from(DOC_BUCKET).remove([path]);
     toast('Erro ao salvar anexo ⚠️');return;
   }
   documentos.unshift(ins);drawDocList();toast('Anexo adicionado ✓');
-  gastosComAnexo.add(egid);drawList();
+  if(anexoAlvo.tipo==='reserva'){reservasComAnexo.add(anexoAlvo.id);drawDash();}
+  else{gastosComAnexo.add(anexoAlvo.id);drawList();}
 }
 $('docupbtn').onclick=()=>$('docfile').click();
 $('docfile').onchange=(e)=>{
   const file=e.target.files[0];
   if(file)uploadDocumento(file);
   e.target.value='';
+};
+$('docupbtn2').onclick=()=>$('docfile2').click();
+$('docfile2').onchange=(e)=>{
+  const file=e.target.files[0];
+  if(file)uploadDocumento(file);
+  e.target.value='';
+};
+
+// ── MODAL RESERVA (Fase 2) ────────────────────────────
+document.querySelectorAll('#rvpills .pill').forEach(p=>{
+  p.onclick=()=>{
+    document.querySelectorAll('#rvpills .pill').forEach(x=>x.classList.remove('on'));
+    p.classList.add('on');
+    const isVoo=p.dataset.id==='voo';
+    $('rv-voo-fields').style.display=isVoo?'block':'none';
+    $('rv-hotel-fields').style.display=isVoo?'none':'block';
+  };
+});
+function openReserva(id){
+  ervid=id;
+  const r=id?reservas.find(x=>x.id===id):null;
+  $('orvt').textContent=r?'Editar Reserva':'Nova Reserva';
+  const tipo=r?.tipo||'voo';
+  document.querySelectorAll('#rvpills .pill').forEach(p=>p.classList.toggle('on',p.dataset.id===tipo));
+  $('rv-voo-fields').style.display=tipo==='voo'?'block':'none';
+  $('rv-hotel-fields').style.display=tipo==='hotel'?'block':'none';
+  $('rvt').value=r?.titulo||'';$('rvst').value=r?.status||'';
+  $('rvi').value=r?.data_inicio?.slice(0,16)||'';$('rvf').value=r?.data_fim?.slice(0,16)||'';
+  $('rvcia').value=r?.cia_aerea||'';$('rvnv').value=r?.numero_voo||'';
+  $('rvor').value=r?.origem_codigo||'';$('rvde').value=r?.destino_codigo||'';
+  $('rvto').value=r?.terminal_origem||'';$('rvtd').value=r?.terminal_destino||'';
+  $('rvend').value=r?.endereco||'';$('rvnr').value=r?.numero_reserva||'';
+  documentos=[];
+  if(id){
+    anexoAlvo={tipo:'reserva',id};
+    docBind={list:'doclist2',pills:'dpills2',file:'docfile2',btn:'docupbtn2',section:'doc-section2',disabled:'doc-disabled-msg2'};
+    $('doc-section2').style.display='block';$('doc-disabled-msg2').style.display='none';
+    loadDocumentos(id,'reserva');
+  }else{
+    anexoAlvo=null;
+    $('doc-section2').style.display='none';$('doc-disabled-msg2').style.display='block';
+    drawDocList();
+  }
+  $('orv').classList.add('on');
+}
+$('rvcnc').onclick=()=>$('orv').classList.remove('on');
+$('orv').onclick=e=>{if(e.target===$('orv'))$('orv').classList.remove('on');};
+$('rvok').onclick=async()=>{
+  const tipo=document.querySelector('#rvpills .pill.on')?.dataset.id||'voo';
+  const titulo=$('rvt').value.trim();if(!titulo)return;
+  const payload={
+    viagem_id:vid,tipo,titulo,
+    status:$('rvst').value.trim()||null,
+    data_inicio:$('rvi').value||null,data_fim:$('rvf').value||null,
+    cia_aerea:tipo==='voo'?($('rvcia').value.trim()||null):null,
+    numero_voo:tipo==='voo'?($('rvnv').value.trim()||null):null,
+    origem_codigo:tipo==='voo'?($('rvor').value.trim().toUpperCase()||null):null,
+    destino_codigo:tipo==='voo'?($('rvde').value.trim().toUpperCase()||null):null,
+    terminal_origem:tipo==='voo'?($('rvto').value.trim()||null):null,
+    terminal_destino:tipo==='voo'?($('rvtd').value.trim()||null):null,
+    endereco:tipo==='hotel'?($('rvend').value.trim()||null):null,
+    numero_reserva:tipo==='hotel'?($('rvnr').value.trim()||null):null,
+  };
+  $('orv').classList.remove('on');
+  if(ervid){
+    const i=reservas.findIndex(x=>x.id===ervid);
+    if(i!==-1)reservas[i]={...reservas[i],...payload};
+    drawDash();toast('Reserva atualizada ✓');
+    await sb.from('reservas').update(payload).eq('id',ervid);
+  }else{
+    const tmp='t'+Date.now();
+    reservas.push({id:tmp,...payload});
+    drawDash();toast('Reserva adicionada ✓');
+    const{data:ins,error}=await sb.from('reservas').insert(payload).select().single();
+    if(error){reservas=reservas.filter(r=>r.id!==tmp);drawDash();toast('Erro ⚠️');}
+    else{const i=reservas.findIndex(r=>r.id===tmp);if(i!==-1){reservas[i]=ins;ervid=ins.id;}}
+  }
 };
 
 // ── ROTEIRO ───────────────────────────────────────────
@@ -1355,6 +1719,11 @@ function drawRot(){
           const eb=document.createElement('button');eb.className='bi';eb.textContent='✏️';eb.style.fontSize='14px';eb.onclick=()=>openPar(dia.id,p.id);ar2.appendChild(eb);
           const db2=document.createElement('button');db2.className='bi';db2.textContent='🗑️';db2.style.fontSize='14px';db2.onclick=()=>delPar(p.id);ar2.appendChild(db2);
           btns.appendChild(ar2);row.appendChild(btns);pw.appendChild(row);
+          if(i<pars.length-1){
+            const distEl=document.createElement('div');distEl.className='p-dist';
+            distEl.id=`pd-${dia.id}-${i}`;
+            pw.appendChild(distEl);
+          }
         });
       }
       body.appendChild(pw);
@@ -1363,10 +1732,101 @@ function drawRot(){
       bp.onclick=e=>{e.stopPropagation();openPar(dia.id,null);};acts.appendChild(bp);
       const be=document.createElement('button');be.className='bs';be.textContent='✏️ Dia';be.onclick=e=>{e.stopPropagation();openDia(dia.id);};acts.appendChild(be);
       const bd=document.createElement('button');bd.className='bs';bd.style.color='var(--red)';bd.textContent='🗑️';bd.onclick=e=>{e.stopPropagation();delDia(dia.id);};acts.appendChild(bd);
+      if(pars.filter(p=>!p.realizado).length>=2){
+        const bo=document.createElement('button');bo.className='bs';bo.style.cssText='color:var(--yel);border-color:var(--yel);font-weight:600';bo.textContent='🧭 Otimizar';
+        bo.onclick=e=>{e.stopPropagation();otimizarRota(dia);};acts.appendChild(bo);
+      }
       body.appendChild(acts);card.appendChild(body);
+      if(pars.length>1)fillDistances(dia,pars);
     }
     el.appendChild(card);
   });
+}
+
+// ── DISTÂNCIA ENTRE PARADAS (Fase 1) ──────────────────
+function haversineKm(lat1,lng1,lat2,lng2){
+  const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function distLabel(km){
+  const walk=km<=1.2;
+  const mins=walk?Math.round(km/4.5*60):Math.round(km/28*60);
+  const kmTxt=km<10?km.toFixed(1):Math.round(km);
+  return walk?`🚶 ${mins} min · ${kmTxt}km`:`🚗 ${mins} min · ${kmTxt}km`;
+}
+async function fillDistances(dia,pars){
+  const ctx=geoContextoDeTitulo(dia.titulo);
+  const coords=await geocodeBatch(pars,ctx);
+  coords.forEach((c,i)=>{
+    if(i===pars.length-1)return;
+    const el=document.getElementById(`pd-${dia.id}-${i}`);
+    if(!el)return;
+    const c2=coords[i+1];
+    el.textContent=(c.ok&&c2.ok)?distLabel(haversineKm(c.lat,c.lng,c2.lat,c2.lng)):'📍 distância indisponível';
+  });
+}
+
+// ── OTIMIZAR ROTA DO DIA (Fase 3) ──────────────────────
+function distanciaTotal(coordsArr){
+  let total=0;
+  for(let i=0;i<coordsArr.length-1;i++){
+    if(coordsArr[i].ok&&coordsArr[i+1].ok)
+      total+=haversineKm(coordsArr[i].lat,coordsArr[i].lng,coordsArr[i+1].lat,coordsArr[i+1].lng);
+  }
+  return total;
+}
+function nearestNeighborOrder(coords,startCoord=null){
+  const validos=coords.map((c,i)=>({...c,i})).filter(c=>c.ok);
+  if(validos.length<2)return coords.map((_,i)=>i);
+  let atual,ordem=[],visitados=new Set();
+  if(startCoord?.ok){atual=startCoord;}
+  else{atual=validos[0];ordem.push(atual.i);visitados.add(atual.i);}
+  while(ordem.length<validos.length){
+    let melhor=null,menorD=Infinity;
+    for(const c of validos){
+      if(visitados.has(c.i))continue;
+      const d=haversineKm(atual.lat,atual.lng,c.lat,c.lng);
+      if(d<menorD){menorD=d;melhor=c;}
+    }
+    ordem.push(melhor.i);visitados.add(melhor.i);atual=melhor;
+  }
+  const semCoord=coords.map((_,i)=>i).filter(i=>!coords[i].ok);
+  return [...ordem,...semCoord];
+}
+async function otimizarRota(dia){
+  const pars=[...rPars.filter(p=>p.dia_id===dia.id)].sort((a,b)=>a.ordem-b.ordem);
+  const pendentesIdx=pars.map((p,i)=>i).filter(i=>!pars[i].realizado);
+  if(pendentesIdx.length<2){toast('Nada a otimizar entre as paradas pendentes');return;}
+
+  toast('🧭 Calculando melhor rota...');
+  const ctx=geoContextoDeTitulo(dia.titulo);
+  const coords=await geocodeBatch(pars,ctx);
+
+  const primeiroPendente=pendentesIdx[0];
+  let anchorCoord=null;
+  for(let i=primeiroPendente-1;i>=0;i--){if(coords[i].ok){anchorCoord=coords[i];break;}}
+
+  const coordsPendentes=pendentesIdx.map(i=>coords[i]);
+  const distAntes=distanciaTotal(anchorCoord?[anchorCoord,...coordsPendentes]:coordsPendentes);
+  const novaOrdemRel=nearestNeighborOrder(coordsPendentes,anchorCoord);
+  const coordsDepois=novaOrdemRel.map(i=>coordsPendentes[i]);
+  const distDepois=distanciaTotal(anchorCoord?[anchorCoord,...coordsDepois]:coordsDepois);
+
+  if(distDepois>=distAntes-0.05){toast('✓ A ordem atual já é a mais eficiente');return;}
+
+  const parsPendentesOrdenadas=novaOrdemRel.map(i=>pars[pendentesIdx[i]]);
+  const novaLista=[...pars];
+  pendentesIdx.forEach((posOriginal,k)=>{novaLista[posOriginal]=parsPendentesOrdenadas[k];});
+
+  novaLista.forEach((p,i)=>{
+    const idx=rPars.findIndex(x=>x.id===p.id);
+    if(idx!==-1)rPars[idx]={...rPars[idx],ordem:i+1};
+  });
+  drawRot();
+  toast(`✓ Rota otimizada — economia de ~${(distAntes-distDepois).toFixed(1)}km (paradas feitas mantidas)`);
+
+  await Promise.all(novaLista.map((p,i)=>sb.from('roteiro_paradas').update({ordem:i+1}).eq('id',p.id)));
 }
 
 // ── MOVER PARADA ──────────────────────────────────────
@@ -1736,6 +2196,76 @@ async function geocodeBatch(pars,ctx,concurrency=4){
   }
   await Promise.all(Array.from({length:Math.min(concurrency,pars.length)},worker));
   return results;
+}
+
+// ── EXPLORAR ARREDORES (Fase 4 — Overpass/OSM) ────────
+async function buscarExplore(lat,lng,catId,raio=1500){
+  const cat=EXPLORE_CATS.find(c=>c.id===catId);
+  const q=`[out:json][timeout:25];(${cat.q}(around:${raio},${lat},${lng}););out body 25;`;
+  const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q)});
+  const d=await r.json();
+  return (d.elements||[])
+    .filter(el=>el.tags?.name)
+    .map(el=>({
+      nome:el.tags.name,lat:el.lat,lng:el.lon,tipo:catId,
+      endereco:[el.tags['addr:street'],el.tags['addr:housenumber']].filter(Boolean).join(', '),
+      distKm:haversineKm(lat,lng,el.lat,el.lon)
+    }))
+    .sort((a,b)=>a.distKm-b.distKm);
+}
+$('mexp-btn').onclick=async()=>{
+  if(!mSelDia||mSelDia==='all'){toast('Selecione um dia específico primeiro ⚠️');return;}
+  const pars=[...rPars.filter(p=>p.dia_id===mSelDia.id)].sort((a,b)=>a.ordem-b.ordem);
+  if(!pars.length){toast('Nenhuma parada neste dia para centralizar a busca ⚠️');return;}
+  const ctx=geoContextoDeTitulo(mSelDia.titulo);
+  const coords=(await geocodeBatch(pars,ctx)).filter(c=>c.ok);
+  if(!coords.length){toast('Não foi possível localizar este dia no mapa ⚠️');return;}
+  const lat=coords.reduce((s,c)=>s+c.lat,0)/coords.length;
+  const lng=coords.reduce((s,c)=>s+c.lng,0)/coords.length;
+  $('mexp-sheet').dataset.lat=lat;$('mexp-sheet').dataset.lng=lng;
+  drawExploreCats();
+  $('mexp-sheet').classList.add('on');
+  loadExploreCat('restaurante');
+};
+function drawExploreCats(){
+  const el=$('mexp-cats');el.innerHTML='';
+  EXPLORE_CATS.forEach((c,i)=>{
+    const b=document.createElement('button');b.className='m-explore-cat-btn'+(i===0?' on':'');
+    b.textContent=`${c.e} ${c.label}`;
+    b.onclick=()=>{document.querySelectorAll('.m-explore-cat-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');loadExploreCat(c.id);};
+    el.appendChild(b);
+  });
+}
+async function loadExploreCat(catId){
+  const lat=+$('mexp-sheet').dataset.lat,lng=+$('mexp-sheet').dataset.lng;
+  const list=$('mexp-list');list.innerHTML='<div style="text-align:center;padding:20px;color:var(--mut2)">🔍 Buscando...</div>';
+  const results=await buscarExplore(lat,lng,catId);
+  list.innerHTML='';
+  if(!results.length){list.innerHTML='<div style="text-align:center;padding:20px;color:var(--mut2)">Nada encontrado por perto</div>';return;}
+  results.slice(0,15).forEach(r=>{
+    const item=document.createElement('div');item.className='m-explore-item';
+    const info=document.createElement('div');info.className='mei-info';
+    const nm=document.createElement('div');nm.className='mei-nm';nm.textContent=r.nome;info.appendChild(nm);
+    const sub=document.createElement('div');sub.className='mei-sub';sub.textContent=`${r.distKm.toFixed(1)}km${r.endereco?' · '+r.endereco:''}`;info.appendChild(sub);
+    item.appendChild(info);
+    const addBtn=document.createElement('button');addBtn.className='mei-add';addBtn.textContent='+ Adicionar';
+    addBtn.onclick=()=>adicionarParadaDeExplore(r);
+    item.appendChild(addBtn);list.appendChild(item);
+  });
+}
+async function adicionarParadaDeExplore(r){
+  if(!mSelDia||mSelDia==='all')return;
+  const tipoMap={restaurante:'restaurante',cafe:'restaurante',atracao:'atração',bar:'restaurante'};
+  const ordem=rPars.filter(p=>p.dia_id===mSelDia.id).length+1;
+  const gmaps_link=`https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}`;
+  const payload={dia_id:mSelDia.id,nome:r.nome,tipo:tipoMap[r.tipo]||'outro',endereco:r.endereco||null,horario:null,observacao:null,gmaps_link,realizado:false,ordem};
+  const tmp='t'+Date.now();
+  rPars.push({id:tmp,...payload});
+  toast(`✓ ${r.nome} adicionado ao roteiro`);
+  const{data:ins,error}=await sb.from('roteiro_paradas').insert(payload).select().single();
+  if(error){rPars=rPars.filter(p=>p.id!==tmp);toast('Erro ⚠️');}
+  else{const i=rPars.findIndex(p=>p.id===tmp);if(i!==-1)rPars[i]=ins;}
+  await drawMDia(mSelDia);
 }
 
 function renderParadaRow(container,p,i,total,corOverride){

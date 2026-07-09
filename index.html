@@ -305,8 +305,8 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 #m-map[data-map-style="light"] .leaflet-popup-content strong,
 #m-map[data-map-style="sat"] .leaflet-popup-content strong{color:#1A1830!important}
 
-#m-map{flex-shrink:0;width:100%;height:240px;background:var(--sur);overflow:hidden;position:relative}
-#m-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+16px)}
+#m-map{flex-shrink:0;width:100%;height:min(42vh,360px);background:var(--sur);overflow:hidden;position:relative}
+#m-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+64px)}
 #m-map.h,#m-list.h{display:none!important}
 .m-status{padding:4px 0 8px;font-size:11px;color:var(--mut2);text-align:center;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px}
 .m-spin{width:11px;height:11px;border:2px solid var(--bor2);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
@@ -563,9 +563,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .rsv-sub{font-size:10px;color:var(--mut2);margin-top:2px}
 
 /* ── FASE 4: explorar arredores ── */
-.m-explore-btn{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:150;background:var(--grd);border:none;border-radius:99px;color:#fff;font-weight:700;font-size:13px;padding:10px 20px;box-shadow:var(--shadow-teal)}
-.m-explore-sheet{display:none;position:fixed;left:0;right:0;bottom:0;background:var(--sur);border-radius:20px 20px 0 0;padding:16px;max-height:60vh;overflow-y:auto;z-index:160}
+.m-explore-btn{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:150;background:var(--grd);border:none;border-radius:99px;color:#fff;font-weight:700;font-size:13px;padding:10px 20px;box-shadow:var(--shadow-teal);transition:opacity .15s,transform .15s}
+.m-explore-btn.h{opacity:0;pointer-events:none;transform:translateX(-50%) translateY(10px)}
+.m-explore-sheet{display:none;position:fixed;left:0;right:0;bottom:0;background:var(--sur);border:1px solid var(--bor);border-bottom:none;border-radius:20px 20px 0 0;padding:16px;max-height:65vh;overflow-y:auto;z-index:160;box-shadow:0 -8px 30px rgba(0,0,0,.25)}
 .m-explore-sheet.on{display:block}
+.m-explore-sheet-hdl{width:34px;height:4px;background:var(--bor2);border-radius:99px;margin:0 auto 12px}
 .m-explore-cats{display:flex;gap:8px;overflow-x:auto;margin-bottom:12px}
 .m-explore-cat-btn{flex:0 0 auto;background:var(--sur2);border:1px solid var(--bor);border-radius:99px;padding:6px 14px;font-size:12px;color:var(--txt)}
 .m-explore-cat-btn.on{background:var(--teal);color:#000;font-weight:700}
@@ -600,6 +602,15 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .cfg-color-pick{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 .cfg-color-sw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .cfg-color-sw.on{border-color:var(--txt);box-shadow:0 0 0 2px var(--sur),0 0 0 3px var(--txt)}
+/* ── FASE 7: busca de locais com autocomplete no modal Parada ── */
+.pn-suggest{display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--sur);border:1px solid var(--bor);border-radius:var(--r-sm);box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:60;max-height:240px;overflow-y:auto}
+.pn-suggest.on{display:block}
+.pn-suggest-item{padding:10px 12px;border-bottom:1px solid var(--bor);cursor:pointer}
+.pn-suggest-item:last-child{border-bottom:none}
+.pn-suggest-item:active{background:var(--sur2)}
+.pn-suggest-nm{font-size:13px;font-weight:600}
+.pn-suggest-addr{font-size:10px;color:var(--mut2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pn-suggest-loading{padding:12px;text-align:center;font-size:11px;color:var(--mut2)}
 </style>
 </head>
 <body>
@@ -682,6 +693,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div id="m-list"></div>
   <button class="m-explore-btn" id="mexp-btn">🔍 Explorar arredores</button>
   <div class="m-explore-sheet" id="mexp-sheet">
+    <div class="m-explore-sheet-hdl"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <span style="font-size:14px;font-weight:800">🔍 Explorar arredores</span>
+      <button class="bi" id="mexp-close" style="font-size:16px;color:var(--mut2)">✕</button>
+    </div>
     <div class="m-explore-cats" id="mexp-cats"></div>
     <div id="mexp-list"></div>
   </div>
@@ -771,7 +787,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <!-- MODAL PARADA -->
 <div class="ov" id="op"><div class="sh">
   <div class="hdl"></div><div class="mtit" id="opt">Nova Parada</div>
-  <label class="fl">NOME</label><input class="fi" id="pn" type="text" autocomplete="off" placeholder="Ex: Torre de Belém"/>
+  <label class="fl">NOME</label>
+  <div style="position:relative">
+    <input class="fi" id="pn" type="text" autocomplete="off" placeholder="Ex: Torre de Belém ou busque um lugar..."/>
+    <div class="pn-suggest" id="pn-suggest"></div>
+  </div>
   <label class="fl">TIPO</label><div class="tpills" id="tpills"></div>
   <label class="fl">HORÁRIO</label><input class="fi" id="ph" type="time" style="color-scheme:dark;color:var(--teal)"/>
   <label class="fl">ENDEREÇO</label><input class="fi" id="pe" type="text" autocomplete="off" placeholder="Opcional"/>
@@ -1903,10 +1923,61 @@ function openPar(diaId,parId){
   $('pn').value=par?.nome||'';$('ph').value=par?.horario||'';
   $('pe').value=par?.endereco||'';$('po').value=par?.observacao||'';
   $('pg').value=par?.gmaps_link||'';
+  pnLat=null;pnLng=null;$('pn-suggest').classList.remove('on');$('pn-suggest').innerHTML='';
   rmod=par?.realizado||false;$('rsw').classList.toggle('on',rmod);
   const tid=par?.tipo||'atração';
   document.querySelectorAll('#tpills .pill').forEach(p=>p.classList.toggle('on',p.dataset.id===tid));
   $('op').classList.add('on');setTimeout(()=>$('pn').focus(),100);
+}
+let pnLat=null,pnLng=null,pnSearchTimer=null;
+$('pn').addEventListener('input',()=>{
+  pnLat=null;pnLng=null; // edição manual invalida a seleção anterior
+  clearTimeout(pnSearchTimer);
+  const q=$('pn').value.trim();
+  if(q.length<3){$('pn-suggest').classList.remove('on');return;}
+  $('pn-suggest').innerHTML='<div class="pn-suggest-loading">🔍 Buscando...</div>';
+  $('pn-suggest').classList.add('on');
+  pnSearchTimer=setTimeout(()=>buscarSugestoesNome(q),400);
+});
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#pn')&&!e.target.closest('#pn-suggest'))$('pn-suggest').classList.remove('on');
+});
+async function buscarSugestoesNome(q){
+  const dia=rDias.find(d=>d.id===daid);
+  const ctx=geoContextoDeTitulo(dia?.titulo||'');
+  const ps=new URLSearchParams({format:'json',limit:'5','accept-language':'pt-BR',namedetails:'1',q});
+  if(ctx.countrycodes)ps.set('countrycodes',ctx.countrycodes);
+  if(ctx.viewbox){ps.set('viewbox',ctx.viewbox);ps.set('bounded','1');}
+  try{
+    const ctrl=new AbortController();
+    const timer=setTimeout(()=>ctrl.abort(),8000);
+    const r=await fetch(`https://nominatim.openstreetmap.org/search?${ps}`,{headers:{'User-Agent':'TripCash/1.0'},signal:ctrl.signal});
+    clearTimeout(timer);
+    const results=await r.json();
+    drawSugestoesNome(results);
+  }catch(err){
+    $('pn-suggest').innerHTML='<div class="pn-suggest-loading">Busca indisponível — digite manualmente</div>';
+  }
+}
+function drawSugestoesNome(results){
+  const el=$('pn-suggest');el.innerHTML='';
+  if(!results.length){el.innerHTML='<div class="pn-suggest-loading">Nada encontrado</div>';return;}
+  results.slice(0,5).forEach(r=>{
+    const nomeS=r.namedetails?.name||r.display_name.split(',')[0];
+    const item=document.createElement('div');item.className='pn-suggest-item';
+    const nm=document.createElement('div');nm.className='pn-suggest-nm';nm.textContent=nomeS;
+    const addr=document.createElement('div');addr.className='pn-suggest-addr';addr.textContent=r.display_name;
+    item.appendChild(nm);item.appendChild(addr);
+    item.onclick=()=>{
+      $('pn').value=nomeS;
+      $('pe').value=r.display_name;
+      pnLat=+r.lat;pnLng=+r.lon;
+      $('pg').value=`https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lon}`;
+      $('pn-suggest').classList.remove('on');
+    };
+    el.appendChild(item);
+  });
+  el.classList.add('on');
 }
 $('pcnc').onclick=()=>$('op').classList.remove('on');
 $('op').onclick=e=>{if(e.target===$('op'))$('op').classList.remove('on');};
@@ -1917,11 +1988,13 @@ $('pok').onclick=async()=>{
   const gmaps_link=$('pg').value.trim()||null;
   const tipo=document.querySelector('#tpills .pill.on')?.dataset.id||'outro';
   const ordem=rPars.filter(p=>p.dia_id===daid).length+1;
+  const coordsPreCache=(pnLat&&pnLng)?{lat:pnLat,lng:pnLng,ok:true,src:'nominatim-search'}:null;
   $('op').classList.remove('on');
   if(peid){
     const i=rPars.findIndex(p=>p.id===peid);
     if(i!==-1)rPars[i]={...rPars[i],nome,horario,endereco,observacao,tipo,realizado,gmaps_link};
     drawRot();toast('Parada atualizada ✓');
+    if(coordsPreCache)geoCache.set(peid,coordsPreCache);
     await sb.from('roteiro_paradas').update({nome,horario,endereco,observacao,tipo,realizado,gmaps_link}).eq('id',peid);
   }else{
     const tmp='t'+Date.now();
@@ -1929,7 +2002,10 @@ $('pok').onclick=async()=>{
     drawRot();toast('Parada adicionada ✓');
     const{data:ins,error}=await sb.from('roteiro_paradas').insert({dia_id:daid,nome,horario,endereco,observacao,tipo,realizado,gmaps_link,ordem}).select().single();
     if(error){rPars=rPars.filter(p=>p.id!==tmp);drawRot();toast('Erro ⚠️');}
-    else{const i=rPars.findIndex(p=>p.id===tmp);if(i!==-1)rPars[i]=ins;}
+    else{
+      const i=rPars.findIndex(p=>p.id===tmp);if(i!==-1)rPars[i]=ins;
+      if(coordsPreCache)geoCache.set(ins.id,coordsPreCache);
+    }
   }
 };
 async function delPar(id){
@@ -2199,11 +2275,34 @@ async function geocodeBatch(pars,ctx,concurrency=4){
 }
 
 // ── EXPLORAR ARREDORES (Fase 4 — Overpass/OSM) ────────
+const OVERPASS_ENDPOINTS=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+async function fetchOverpass(query,timeoutMs=10000){
+  let lastErr=null;
+  for(const endpoint of OVERPASS_ENDPOINTS){
+    const ctrl=new AbortController();
+    const timer=setTimeout(()=>ctrl.abort(),timeoutMs);
+    try{
+      const r=await fetch(endpoint,{
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body:'data='+encodeURIComponent(query),
+        signal:ctrl.signal
+      });
+      clearTimeout(timer);
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      return await r.json();
+    }catch(err){
+      clearTimeout(timer);
+      lastErr=err;
+      // tenta o próximo espelho antes de desistir
+    }
+  }
+  throw lastErr||new Error('Overpass indisponível');
+}
 async function buscarExplore(lat,lng,catId,raio=1500){
   const cat=EXPLORE_CATS.find(c=>c.id===catId);
-  const q=`[out:json][timeout:25];(${cat.q}(around:${raio},${lat},${lng}););out body 25;`;
-  const r=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:'data='+encodeURIComponent(q)});
-  const d=await r.json();
+  const q=`[out:json][timeout:10];(${cat.q}(around:${raio},${lat},${lng}););out body 25;`;
+  const d=await fetchOverpass(q);
   return (d.elements||[])
     .filter(el=>el.tags?.name)
     .map(el=>({
@@ -2225,7 +2324,12 @@ $('mexp-btn').onclick=async()=>{
   $('mexp-sheet').dataset.lat=lat;$('mexp-sheet').dataset.lng=lng;
   drawExploreCats();
   $('mexp-sheet').classList.add('on');
+  $('mexp-btn').classList.add('h');
   loadExploreCat('restaurante');
+};
+$('mexp-close').onclick=()=>{
+  $('mexp-sheet').classList.remove('on');
+  $('mexp-btn').classList.remove('h');
 };
 function drawExploreCats(){
   const el=$('mexp-cats');el.innerHTML='';
@@ -2236,10 +2340,29 @@ function drawExploreCats(){
     el.appendChild(b);
   });
 }
+const exploreCache=new Map(); // chave: `${lat.toFixed(3)},${lng.toFixed(3)},${catId}` — evita rebater no Overpass ao trocar de categoria e voltar
 async function loadExploreCat(catId){
   const lat=+$('mexp-sheet').dataset.lat,lng=+$('mexp-sheet').dataset.lng;
-  const list=$('mexp-list');list.innerHTML='<div style="text-align:center;padding:20px;color:var(--mut2)">🔍 Buscando...</div>';
-  const results=await buscarExplore(lat,lng,catId);
+  const cacheKey=`${lat.toFixed(3)},${lng.toFixed(3)},${catId}`;
+  const list=$('mexp-list');
+  list.innerHTML='<div style="text-align:center;padding:20px;color:var(--mut2)">🔍 Buscando...</div>';
+  let results;
+  try{
+    if(exploreCache.has(cacheKey)){
+      results=exploreCache.get(cacheKey);
+    }else{
+      results=await buscarExplore(lat,lng,catId);
+      exploreCache.set(cacheKey,results);
+    }
+  }catch(err){
+    list.innerHTML='';
+    const errBox=document.createElement('div');errBox.style.cssText='text-align:center;padding:20px;color:var(--mut2);font-size:12px';
+    errBox.innerHTML='Não foi possível buscar agora — o serviço pode estar sobrecarregado.<br><br>';
+    const retry=document.createElement('button');retry.className='bs';retry.textContent='🔄 Tentar novamente';
+    retry.onclick=()=>loadExploreCat(catId);
+    errBox.appendChild(retry);list.appendChild(errBox);
+    return;
+  }
   list.innerHTML='';
   if(!results.length){list.innerHTML='<div style="text-align:center;padding:20px;color:var(--mut2)">Nada encontrado por perto</div>';return;}
   results.slice(0,15).forEach(r=>{

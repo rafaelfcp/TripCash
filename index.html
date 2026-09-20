@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
@@ -100,7 +100,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 #tabs{flex-shrink:0;display:flex;gap:4px;padding:0 16px 10px;background:var(--bg);z-index:2;position:relative}
 .tab{
   flex:1;background:var(--sur);border:1px solid var(--bor);border-radius:99px;
-  color:var(--mut2);font-size:11px;padding:8px 2px;cursor:pointer;text-align:center;
+  color:var(--mut2);font-size:12px;padding:10px 6px;min-height:44px;cursor:pointer;text-align:center;
   font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;
   transition:all .2s;
 }
@@ -111,6 +111,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
   box-shadow:var(--shadow-teal);
   letter-spacing:.1px;
 }
+.tab:focus-visible,.chip:focus-visible,.pill:focus-visible,.bi:focus-visible,.bs:focus-visible,.bc:focus-visible,.bok:focus-visible,.fab:focus-visible,.m-btn:focus-visible,.m-sw-btn:focus-visible,.m-style-btn:focus-visible,.lf-btn:focus-visible,.lanc-mode-btn:focus-visible{outline:3px solid var(--amber2);outline-offset:3px}
 
 /* ── PAGES ── */
 #pages{flex:1;overflow:hidden;position:relative;min-height:0}
@@ -119,7 +120,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 
 /* ── SECTION LABEL ── */
 .sec{
-  font-size:9px;letter-spacing:3px;color:var(--mut);
+  font-size:12px;letter-spacing:1.5px;color:var(--mut);
   text-transform:uppercase;margin-bottom:10px;margin-top:6px;
   font-weight:700;display:flex;align-items:center;gap:8px;
 }
@@ -390,7 +391,7 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 }
 .hdl{width:36px;height:4px;background:var(--bor2);border-radius:99px;margin:0 auto 18px}
 .mtit{font-size:17px;font-weight:800;margin-bottom:16px;letter-spacing:-0.3px}
-.fl{font-size:9px;letter-spacing:2px;color:var(--mut);display:block;margin-bottom:5px;text-transform:uppercase;font-weight:700}
+.fl{font-size:12px;letter-spacing:1.2px;color:var(--mut);display:block;margin-bottom:6px;text-transform:uppercase;font-weight:700}
 .fi{
   width:100%;background:var(--bg);border:1px solid var(--bor);border-radius:10px;
   color:var(--txt);font-size:15px;padding:12px 13px;margin-bottom:12px;
@@ -615,23 +616,69 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .opl-desc{font-size:13px;line-height:1.6;color:var(--txt);margin-bottom:14px}
 .opl-fact{font-size:12px;color:var(--txt);padding:7px 0;border-bottom:1px solid var(--bor)}
 .opl-fact:last-of-type{border-bottom:none}
+/* ── ACESSIBILIDADE E RESPONSIVIDADE V2 ── */
+button{min-height:44px}
+.bi{min-width:44px;min-height:44px}.chip{min-height:38px;display:inline-flex;align-items:center}.pill{min-height:44px;font-size:13px}
+.tab:focus-visible,.chip:focus-visible,.pill:focus-visible,.bi:focus-visible,.bs:focus-visible,.bc:focus-visible,.bok:focus-visible,.fab:focus-visible,.m-btn:focus-visible,.m-sw-btn:focus-visible,.m-style-btn:focus-visible,.lf-btn:focus-visible,.lanc-mode-btn:focus-visible{outline:3px solid var(--amber2);outline-offset:3px}
+.budget-hero{background:var(--sur);border:1px solid var(--bor2);border-radius:var(--r);padding:16px;margin:0 0 18px;position:relative;overflow:hidden}.budget-hero:before{content:'';position:absolute;inset:0;background:var(--grd-subtle);pointer-events:none}.budget-hero>*{position:relative}.budget-hero h2{font-size:16px;margin-bottom:4px}.budget-hero p{font-size:13px;color:var(--mut2);line-height:1.5}.budget-kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.budget-kpi{background:color-mix(in srgb,var(--bg) 78%,transparent);border-radius:10px;padding:10px}.budget-kpi span{display:block;font-size:12px;color:var(--mut2);margin-bottom:4px}.budget-kpi strong{font-size:17px}.budget-status{margin-top:12px;font-size:13px;font-weight:700;color:var(--teal)}
+@media (max-width:899px){#tabs{position:fixed;left:0;right:0;bottom:0;padding:8px 10px calc(var(--sb) + 8px);gap:5px;border-top:1px solid var(--bor);box-shadow:0 -8px 24px rgba(0,0,0,.18)}.tab{font-size:11px;border-radius:12px;padding:6px 3px;line-height:1.15}#pages{margin-bottom:68px}.pg{padding-bottom:22px}}
+@media (min-width:900px){#shell{display:grid;grid-template-columns:248px minmax(0,1fr);grid-template-rows:auto 1fr;padding:0}#topbar{grid-column:1;grid-row:1;padding:28px 18px 16px;border-right:1px solid var(--bor);min-height:210px}.tb-row{display:block}.bud-box{text-align:left;margin-top:22px}.bud-box button{margin-left:0!important}.chips{margin-top:8px}.prog{margin-top:20px}#tabs{grid-column:1;grid-row:2;display:flex;flex-direction:column;align-items:stretch;padding:12px 14px 28px;border-right:1px solid var(--bor);gap:8px}.tab{flex:0;display:flex;align-items:center;justify-content:flex-start;padding:11px 14px;border-radius:10px;text-align:left}#pages{grid-column:2;grid-row:1 / span 2;background:var(--bg)}.pg{padding:32px clamp(28px,5vw,72px) 48px;max-width:1440px;margin:0 auto}.cat-grid{grid-template-columns:repeat(6,minmax(120px,1fr))}.sg{grid-template-columns:repeat(3,1fr)}.budget-kpis{grid-template-columns:repeat(3,1fr)}.budget-hero{padding:22px}.budget-hero h2{font-size:20px}.donut-w{max-width:720px}.sh{max-width:640px;border-radius:24px;margin-bottom:5vh;padding:24px}.ov{align-items:center}.hdl{display:none}#mapa-pg{padding-left:248px}.m-top,.m-dias,.m-switch,.m-style,#m-list{max-width:1200px;margin-left:auto;margin-right:auto}}
+.trip-nm{background:none;border:none;color:var(--txt);padding:0;min-height:44px;text-align:left}
+.user-menu{margin-top:14px;padding-top:12px;border-top:1px solid var(--bor)}.user-email{font-size:12px;color:var(--mut2);word-break:break-word;margin-bottom:6px}.logout-btn{background:none;border:1px solid var(--bor);border-radius:8px;color:var(--mut2);font:inherit;font-size:12px;padding:7px 10px;cursor:pointer;min-height:44px;width:100%;text-align:left}.logout-btn:hover{border-color:var(--red);color:var(--red)}
+#auth-screen{display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:20px;background:var(--bg)}body.auth-required #auth-screen{display:flex}body.auth-required #shell,body.auth-required .fab,body.auth-required #mapa-pg{display:none!important}.auth-card{width:min(100%,420px);background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:28px;box-shadow:var(--shadow)}.auth-card h1{font-size:25px;margin:10px 0 6px}.auth-card p{font-size:14px;line-height:1.55;color:var(--mut2);margin-bottom:20px}.auth-view[hidden]{display:none}.auth-status{min-height:22px;font-size:13px;color:var(--mut2);margin:8px 0}.auth-status.error{color:var(--red)}.auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.auth-actions button{width:100%}.auth-link{display:block;margin:14px auto 0;background:none;border:none;color:var(--teal);font:inherit;font-size:13px;font-weight:700;cursor:pointer;min-height:32px}
 </style>
 </head>
-<body>
+<body class="auth-required">
+
+<main id="auth-screen" aria-labelledby="auth-title">
+  <div class="auth-card">
+    <section class="auth-view" id="auth-login-view">
+      <div class="trip-lbl">TripCash</div>
+      <h1 id="auth-title">Sua viagem, só sua.</h1>
+      <p>Entre para acessar suas viagens, gastos, roteiro e comprovantes com segurança.</p>
+      <form id="auth-form">
+        <label class="fl" for="auth-email">E-MAIL</label>
+        <input class="fi" id="auth-email" type="email" autocomplete="email" required placeholder="voce@exemplo.com"/>
+        <label class="fl" for="auth-password">SENHA</label>
+        <input class="fi" id="auth-password" type="password" autocomplete="current-password" required minlength="8" placeholder="Sua senha"/>
+        <div class="auth-status" id="auth-status" role="status" aria-live="polite"></div>
+        <button class="bok" id="auth-login" type="submit" style="width:100%">Entrar</button>
+      </form>
+      <button class="auth-link" id="auth-show-signup" type="button">Ainda não tenho conta — criar agora</button>
+    </section>
+    <section class="auth-view" id="auth-signup-view" hidden aria-labelledby="signup-title">
+      <div class="trip-lbl">TripCash</div>
+      <h1 id="signup-title">Crie sua conta</h1>
+      <p>Use seu e-mail para proteger os dados financeiros das suas viagens.</p>
+      <form id="auth-signup-form">
+        <label class="fl" for="signup-email">E-MAIL</label>
+        <input class="fi" id="signup-email" type="email" autocomplete="email" required placeholder="voce@exemplo.com"/>
+        <label class="fl" for="signup-password">SENHA</label>
+        <input class="fi" id="signup-password" type="password" autocomplete="new-password" required minlength="8" placeholder="Mínimo de 8 caracteres"/>
+        <label class="fl" for="signup-password-confirm">CONFIRME A SENHA</label>
+        <input class="fi" id="signup-password-confirm" type="password" autocomplete="new-password" required minlength="8" placeholder="Repita sua senha"/>
+        <div class="auth-status" id="signup-status" role="status" aria-live="polite"></div>
+        <button class="bok" id="auth-signup" type="submit" style="width:100%">Criar conta</button>
+      </form>
+      <button class="auth-link" id="auth-back-login" type="button">← Já tenho uma conta</button>
+    </section>
+  </div>
+</main>
 
 <div id="shell">
   <div id="topbar">
     <div class="tb-row">
       <div>
         <div class="trip-lbl">Controle de Viagem</div>
-        <div class="trip-nm" id="tnm"><span id="tnmt">—</span><span style="font-size:13px;opacity:.5">✏️</span></div>
-        <button id="cfg-btn" style="background:none;border:none;font-size:14px;opacity:.6;cursor:pointer;padding:2px 4px 2px 0" title="Configurações de categorias">⚙️</button>
+        <button class="trip-nm" id="tnm" type="button" aria-label="Editar viagem"><span id="tnmt">—</span><span aria-hidden="true" style="font-size:13px;opacity:.5">✏️</span></button>
+        <button id="cfg-btn" type="button" aria-label="Configurações de categorias" style="background:none;border:none;font-size:14px;opacity:.6;cursor:pointer;padding:2px 4px 2px 0" title="Configurações de categorias">⚙️</button>
         <div class="chips" id="chips"></div>
       </div>
       <div class="bud-box">
         <div class="bud-lbl">Orçamento</div>
         <div class="bud-val" id="bval">—</div>
-        <button id="theme-btn" onclick="toggleTheme()" style="margin-top:6px;background:none;border:none;font-size:18px;cursor:pointer;display:block;margin-left:auto">🌙</button>
+        <button id="theme-btn" type="button" aria-label="Alternar tema" onclick="toggleTheme()" style="margin-top:6px;background:none;border:none;font-size:18px;cursor:pointer;display:block;margin-left:auto">🌙</button>
+        <div class="user-menu" aria-label="Conta"><div class="user-email" id="user-email"></div><button class="logout-btn" id="logout-btn" type="button" aria-label="Sair da conta">↪ Sair da conta</button></div>
       </div>
     </div>
     <div class="prog"><div class="prog-b" id="pb" style="width:0%"></div></div>
@@ -642,10 +689,10 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
 
   <div id="tabs">
-    <div class="tab on" data-t="dash">📊</div>
-    <div class="tab" data-t="lanc">📋</div>
-    <div class="tab" data-t="rot">🗺️ Roteiro</div>
-    <div class="tab" data-t="mapa">📍 Mapa</div>
+    <button class="tab on" type="button" data-t="dash" aria-current="page">📊 <span>Visão geral</span></button>
+    <button class="tab" type="button" data-t="lanc">💳 <span>Gastos</span></button>
+    <button class="tab" type="button" data-t="rot">🗺️ <span>Plano</span></button>
+    <button class="tab" type="button" data-t="mapa">📍 <span>Mapa</span></button>
   </div>
 
   <div id="pages">
@@ -711,14 +758,14 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 </div>
 
 <!-- MODAL GASTO -->
-<div class="ov" id="og"><div class="sh">
+<div class="ov" id="og" role="dialog" aria-modal="true" aria-labelledby="ogt"><div class="sh">
   <div class="hdl"></div><div class="mtit" id="ogt">Novo Gasto</div>
-  <label class="fl">DESCRIÇÃO</label><input class="fi" id="fd" type="text" autocomplete="off" placeholder="Ex: Almoço..."/>
+  <label class="fl" for="fd">DESCRIÇÃO</label><input class="fi" id="fd" type="text" autocomplete="off" placeholder="Ex: Almoço..."/>
   <div class="g2">
-    <div><label class="fl">VALOR (R$)</label><input class="fi" id="fv" type="number" min="0.01" step="0.01" placeholder="0,00" style="color:var(--yel);font-weight:700"/></div>
-    <div><label class="fl">DATA</label><input class="fi" id="fdt" type="date" style="color-scheme:dark"/></div>
+    <div><label class="fl" for="fv">VALOR (R$)</label><input class="fi" id="fv" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="0,00" style="color:var(--yel);font-weight:700"/></div>
+    <div><label class="fl" for="fdt">DATA</label><input class="fi" id="fdt" type="date" style="color-scheme:dark"/></div>
   </div>
-  <label class="fl">OBSERVAÇÃO</label><input class="fi" id="fo" type="text" autocomplete="off" placeholder="Detalhes..."/>
+  <label class="fl" for="fo">OBSERVAÇÃO</label><input class="fi" id="fo" type="text" autocomplete="off" placeholder="Detalhes..."/>
   <label class="fl">CATEGORIA</label>
   <div class="pills" id="cpills"></div>
 
@@ -731,7 +778,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     <button class="bs doc-upbtn" id="docupbtn" type="button">+ Anexar PDF</button>
   </div>
 
-  <button class="bok" id="gok" style="width:100%" disabled>Salvar</button>
+  <div class="br"><button class="bc" id="gcnc" type="button">Cancelar</button><button class="bok" id="gok" type="button" disabled>Salvar gasto</button></div>
 </div></div>
 
 <!-- MODAL RESERVA -->
@@ -865,6 +912,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
 <script>
 let categorias=[]; // carregado do banco via loadCategorias() — ver Fase 6 (Configurações)
+let currentUser=null,currentProfile=null,appStartedUserId=null;
 const TIPOS=[
   {id:'hotel',      label:'Hotel',      e:'🏨',c:'#FF6B6B'},
   {id:'restaurante',label:'Restaurante',e:'🍽️',c:'#FFE66D'},
@@ -912,15 +960,66 @@ const geoCache=new Map();   // chave: parada.id → resultado geocodificado — 
 let mView='map';            // 'map' | 'list' — toggle de visualização
 let mSelDia=null;           // 'all' ou objeto dia atualmente selecionado
 
-// ── INIT ──────────────────────────────────────────────
+// ── AUTENTICAÇÃO E INICIALIZAÇÃO ───────────────────────
+function authMessage(msg,error=false,target='auth-status'){const el=$(target);el.textContent=msg;el.classList.toggle('error',error);}
+function showAuthView(view){
+  const signingUp=view==='signup';
+  $('auth-login-view').hidden=signingUp;$('auth-signup-view').hidden=!signingUp;
+  authMessage('');authMessage('',false,'signup-status');
+  setTimeout(()=>$(signingUp?'signup-email':'auth-email').focus(),50);
+}
+async function startAuthenticatedApp(session){
+  if(!session?.user)return;
+  currentUser=session.user;
+  $('user-email').textContent=currentUser.email||'';
+  document.body.classList.remove('auth-required');
+  if(appStartedUserId===currentUser.id)return;
+  appStartedUserId=currentUser.id;
+  const{data:profile}=await sb.from('profiles').select('display_name,role').eq('id',currentUser.id).maybeSingle();
+  currentProfile=profile||null;
+  await loadCategorias();renderCatPills(null);await loadViagens();
+}
+function showAuth(){
+  currentUser=null;currentProfile=null;appStartedUserId=null;
+  document.body.classList.add('auth-required');
+  $('auth-password').value='';$('signup-password').value='';$('signup-password-confirm').value='';showAuthView('login');
+}
+async function initAuth(){
+  const{data:{session}}=await sb.auth.getSession();
+  if(session)await startAuthenticatedApp(session);else showAuth();
+  sb.auth.onAuthStateChange(async(event,session)=>{
+    if(event==='SIGNED_OUT'||!session)showAuth();
+    else await startAuthenticatedApp(session);
+  });
+}
+$('auth-form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const email=$('auth-email').value.trim(),password=$('auth-password').value;
+  authMessage('Entrando...');
+  const{error}=await sb.auth.signInWithPassword({email,password});
+  if(error)authMessage(error.message,true);
+});
+$('auth-show-signup').onclick=()=>showAuthView('signup');
+$('auth-back-login').onclick=()=>showAuthView('login');
+$('auth-signup-form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const email=$('signup-email').value.trim(),password=$('signup-password').value,confirmPassword=$('signup-password-confirm').value;
+  if(password!==confirmPassword){authMessage('As senhas não coincidem.',true,'signup-status');return;}
+  if(!email||password.length<8){authMessage('Informe um e-mail válido e uma senha de ao menos 8 caracteres.',true,'signup-status');return;}
+  authMessage('Criando conta...',false,'signup-status');
+  const options=location.protocol.startsWith('http')?{emailRedirectTo:location.href}:{};
+  const{data,error}=await sb.auth.signUp({email,password,options});
+  if(error){authMessage(error.message,true,'signup-status');return;}
+  authMessage(data.session?'Conta criada. Bem-vindo!':'Conta criada. Confirme o e-mail para entrar.',false,'signup-status');
+});
+$('logout-btn').onclick=async()=>{await sb.auth.signOut();};
+
 (async()=>{
   sb=supabase.createClient(
     'https://evvvzmnguhgqaopvquhs.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2dnZ6bW5ndWhncWFvcHZxdWhzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkyMTMzODYsImV4cCI6MjA5NDc4OTM4Nn0.FSuRZjedHmJs4QRiCrk_DS1tzEO-tOU3pN8HG15Iw5g'
   );
-  await loadCategorias();
-  renderCatPills(null);
-  await loadViagens();
+  await initAuth();
 })();
 async function loadCategorias(){
   const{data,error}=await sb.from('categorias').select('*').order('ordem');
@@ -1012,7 +1111,9 @@ $('cfgaddbtn').onclick=async()=>{
 
 // ── VIAGENS ───────────────────────────────────────────
 async function loadViagens(){
-  const{data}=await sb.from('viagens').select('*').order('criado_em',{ascending:false});
+  if(!currentUser)return;
+  const{data,error}=await sb.from('viagens').select('*').eq('owner_id',currentUser.id).order('criado_em',{ascending:false});
+  if(error){toast('Não foi possível carregar suas viagens ⚠️');return;}
   viagens=data||[];
   if(!viagens.length)return;
   vid=viagens[0].id;
@@ -1029,7 +1130,7 @@ function drawChips(){
   a.onclick=async()=>{
     const n=prompt('Nome:');if(!n)return;
     const o=parseFloat(prompt('Orçamento:')||'0');
-    const{data,e}=await sb.from('viagens').insert({nome:n,orcamento:o}).select().single();
+    const{data,e}=await sb.from('viagens').insert({nome:n,orcamento:o,owner_id:currentUser.id}).select().single();
     if(e){toast('Erro');return;}viagens.unshift(data);vid=data.id;drawChips();await loadGastos();
   };el.appendChild(a);
 }
@@ -1140,10 +1241,18 @@ function drawReservasStrip(container){
 
 function drawDash(){
   const el=$('pg-dash');el.innerHTML='';
-  drawReservasStrip(el);
   const tot=gastos.reduce((s,g)=>s+Number(g.valor),0);
   const bc=categorias.map(c=>({...c,tot:gastos.filter(g=>g.categoria===c.id).reduce((s,g)=>s+Number(g.valor),0)}));
   const mx=Math.max(...bc.map(c=>c.tot),1);
+  const v=viagens.find(x=>x.id===vid);const orc=v?.orcamento||0;
+  const saldo=orc-tot;const pct=orc?Math.round((tot/orc)*100):0;
+  const diasPlanejados=rDias.filter(d=>d.data).length||new Set(gastos.map(g=>g.data)).size||1;
+  const porDia=Math.max(0,saldo)/diasPlanejados;
+  const hero=document.createElement('section');hero.className='budget-hero';hero.setAttribute('aria-label','Resumo do orçamento');
+  const estado=!orc?'Defina um orçamento para acompanhar sua viagem':saldo<0?'Orçamento excedido — reveja os próximos gastos':pct>=85?'Atenção: você está perto do limite':`Dentro do orçamento — restam ${R(saldo)}`;
+  hero.innerHTML=`<h2>Seu dinheiro na viagem</h2><p>Uma visão rápida para decidir o próximo gasto.</p><div class="budget-kpis"><div class="budget-kpi"><span>Gasto até agora</span><strong>${R(tot)}</strong></div><div class="budget-kpi"><span>Saldo disponível</span><strong>${orc?R(Math.max(0,saldo)):'—'}</strong></div><div class="budget-kpi"><span>Disponível por dia</span><strong>${orc?R(porDia):'—'}</strong></div></div><div class="budget-status">${saldo<0?'⚠️':'✓'} ${estado}</div>`;
+  el.appendChild(hero);
+  drawReservasStrip(el);
 
   // label "Por Categoria"
   const sec1=document.createElement('div');sec1.className='sec';sec1.textContent='Por Categoria';el.appendChild(sec1);
@@ -1151,7 +1260,7 @@ function drawDash(){
   // cat grid — mostra ativas sempre; inativas só se tiverem gasto histórico
   const gr=document.createElement('div');gr.className='cat-grid';
   bc.filter(c=>c.ativo||c.tot>0).forEach(c=>{
-    const d=document.createElement('div');d.className='cat-card';
+    const d=document.createElement('button');d.type='button';d.className='cat-card';d.setAttribute('aria-label',`Ver gastos de ${c.label}`);
     d.innerHTML=`<div class="i">${c.e}</div><div class="l">${c.label}</div><div class="v" style="color:${c.tot?c.c:'#333'}">${c.tot?R(c.tot):'—'}</div>`;
     d.onclick=()=>openCat(c.id);
     gr.appendChild(d);
@@ -1159,7 +1268,6 @@ function drawDash(){
   el.appendChild(gr);
 
   // stats
-  const v=viagens.find(x=>x.id===vid);const orc=v?.orcamento||0;
   const dias=[...new Set(gastos.map(g=>g.data))].length;
   const maior=gastos.length?gastos.reduce((a,b)=>Number(a.valor)>Number(b.valor)?a:b):null;
   const sg=document.createElement('div');sg.className='sg';
@@ -1431,6 +1539,7 @@ $('fab').onclick=()=>{
   chkg();$('og').classList.add('on');setTimeout(()=>$('fd').focus(),100);
 };
 $('og').onclick=e=>{if(e.target===$('og'))$('og').classList.remove('on');};
+$('gcnc').onclick=()=>$('og').classList.remove('on');
 function editG(id){
   const g=gastos.find(x=>x.id===id);if(!g)return;
   egid=id;$('ogt').textContent='Editar Gasto';
@@ -1526,9 +1635,10 @@ function drawDocList(){
   });
 }
 
-function abrirDocumento(doc){
-  const{data}=sb.storage.from(DOC_BUCKET).getPublicUrl(doc.storage_path);
-  window.open(data.publicUrl,'_blank');
+async function abrirDocumento(doc){
+  const{data,error}=await sb.storage.from(DOC_BUCKET).createSignedUrl(doc.storage_path,300);
+  if(error||!data?.signedUrl){toast('Não foi possível abrir o anexo ⚠️');return;}
+  window.open(data.signedUrl,'_blank','noopener');
 }
 
 async function excluirDocumento(doc){
@@ -2666,7 +2776,7 @@ async function drawMDia(dia){
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=async()=>{
     const t=tab.dataset.t;
-    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));tab.classList.add('on');
+    document.querySelectorAll('.tab').forEach(x=>{x.classList.remove('on');x.removeAttribute('aria-current');});tab.classList.add('on');tab.setAttribute('aria-current','page');
     if(t==='mapa'){
       $('mapa-pg').classList.add('on');
       $('fab').classList.add('h');
@@ -2683,8 +2793,8 @@ document.querySelectorAll('.tab').forEach(tab=>{
 $('mback').onclick=()=>{
   fecharExploreSheet();
   $('mapa-pg').classList.remove('on');
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
-  document.querySelector('[data-t="dash"]').classList.add('on');
+  document.querySelectorAll('.tab').forEach(x=>{x.classList.remove('on');x.removeAttribute('aria-current');});
+  document.querySelector('[data-t="dash"]').classList.add('on');document.querySelector('[data-t="dash"]').setAttribute('aria-current','page');
   document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
   $('pg-dash').classList.add('on');
   $('fab').classList.add('h');
@@ -2694,8 +2804,12 @@ $('mback').onclick=()=>{
 function toggleTheme(){
   const light=document.body.classList.toggle('light');
   $('theme-btn').textContent=light?'☀️':'🌙';
+  $('theme-btn').setAttribute('aria-label',light?'Ativar tema escuro':'Ativar tema claro');
   localStorage.setItem('theme',light?'light':'dark');
 }
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')document.querySelectorAll('.ov.on,.cov.on,.eov.on').forEach(el=>el.classList.remove('on'));
+});
 // restaura tema salvo
 if(localStorage.getItem('theme')==='light'){
   document.body.classList.add('light');

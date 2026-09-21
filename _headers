@@ -1,0 +1,23 @@
+# Cloudflare Pages — cabeçalhos de segurança e cache
+# CSP está em modo REPORT-ONLY: viola => aparece no Console, mas nada quebra.
+# Depois de navegar por todas as telas sem violações, renomeie para
+# "Content-Security-Policy" (remova o "-Report-Only").
+# 'unsafe-inline' é necessário porque o app é um arquivo único com <script>/<style> inline.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Permissions-Policy: camera=(), microphone=(), geolocation=(self)
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://unpkg.com https://*.basemaps.cartocdn.com https://server.arcgisonline.com https://upload.wikimedia.org; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://nominatim.openstreetmap.org https://overpass-api.de https://overpass.kumi.systems https://*.wikipedia.org; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+
+/sw.js
+  Cache-Control: no-cache
+
+/manifest.webmanifest
+  Content-Type: application/manifest+json
+  Cache-Control: no-cache
+
+/icons/*
+  Cache-Control: public, max-age=31536000, immutable

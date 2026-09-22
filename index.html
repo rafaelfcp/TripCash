@@ -307,6 +307,14 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 .leaflet-popup-content{margin:10px 13px!important;font-size:12px!important;font-family:'Plus Jakarta Sans',sans-serif!important}
 #m-map[data-map-style="light"] .leaflet-popup-content strong,
 #m-map[data-map-style="sat"] .leaflet-popup-content strong{color:#1A1830!important}
+/* tiles OSM (sem API key) não têm variante escura nativa — simula com filtro CSS */
+#m-map[data-map-style="dark"] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(0.94) contrast(0.88) saturate(0.9)}
+.leaflet-control-attribution{background:rgba(12,12,24,.6)!important;color:#cfd0e6!important;font-size:9px!important;line-height:1.4!important;padding:1px 6px!important;border-radius:4px 0 0 0!important}
+.leaflet-control-attribution a{color:#9fd8ff!important}
+#m-map[data-map-style="light"] .leaflet-control-attribution,
+#m-map[data-map-style="sat"] .leaflet-control-attribution{background:rgba(255,255,255,.75)!important;color:#4a4a5a!important}
+#m-map[data-map-style="light"] .leaflet-control-attribution a,
+#m-map[data-map-style="sat"] .leaflet-control-attribution a{color:#2b6cb0!important}
 
 #m-map{flex-shrink:0;width:100%;height:min(42vh,360px);background:var(--sur);overflow:hidden;position:relative}
 #m-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+64px)}
@@ -2445,18 +2453,24 @@ let lastDiaId=null; // persiste o último dia selecionado no mapa
 let curTileLayer=null; // tile layer ativo no Leaflet — troca ao mudar de estilo
 
 // estilos de mapa disponíveis — todos gratuitos, sem API key
+// obs: a CartoDB passou a exigir API key nos tiles anônimos (basemaps.cartocdn.com);
+// "dark" e "light" agora usam OpenStreetMap puro — o visual escuro vem de um filtro CSS
+// aplicado em #m-map[data-map-style="dark"] .leaflet-tile-pane (ver CSS)
 const MAP_STYLES={
   dark:{
-    url:'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution:'',maxZoom:19
+    url:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+    maxZoom:19
   },
   light:{
-    url:'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    attribution:'',maxZoom:19
+    url:'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+    maxZoom:19
   },
   sat:{
     url:'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attribution:'',maxZoom:19
+    attribution:'Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics',
+    maxZoom:19
   }
 };
 let mapStyle=localStorage.getItem('mapStyle')||'dark'; // dark | light | sat — persiste entre sessões
@@ -2481,7 +2495,7 @@ async function initMapa(){
   // inicializa (ou reinicializa) o mapa Leaflet
   if(lmap){lmap.remove();lmap=null;}
   lmks=[];lln=null;curTileLayer=null;
-  lmap=L.map('m-map',{zoomControl:true,attributionControl:false}).setView([39.4,-8.2],7);
+  lmap=L.map('m-map',{zoomControl:true,attributionControl:true}).setView([39.4,-8.2],7);
   applyMapStyle(mapStyle); // aplica o estilo salvo (ou dark por padrão)
   mView='map';
   $('msw-map').classList.add('on');$('msw-list').classList.remove('on');

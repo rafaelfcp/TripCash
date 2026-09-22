@@ -606,6 +606,12 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .cfg-color-pick{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
 .cfg-color-sw{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent}
 .cfg-color-sw.on{border-color:var(--txt);box-shadow:0 0 0 2px var(--sur),0 0 0 3px var(--txt)}
+.mem-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--bor)}
+.mem-info{flex:1;min-width:0}
+.mem-email{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mem-meta{font-size:10px;color:var(--mut2);margin-top:1px}
+.mem-meta.pendente{color:var(--amber)}
+.chip-shared{font-size:10px;margin-left:4px;opacity:.8}
 /* ── FASE 7: busca de locais com autocomplete no modal Parada ── */
 .pn-suggest{display:none;position:absolute;left:0;right:0;top:calc(100% + 2px);background:var(--sur);border:1px solid var(--bor);border-radius:var(--r-sm);box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:60;max-height:240px;overflow-y:auto}
 .pn-suggest.on{display:block}
@@ -716,6 +722,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <svg class="wf-logo sm" viewBox="-14 -14 582.0 188" role="img" aria-label="Wayfin"><use href="#wf-lockup"/></svg>
         <button class="trip-nm" id="tnm" type="button" aria-label="Editar viagem"><span id="tnmt">—</span><span aria-hidden="true" style="font-size:13px;opacity:.5">✏️</span></button>
         <button id="cfg-btn" type="button" aria-label="Configurações de categorias" style="background:none;border:none;font-size:14px;opacity:.6;cursor:pointer;padding:2px 4px 2px 0" title="Configurações de categorias">⚙️</button>
+        <button id="mem-btn" type="button" aria-label="Compartilhar viagem" style="background:none;border:none;font-size:14px;opacity:.6;cursor:pointer;padding:2px 4px 2px 0" title="Compartilhar viagem">🤝</button>
         <div class="chips" id="chips"></div>
       </div>
       <div class="bud-box">
@@ -950,6 +957,22 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   <div class="cfg-color-pick" id="cfgcolors"></div>
   <button class="bs" id="cfgaddbtn" style="width:100%;color:var(--teal);border-color:var(--teal);font-weight:600;margin-bottom:12px">+ Adicionar categoria</button>
   <div class="br"><button class="bc" id="cfgcnc" style="width:100%">Fechar</button></div>
+</div></div>
+
+<!-- MODAL MEMBROS / COMPARTILHAR VIAGEM -->
+<div class="ov" id="omem" role="dialog" aria-modal="true" aria-labelledby="omem-t"><div class="sh">
+  <div class="hdl"></div><div class="mtit" id="omem-t">🤝 Compartilhar viagem</div>
+  <div id="mem-list"></div>
+  <div id="mem-invite" style="display:none">
+    <label class="fl" style="margin-top:14px">CONVIDAR POR E-MAIL</label>
+    <div class="g2">
+      <input class="fi" id="meminput" type="email" autocomplete="off" placeholder="pessoa@exemplo.com"/>
+      <select class="fi" id="mempapel"><option value="editor" selected>Editor</option><option value="leitor">Leitor</option></select>
+    </div>
+    <button class="bs" id="memaddbtn" style="width:100%;color:var(--teal);border-color:var(--teal);font-weight:600;margin-bottom:12px">+ Convidar</button>
+  </div>
+  <div id="mem-readonly" style="display:none;font-size:12px;color:var(--mut2);margin-top:10px">Somente o dono da viagem pode convidar ou remover pessoas.</div>
+  <div class="br"><button class="bc" id="memcnc" style="width:100%">Fechar</button></div>
 </div></div>
 
 <div class="toast" id="toast"></div>
@@ -1273,6 +1296,79 @@ async function excluirCategoria(c){
   if(error){categorias=bk;drawCfgList();toast('Erro ao excluir ⚠️');}
   else toast('Categoria excluída ✓');
 }
+// ── MEMBROS DA VIAGEM (compartilhamento) ────────────────
+let membros=[];
+function friendlyMemberError(msg){
+  const m={
+    nao_autenticado:'Sessão expirada — entre novamente ⚠️',
+    somente_o_dono_convida:'Só o dono da viagem pode convidar ⚠️',
+    somente_o_dono_remove:'Só o dono da viagem pode remover ⚠️',
+    viagem_nao_encontrada:'Viagem não encontrada ⚠️',
+    papel_invalido:'Papel inválido ⚠️',
+    email_invalido:'Digite um e-mail válido ⚠️',
+    nao_pode_convidar_a_si_mesmo:'Você já tem acesso a esta viagem 🙂',
+    membro_nao_encontrado:'Esse convite já não existe mais ⚠️'
+  };
+  for(const k in m)if((msg||'').includes(k))return m[k];
+  return 'Não foi possível concluir ⚠️';
+}
+async function loadMembros(){
+  const{data,error}=await sb.from('viagem_membros').select('*').eq('viagem_id',vid).order('criado_em');
+  membros=error?[]:(data||[]);
+}
+function drawMembros(){
+  const v=viagens.find(x=>x.id===vid);if(!v)return;
+  const souDono=v.owner_id===currentUser.id;
+  const el=$('mem-list');el.innerHTML='';
+  if(!membros.length){
+    el.innerHTML='<div style="text-align:center;padding:16px;color:var(--mut2);font-size:12px">Ninguém convidado ainda</div>';
+  }else{
+    membros.forEach(m=>{
+      const row=document.createElement('div');row.className='mem-row';
+      const info=document.createElement('div');info.className='mem-info';
+      const em=document.createElement('div');em.className='mem-email';em.textContent=m.email;info.appendChild(em);
+      const meta=document.createElement('div');meta.className='mem-meta'+(m.status==='pendente'?' pendente':'');
+      meta.textContent=(m.papel==='editor'?'Editor':'Leitor')+' · '+(m.status==='aceito'?'Acesso ativo':'Aguardando cadastro');
+      info.appendChild(meta);row.appendChild(info);
+      if(souDono){
+        const del=document.createElement('button');del.className='bi';del.textContent='🗑️';del.style.fontSize='14px';
+        del.onclick=()=>removerMembro(m);row.appendChild(del);
+      }
+      el.appendChild(row);
+    });
+  }
+  $('mem-invite').style.display=souDono?'block':'none';
+  $('mem-readonly').style.display=souDono?'none':'block';
+}
+async function removerMembro(m){
+  if(!confirm(`Remover o acesso de ${m.email}?`))return;
+  const bk=[...membros];membros=membros.filter(x=>x.id!==m.id);drawMembros();
+  const{error}=await sb.rpc('remover_membro',{p_membro_id:m.id});
+  if(error){membros=bk;drawMembros();toast(friendlyMemberError(error.message));}
+  else toast('Acesso removido ✓');
+}
+$('mem-btn').onclick=async()=>{
+  if(!vid){toast('Crie uma viagem primeiro ⚠️');return;}
+  $('meminput').value='';$('mempapel').value='editor';
+  $('mem-list').innerHTML='<div style="text-align:center;padding:16px;color:var(--mut2);font-size:12px">Carregando…</div>';
+  $('omem').classList.add('on');
+  await loadMembros();drawMembros();
+};
+$('memcnc').onclick=()=>$('omem').classList.remove('on');
+$('omem').onclick=e=>{if(e.target===$('omem'))$('omem').classList.remove('on');};
+$('memaddbtn').onclick=async()=>{
+  const email=$('meminput').value.trim();
+  const papel=$('mempapel').value;
+  if(!email){toast('Digite um e-mail ⚠️');return;}
+  $('memaddbtn').disabled=true;
+  const{data,error}=await sb.rpc('convidar_membro',{p_viagem_id:vid,p_email:email,p_papel:papel});
+  $('memaddbtn').disabled=false;
+  if(error){toast(friendlyMemberError(error.message));return;}
+  $('meminput').value='';
+  toast(data.status==='aceito'?'Convite aceito — acesso liberado ✓':'Convite enviado — ativa quando a pessoa criar a conta ✓');
+  await loadMembros();drawMembros();
+};
+
 $('cfg-btn').onclick=()=>{
   drawCfgList();drawCfgColorPicker();
   $('cfgemoji').value='';$('cfglabel').value='';
@@ -1300,7 +1396,7 @@ $('cfgaddbtn').onclick=async()=>{
 // ── VIAGENS ───────────────────────────────────────────
 async function loadViagens(){
   if(!currentUser)return;
-  const{data,error}=await sb.from('viagens').select('*').eq('owner_id',currentUser.id).order('criado_em',{ascending:false});
+  const{data,error}=await sb.from('viagens').select('*').order('criado_em',{ascending:false});
   if(error){toast('Não foi possível carregar suas viagens ⚠️');return;}
   viagens=data||[];
   if(!viagens.length)return;
@@ -1311,7 +1407,9 @@ function drawChips(){
   const el=$('chips');el.innerHTML='';
   viagens.forEach(v=>{
     const c=document.createElement('div');c.className='chip'+(v.id===vid?' on':'');
-    c.textContent=v.nome;c.onclick=async()=>{vid=v.id;drawChips();await loadGastos();};
+    c.textContent=v.nome;
+    if(v.owner_id!==currentUser.id){const b=document.createElement('span');b.className='chip-shared';b.textContent='👥';b.title='Compartilhada com você';c.appendChild(b);}
+    c.onclick=async()=>{vid=v.id;drawChips();await loadGastos();};
     el.appendChild(c);
   });
   const a=document.createElement('div');a.className='chip add';

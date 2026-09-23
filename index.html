@@ -316,6 +316,27 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 #m-map[data-map-style="light"] .leaflet-control-attribution a,
 #m-map[data-map-style="sat"] .leaflet-control-attribution a{color:#2b6cb0!important}
 
+/* checklist de mala */
+#pg-mala{padding:14px 16px calc(var(--sb)+90px)}
+.mala-hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.mala-prog-txt{font-size:12px;color:var(--mut2);font-weight:600}
+.mala-actions{display:flex;gap:8px}
+.mala-actions button{background:var(--sur);border:1px solid var(--bor);border-radius:99px;color:var(--txt);font-size:11px;font-weight:600;padding:6px 12px;cursor:pointer;white-space:nowrap}
+.mala-actions button:active{opacity:.7}
+.mala-add{display:flex;gap:8px;margin-bottom:14px}
+.mala-add input{flex:1;background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:10px 13px;color:var(--txt);font-size:14px;font:inherit}
+.mala-add button{background:var(--grd);border:none;border-radius:12px;color:#0C0C18;font-weight:700;font-size:13px;padding:0 16px;cursor:pointer}
+.mala-list{display:flex;flex-direction:column;gap:2px}
+.mala-row{display:flex;align-items:center;gap:11px;padding:11px 4px;border-bottom:1px solid var(--bor)}
+.mala-check{flex-shrink:0;width:22px;height:22px;border-radius:7px;border:2px solid var(--bor2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;color:#0C0C18;padding:0}
+.mala-check.on{background:var(--teal);border-color:var(--teal)}
+.mala-txt{flex:1;font-size:14px;min-width:0;word-break:break-word}
+.mala-row.done .mala-txt{color:var(--mut2);text-decoration:line-through}
+.mala-del{flex-shrink:0;background:none;border:none;color:var(--mut2);font-size:15px;cursor:pointer;padding:2px 4px;opacity:.6}
+.mala-del:active{opacity:1}
+.mala-empty{text-align:center;padding:40px 16px;color:var(--mut2);font-size:13px;line-height:1.6}
+.mala-empty button{margin-top:14px}
+
 #m-map{flex-shrink:0;width:100%;height:min(42vh,360px);background:var(--sur);overflow:hidden;position:relative}
 #m-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px calc(var(--sb)+64px)}
 #m-map.h,#m-list.h{display:none!important}
@@ -643,6 +664,75 @@ button{min-height:44px}
 .user-menu{margin-top:14px;padding-top:12px;border-top:1px solid var(--bor)}.user-email{font-size:12px;color:var(--mut2);word-break:break-word;margin-bottom:6px}.logout-btn{background:none;border:1px solid var(--bor);border-radius:8px;color:var(--mut2);font:inherit;font-size:12px;padding:7px 10px;cursor:pointer;min-height:44px;width:100%;text-align:left}.logout-btn:hover{border-color:var(--red);color:var(--red)}
 #auth-screen{display:none;position:fixed;inset:0;z-index:2000;align-items:center;justify-content:center;padding:20px;background:var(--bg)}body.auth-required #auth-screen{display:flex}body.auth-required #shell,body.auth-required .fab,body.auth-required #mapa-pg{display:none!important}.auth-card{width:min(100%,420px);background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:28px;box-shadow:var(--shadow)}.auth-card h1{font-size:25px;margin:10px 0 6px}.auth-card p{font-size:14px;line-height:1.55;color:var(--mut2);margin-bottom:20px}.auth-view[hidden]{display:none}.auth-status{min-height:22px;font-size:13px;color:var(--mut2);margin:8px 0}.auth-status.error{color:var(--red)}.auth-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.auth-actions button{width:100%}.auth-link{display:block;margin:14px auto 0;background:none;border:none;color:var(--teal);font:inherit;font-size:13px;font-weight:700;cursor:pointer;min-height:32px}
 
+/* ── LANDING (página pública, antes do login) ───────────── */
+#landing-screen{display:none;position:fixed;inset:0;z-index:2500;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
+body.show-landing #landing-screen{display:block}
+#landing-screen .ld-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+#landing-screen a{color:inherit}
+.ld-nav{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--bor)}
+.ld-nav .ld-wrap{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;gap:10px}
+.ld-nav-links{display:none;gap:26px;font-size:13px;font-weight:600;color:var(--mut2)}
+.ld-nav-links a:hover{color:var(--txt)}
+.ld-nav-actions{display:flex;align-items:center;gap:8px}
+.ld-btn{border-radius:99px;font-weight:700;font-size:13px;cursor:pointer;padding:10px 18px;border:1px solid transparent;white-space:nowrap}
+.ld-btn-ghost{background:none;border-color:var(--bor2);color:var(--txt)}
+.ld-btn-primary{background:var(--grd);color:#0C0C18;box-shadow:0 6px 20px rgba(78,205,196,.25)}
+.ld-btn.sm{padding:8px 14px;font-size:12px}
+.ld-hero{padding:60px 0 40px;text-align:center}
+.ld-badge{display:inline-flex;align-items:center;gap:6px;background:var(--sur);border:1px solid var(--bor2);border-radius:99px;padding:6px 14px;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--amber2);text-transform:uppercase;margin-bottom:22px}
+.ld-hero h1{font-size:clamp(30px,6vw,52px);line-height:1.08;margin:0 0 16px;font-weight:800}
+.ld-hero h1 em{font-style:normal;background:var(--grd);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ld-hero p.ld-sub{font-size:clamp(15px,2.2vw,18px);color:var(--mut2);max-width:620px;margin:0 auto 28px;line-height:1.6}
+.ld-hero-ctas{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:14px}
+.ld-hero-ctas .ld-btn{padding:14px 26px;font-size:14px}
+.ld-reassure{font-size:12px;color:var(--mut2)}
+.ld-preview{margin:44px auto 0;max-width:760px;background:var(--sur);border:1px solid var(--bor);border-radius:24px;padding:22px;box-shadow:0 24px 60px rgba(0,0,0,.35);display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;text-align:left}
+.ld-preview-card{background:var(--bg);border:1px solid var(--bor);border-radius:14px;padding:14px}
+.ld-preview-card span{display:block;font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--mut2);margin-bottom:6px}
+.ld-preview-card strong{font-size:19px}
+.ld-preview-card small{display:block;font-size:11px;color:var(--teal);margin-top:4px;font-weight:600}
+.ld-section{padding:56px 0}
+.ld-section h2{font-size:clamp(22px,4vw,32px);margin:0 0 10px;font-weight:800;text-align:center}
+.ld-section .ld-kicker{display:block;text-align:center;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.ld-section .ld-lede{text-align:center;color:var(--mut2);max-width:560px;margin:0 auto 36px;font-size:14px;line-height:1.6}
+.ld-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.ld-card{background:var(--sur);border:1px solid var(--bor);border-radius:18px;padding:22px}
+.ld-card .ld-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--amber2);margin-bottom:10px}
+.ld-card .ld-ic{font-size:26px;display:block;margin-bottom:10px}
+.ld-card h3{font-size:16px;margin:0 0 8px}
+.ld-card p{font-size:13px;color:var(--mut2);line-height:1.55;margin:0}
+.ld-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;counter-reset:ld-step}
+.ld-step{position:relative;padding-left:46px}
+.ld-step:before{counter-increment:ld-step;content:counter(ld-step);position:absolute;left:0;top:0;width:32px;height:32px;border-radius:10px;background:var(--grd);color:#0C0C18;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center}
+.ld-step h3{font-size:15px;margin:2px 0 6px}
+.ld-step p{font-size:13px;color:var(--mut2);line-height:1.55;margin:0}
+.ld-pricing-toplist{display:flex;justify-content:center;gap:20px;margin-bottom:28px;font-size:12px;color:var(--mut2)}
+.ld-plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;align-items:stretch}
+.ld-plan{background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:22px;display:flex;flex-direction:column}
+.ld-plan.hl{border-color:var(--teal);box-shadow:0 16px 40px rgba(78,205,196,.18);position:relative}
+.ld-plan.hl:before{content:'MAIS POPULAR';position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--teal);color:#0C0C18;font-size:10px;font-weight:800;letter-spacing:.04em;padding:4px 12px;border-radius:99px}
+.ld-plan h3{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--mut2);margin:4px 0 10px}
+.ld-plan .ld-price{font-size:30px;font-weight:800;margin-bottom:2px}
+.ld-plan .ld-price small{font-size:13px;font-weight:600;color:var(--mut2)}
+.ld-plan .ld-price-sub{font-size:12px;color:var(--teal);font-weight:600;margin-bottom:16px}
+.ld-plan ul{list-style:none;margin:0 0 18px;padding:0;font-size:12.5px;color:var(--mut2);line-height:1.9;flex:1}
+.ld-plan ul li:before{content:'✓ ';color:var(--teal);font-weight:700}
+.ld-plan .ld-btn{width:100%;text-align:center}
+.ld-story{display:grid;grid-template-columns:1fr;gap:20px;max-width:720px;margin:0 auto}
+.ld-story p{font-size:14.5px;line-height:1.75;color:var(--mut2)}
+.ld-story strong{color:var(--txt)}
+.ld-story-sign{font-size:13px;color:var(--txt);font-weight:700;margin-top:6px}
+.ld-cta-final{text-align:center;padding:60px 0 70px}
+.ld-cta-final h2{font-size:clamp(22px,4vw,30px);margin-bottom:12px}
+.ld-cta-final p{color:var(--mut2);font-size:14px;margin-bottom:22px}
+.ld-footer{border-top:1px solid var(--bor);padding:32px 0 calc(24px + var(--sb))}
+.ld-footer .ld-wrap{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:flex-start;font-size:12px;color:var(--mut2)}
+.ld-footer-links{display:flex;flex-wrap:wrap;gap:16px}
+.ld-footer-links a{color:var(--mut2)}.ld-footer-links a:hover{color:var(--txt)}
+.ld-footer-brand{display:flex;flex-direction:column;gap:8px}
+@media (min-width:820px){.ld-nav-links{display:flex}}
+
+
 /* ── WAYFIN: planos, paywall e patrocinados ── */
 .wf-logo{display:block;height:44px;width:auto;margin-bottom:6px;color:var(--txt);--wf-dot:var(--amber2)}
 body.light .wf-logo{--wf-dot:var(--amber)}
@@ -687,6 +777,164 @@ body.light .wf-logo{--wf-dot:var(--amber)}
   </g>
   <path d="M216.176 110.464 195.232 49.535999999999994H210.688L223.456 87.952L237.008 49.535999999999994H250.0L263.44 87.84L276.20799999999997 49.535999999999994H291.664L270.72 110.464H257.616L243.504 69.36L229.168 110.464Z M314.624 111.80799999999999Q308.24 111.80799999999999 303.536 109.67999999999999Q298.832 107.55199999999999 296.256 103.576Q293.68 99.6 293.68 94.336Q293.68 89.29599999999999 295.92 85.32Q298.16 81.344 302.86400000000003 78.65599999999999Q307.568 75.96799999999999 314.736 74.848L332.88 71.936V69.91999999999999Q332.88 66.0 329.8 63.367999999999995Q326.72 60.736 321.68 60.736Q316.976 60.736 313.336 63.256Q309.696 65.776 308.016 69.91999999999999L296.03200000000004 64.096Q297.824 59.279999999999994 301.688 55.751999999999995Q305.552 52.224 310.81600000000003 50.208Q316.08000000000004 48.192 322.24 48.192Q329.744 48.192 335.456 50.936Q341.168 53.68 344.36 58.552Q347.552 63.424 347.552 69.91999999999999V110.464H333.664V104.08Q332.544 105.312 331.2 106.32Q327.952 109.008 323.808 110.40799999999999Q319.664 111.80799999999999 314.624 111.80799999999999ZM332.88 83.136 317.536 85.712Q313.168 86.496 311.04 88.512Q308.91200000000003 90.52799999999999 308.91200000000003 93.776Q308.91200000000003 96.912 311.32000000000005 98.76Q313.728 100.608 317.312 100.608Q321.904 100.608 325.432 98.648Q328.96000000000004 96.688 330.92 93.21600000000001Q332.88 89.744 332.88 85.6Z M367.152 135.10399999999998Q364.688 135.10399999999998 362.336 134.712Q359.984 134.32 358.08 133.312V121.104Q359.536 121.44 361.608 121.776Q363.68 122.112 365.472 122.112Q370.512 122.112 372.808 119.816Q375.104 117.52 376.896 113.712L378.24 110.464L354.16 49.535999999999994H369.952L385.744 91.536L401.424 49.535999999999994H417.328L390.784 116.624Q388.432 122.448 385.072 126.59199999999998Q381.712 130.736 377.288 132.92Q372.864 135.10399999999998 367.152 135.10399999999998Z M431.104 110.464V62.64H420.35200000000003V49.535999999999994H431.104V47.519999999999996Q431.104 40.57599999999999 433.96000000000004 35.70399999999999Q436.81600000000003 30.831999999999994 441.968 28.255999999999993Q447.12 25.679999999999993 454.176 25.679999999999993Q455.52 25.679999999999993 457.144 25.847999999999992Q458.76800000000003 26.01599999999999 459.88800000000003 26.239999999999995V38.896Q458.76800000000003 38.672 457.81600000000003 38.616Q456.86400000000003 38.56 456.08000000000004 38.56Q451.152 38.56 448.464 40.744Q445.776 42.928 445.776 47.519999999999996V49.535999999999994H459.32800000000003V62.64H445.776V110.464Z M468.848 110.464V49.535999999999994H483.52000000000004V110.464Z M494.384 110.464V49.535999999999994H508.16V57.04Q510.288 53.232 514.096 50.992Q518.912 48.192 525.408 48.192Q532.128 48.192 537.336 51.104Q542.544 54.016 545.456 59.22399999999999Q548.368 64.43199999999999 548.368 71.264V110.464H533.696V74.73599999999999Q533.696 70.70400000000001 532.128 67.792Q530.5600000000001 64.88 527.816 63.256Q525.072 61.632 521.376 61.632Q517.792 61.632 514.992 63.256Q512.192 64.88 510.624 67.792Q509.05600000000004 70.70400000000001 509.05600000000004 74.73599999999999V110.464Z" fill="currentColor"/><circle cx="476.18" cy="21.69" r="8.80" fill="var(--wf-dot,#FFD166)"/>
 </symbol></svg>
+
+<main id="landing-screen">
+  <nav class="ld-nav">
+    <div class="ld-wrap">
+      <svg class="wf-logo sm" viewBox="-14 -14 582.0 188" role="img" aria-label="Wayfin"><use href="#wf-lockup"/></svg>
+      <div class="ld-nav-links">
+        <a href="#ld-features">Funcionalidades</a>
+        <a href="#ld-how">Como funciona</a>
+        <a href="#ld-pricing">Preços</a>
+        <a href="#ld-story">Como surgiu</a>
+      </div>
+      <div class="ld-nav-actions">
+        <button class="ld-btn ld-btn-ghost sm" type="button" id="ld-nav-entrar">Entrar</button>
+        <button class="ld-btn ld-btn-primary sm" type="button" id="ld-nav-comecar">Começar grátis</button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="ld-hero ld-wrap">
+    <span class="ld-badge">✦ Roteiro, gastos e mala — num só lugar</span>
+    <h1>Sua próxima viagem,<br><em>sem planilha e sem bagunça.</em></h1>
+    <p class="ld-sub">O Wayfin junta roteiro no mapa, controle de gastos por orçamento, documentos da viagem e checklist de mala — e ainda deixa você compartilhar tudo com quem for junto.</p>
+    <div class="ld-hero-ctas">
+      <button class="ld-btn ld-btn-primary" type="button" id="ld-hero-comecar">Começar grátis</button>
+      <button class="ld-btn ld-btn-ghost" type="button" id="ld-hero-entrar">Já tenho conta</button>
+    </div>
+    <div class="ld-reassure">Grátis para começar · sem cartão de crédito · cancele quando quiser</div>
+
+    <div class="ld-preview" aria-hidden="true">
+      <div class="ld-preview-card"><span>Orçamento restante</span><strong>R$ 3.240</strong><small>68% da viagem</small></div>
+      <div class="ld-preview-card"><span>Roteiro de hoje</span><strong>4 paradas</strong><small>no mapa</small></div>
+      <div class="ld-preview-card"><span>Mala pronta</span><strong>18 de 22</strong><small>quase lá</small></div>
+      <div class="ld-preview-card"><span>Viagem</span><strong>Compartilhada</strong><small>👥 2 pessoas</small></div>
+    </div>
+  </section>
+
+  <section class="ld-section" id="ld-features">
+    <div class="ld-wrap">
+      <span class="ld-kicker">Funcionalidades</span>
+      <h2>Tudo que um app de planilha não faz por você</h2>
+      <p class="ld-lede">Cada funcionalidade pensada pra quem realmente organiza a viagem — não só anota o que gastou.</p>
+      <div class="ld-grid">
+        <div class="ld-card"><span class="ld-ic">🗺️</span><span class="ld-tag">Roteiro no mapa</span><h3>Monte o dia a dia visualmente</h3><p>Adicione paradas por dia, veja tudo no mapa e otimize a rota — sem planilha, sem anotar endereço em bloco de notas.</p></div>
+        <div class="ld-card"><span class="ld-ic">💳</span><span class="ld-tag">Gastos por orçamento</span><h3>Saiba quanto ainda pode gastar</h3><p>Lance por categoria, acompanhe o orçamento em tempo real e veja exatamente onde o dinheiro da viagem está indo.</p></div>
+        <div class="ld-card"><span class="ld-ic">📎</span><span class="ld-tag">Documentos e reservas</span><h3>Comprovantes e reservas anexados</h3><p>Guarde o comprovante de cada gasto e os dados de cada reserva junto da viagem — sem procurar e-mail ou print.</p></div>
+        <div class="ld-card"><span class="ld-ic">🤝</span><span class="ld-tag">Compartilhamento</span><h3>Viaje em dupla, casal ou grupo</h3><p>Convide quem for com você por e-mail. Cada um vê e lança na mesma viagem, com permissões de editor ou leitor.</p></div>
+        <div class="ld-card"><span class="ld-ic">🎒</span><span class="ld-tag">Checklist de mala</span><h3>Monte a mala com seu modelo salvo</h3><p>Crie sua lista de itens uma vez e reaproveite em toda viagem nova — só marcar o que já foi pra dentro da mala.</p></div>
+        <div class="ld-card"><span class="ld-ic">📲</span><span class="ld-tag">App instalável</span><h3>Direto no celular, sem loja de apps</h3><p>Instale o Wayfin como um PWA na tela inicial do celular — mais leve e mais rápido que baixar um app tradicional.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ld-section" id="ld-how">
+    <div class="ld-wrap">
+      <span class="ld-kicker">Como funciona</span>
+      <h2>Do zero ao roteiro pronto em minutos</h2>
+      <p class="ld-lede">Sem configuração complicada — você cria a viagem e já começa a organizar.</p>
+      <div class="ld-steps">
+        <div class="ld-step"><h3>Crie a viagem e o orçamento</h3><p>Dê um nome, defina quanto pretende gastar e convide quem for junto, se quiser.</p></div>
+        <div class="ld-step"><h3>Monte o roteiro no mapa</h3><p>Adicione as paradas de cada dia e visualize a rota antes mesmo de viajar.</p></div>
+        <div class="ld-step"><h3>Registre gastos e documentos</h3><p>Lance despesas por categoria e anexe comprovantes e reservas conforme forem chegando.</p></div>
+        <div class="ld-step"><h3>Marque a mala e viaje tranquilo</h3><p>Use seu checklist salvo, confira os itens e parta sabendo que não esqueceu nada.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ld-section" id="ld-pricing">
+    <div class="ld-wrap">
+      <span class="ld-kicker">Preços</span>
+      <h2>Simples e sem pegadinha</h2>
+      <p class="ld-lede">Comece de graça. Assine só quando precisar de mais espaço.</p>
+      <div class="ld-plans">
+        <div class="ld-plan">
+          <h3>Gratuito</h3>
+          <div class="ld-price">R$0</div>
+          <div class="ld-price-sub">para sempre</div>
+          <ul>
+            <li>1 viagem por vez</li>
+            <li>Até 3 anexos por viagem</li>
+            <li>Até 2 reservas por viagem</li>
+            <li>Roteiro, mapa e mala sem limite</li>
+            <li>Compartilhamento de viagem incluso</li>
+          </ul>
+          <button class="ld-btn ld-btn-ghost" type="button" data-ld-plan="free">Criar conta grátis</button>
+        </div>
+        <div class="ld-plan hl">
+          <h3>Anual</h3>
+          <div class="ld-price">R$69<small>,90/ano</small></div>
+          <div class="ld-price-sub">≈ R$ 5,83 por mês</div>
+          <ul>
+            <li>Viagens e anexos ilimitados</li>
+            <li>Reservas ilimitadas por viagem</li>
+            <li>Categorias de gasto personalizadas</li>
+            <li>Otimizar rota do dia</li>
+            <li>Mais sugestões ao explorar arredores</li>
+          </ul>
+          <button class="ld-btn ld-btn-primary" type="button" data-ld-plan="annual">Assinar Anual</button>
+        </div>
+        <div class="ld-plan">
+          <h3>Mensal</h3>
+          <div class="ld-price">R$9<small>,90/mês</small></div>
+          <div class="ld-price-sub">cancele quando quiser</div>
+          <ul>
+            <li>Tudo do plano Anual</li>
+            <li>Cobrança mês a mês</li>
+            <li>Ideal pra testar o Premium</li>
+          </ul>
+          <button class="ld-btn ld-btn-ghost" type="button" data-ld-plan="monthly">Assinar Mensal</button>
+        </div>
+        <div class="ld-plan">
+          <h3>Passe de viagem</h3>
+          <div class="ld-price">R$19<small>,90</small></div>
+          <div class="ld-price-sub">30 dias, sem renovação</div>
+          <ul>
+            <li>Tudo do Premium por 30 dias</li>
+            <li>Não renova sozinho</li>
+            <li>Perfeito pra uma viagem específica</li>
+          </ul>
+          <button class="ld-btn ld-btn-ghost" type="button" data-ld-plan="trip_pass">Usar passe de viagem</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ld-section" id="ld-story">
+    <div class="ld-wrap">
+      <span class="ld-kicker">Como surgiu</span>
+      <h2>Feito pra resolver um problema real</h2>
+      <div class="ld-story">
+        <p>O Wayfin começou como uma ferramenta pessoal: um jeito de organizar roteiro, gastos e documentos de viagem sem depender de planilha, print de WhatsApp e três apps diferentes ao mesmo tempo.</p>
+        <p>O maior problema nunca foi <strong>lançar</strong> os gastos — era <strong>compartilhar</strong> a viagem com quem estava junto, sem perder o controle de quem editou o quê. Foi daí que nasceram o roteiro no mapa, o orçamento por categoria e, mais recentemente, o compartilhamento de viagem entre duas ou mais pessoas.</p>
+        <p>Hoje o Wayfin está aberto pra qualquer pessoa que queira parar de organizar viagem em planilha.</p>
+        <div class="ld-story-sign">— Equipe Wayfin</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ld-cta-final ld-wrap">
+    <h2>Pronto pra organizar sua próxima viagem?</h2>
+    <p>Crie sua conta grátis e monte o roteiro antes mesmo de fazer a mala.</p>
+    <button class="ld-btn ld-btn-primary" type="button" id="ld-final-comecar">Criar minha conta grátis</button>
+  </section>
+
+  <footer class="ld-footer">
+    <div class="ld-wrap">
+      <div class="ld-footer-brand">
+        <svg class="wf-logo sm" viewBox="-14 -14 582.0 188" role="img" aria-label="Wayfin"><use href="#wf-lockup"/></svg>
+        <span>© <span id="ld-year"></span> Wayfin</span>
+      </div>
+      <div class="ld-footer-links">
+        <a href="#ld-features">Funcionalidades</a>
+        <a href="#ld-how">Como funciona</a>
+        <a href="#ld-pricing">Preços</a>
+        <a href="mailto:suporte@usewayfin.com">Suporte</a>
+      </div>
+    </div>
+  </footer>
+</main>
 
 <main id="auth-screen" aria-labelledby="auth-title">
   <div class="auth-card">
@@ -751,6 +999,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
     <button class="tab on" type="button" data-t="dash" aria-current="page">📊 <span>Visão geral</span></button>
     <button class="tab" type="button" data-t="lanc">💳 <span>Gastos</span></button>
     <button class="tab" type="button" data-t="rot">🗺️ <span>Plano</span></button>
+    <button class="tab" type="button" data-t="mala">🎒 <span>Mala</span></button>
     <button class="tab" type="button" data-t="mapa">📍 <span>Mapa</span></button>
   </div>
 
@@ -774,6 +1023,7 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       <div id="gl"></div>
     </div>
     <div class="pg" id="pg-rot"><div id="rw"></div></div>
+    <div class="pg" id="pg-mala"><div id="mlw"></div></div>
     <div class="pg" id="pg-mapa-placeholder"></div>
   </div>
 
@@ -1197,19 +1447,40 @@ async function startAuthenticatedApp(session){
   await loadPlan();
   await loadCategorias();renderCatPills(null);await loadViagens();
 }
-function showAuth(){
+function showAuth(landing=false){
   currentUser=null;currentProfile=null;appStartedUserId=null;currentPlan={tier:'free',plan:null,expires:null};
   document.body.classList.add('auth-required');
+  document.body.classList.toggle('show-landing',landing);
   $('auth-password').value='';$('signup-password').value='';$('signup-password-confirm').value='';showAuthView('login');
+}
+function hideLanding(view){
+  document.body.classList.remove('show-landing');
+  showAuthView(view);
 }
 async function initAuth(){
   const{data:{session}}=await sb.auth.getSession();
-  if(session)await startAuthenticatedApp(session);else showAuth();
+  // sem sessão: mostra a landing pública em vez de ir direto pro formulário de login
+  if(session)await startAuthenticatedApp(session);else showAuth(true);
   sb.auth.onAuthStateChange(async(event,session)=>{
-    if(event==='SIGNED_OUT'||!session)showAuth();
-    else await startAuthenticatedApp(session);
+    if(event==='SIGNED_OUT'||!session)showAuth(false);
+    else{document.body.classList.remove('show-landing');await startAuthenticatedApp(session);}
   });
 }
+// ── LANDING: ações dos botões públicos ─────────────────
+$('ld-year').textContent=new Date().getFullYear();
+$('ld-nav-entrar').onclick=()=>hideLanding('login');
+$('ld-hero-entrar').onclick=()=>hideLanding('login');
+$('ld-nav-comecar').onclick=()=>hideLanding('signup');
+$('ld-hero-comecar').onclick=()=>hideLanding('signup');
+$('ld-final-comecar').onclick=()=>hideLanding('signup');
+document.querySelectorAll('#auth-screen .wf-logo').forEach(l=>{
+  l.style.cursor='pointer';
+  l.onclick=()=>document.body.classList.add('show-landing');
+});
+document.querySelectorAll('[data-ld-plan]').forEach(b=>{
+  // qualquer plano pago também cria conta grátis primeiro — a assinatura acontece dentro do app
+  b.onclick=()=>hideLanding('signup');
+});
 $('auth-form').addEventListener('submit',async e=>{
   e.preventDefault();
   const email=$('auth-email').value.trim(),password=$('auth-password').value;
@@ -2448,6 +2719,97 @@ async function delPar(id){
   await sb.from('roteiro_paradas').delete().eq('id',id);
 }
 
+// ── MALA (checklist de bagagem) ──────────────────────────
+let malaItens=[];
+async function loadMala(){
+  if(!vid){malaItens=[];return;}
+  const{data,error}=await sb.from('mala_itens').select('*').eq('viagem_id',vid).order('ordem');
+  malaItens=error?[]:(data||[]);
+}
+function malaProgresso(){
+  if(!malaItens.length)return'';
+  const feitos=malaItens.filter(i=>i.feito).length;
+  return`${feitos} de ${malaItens.length} prontos`;
+}
+function drawMala(){
+  const el=$('mlw');el.innerHTML='';
+  const hdr=document.createElement('div');hdr.className='mala-hdr';
+  hdr.innerHTML=`<span class="mala-prog-txt">${malaProgresso()}</span>`;
+  const actions=document.createElement('div');actions.className='mala-actions';
+  const bDup=document.createElement('button');bDup.type='button';bDup.textContent='⤵ Duplicar do meu modelo';bDup.onclick=duplicarDoModelo;
+  const bSave=document.createElement('button');bSave.type='button';bSave.textContent='💾 Salvar como modelo';bSave.onclick=salvarComoModelo;
+  actions.append(bDup,bSave);hdr.appendChild(actions);el.appendChild(hdr);
+
+  if(!vid){
+    const e=document.createElement('div');e.className='mala-empty';e.textContent='Selecione uma viagem para montar a mala.';el.appendChild(e);return;
+  }
+
+  const add=document.createElement('div');add.className='mala-add';
+  const inp=document.createElement('input');inp.type='text';inp.placeholder='Adicionar item (ex: Carregador de celular)';inp.maxLength=120;
+  const bAdd=document.createElement('button');bAdd.type='button';bAdd.textContent='+';
+  const doAdd=()=>{const t=inp.value.trim();if(!t)return;inp.value='';addMalaItem(t);};
+  bAdd.onclick=doAdd;inp.onkeydown=e=>{if(e.key==='Enter')doAdd();};
+  add.append(inp,bAdd);el.appendChild(add);
+
+  if(!malaItens.length){
+    const e=document.createElement('div');e.className='mala-empty';
+    e.innerHTML='Nenhum item na mala ainda.<br>Adicione um item acima ou duplique o seu modelo salvo.';
+    el.appendChild(e);return;
+  }
+
+  const list=document.createElement('div');list.className='mala-list';
+  malaItens.forEach(item=>{
+    const row=document.createElement('div');row.className='mala-row'+(item.feito?' done':'');
+    const chk=document.createElement('button');chk.type='button';chk.className='mala-check'+(item.feito?' on':'');chk.textContent=item.feito?'✓':'';chk.setAttribute('aria-label','Marcar item');
+    chk.onclick=()=>toggleMalaItem(item);
+    const txt=document.createElement('span');txt.className='mala-txt';txt.textContent=item.texto;
+    const del=document.createElement('button');del.type='button';del.className='mala-del';del.textContent='✕';del.setAttribute('aria-label','Remover item');del.onclick=()=>removerMalaItem(item);
+    row.append(chk,txt,del);list.appendChild(row);
+  });
+  el.appendChild(list);
+}
+async function addMalaItem(texto){
+  const ordem=malaItens.length?Math.max(...malaItens.map(i=>i.ordem))+1:1;
+  const optimistic={id:'tmp_'+Date.now(),viagem_id:vid,texto,feito:false,ordem};
+  malaItens.push(optimistic);drawMala();
+  const{data,error}=await sb.from('mala_itens').insert({viagem_id:vid,texto,ordem}).select().single();
+  if(error){malaItens=malaItens.filter(i=>i.id!==optimistic.id);drawMala();toast('Erro ao adicionar item ⚠️');return;}
+  malaItens=malaItens.map(i=>i.id===optimistic.id?data:i);drawMala();
+}
+async function toggleMalaItem(item){
+  item.feito=!item.feito;drawMala();
+  const{error}=await sb.from('mala_itens').update({feito:item.feito}).eq('id',item.id);
+  if(error){item.feito=!item.feito;drawMala();toast('Erro ao atualizar item ⚠️');}
+}
+async function removerMalaItem(item){
+  const bk=[...malaItens];malaItens=malaItens.filter(i=>i.id!==item.id);drawMala();
+  const{error}=await sb.from('mala_itens').delete().eq('id',item.id);
+  if(error){malaItens=bk;drawMala();toast('Erro ao remover item ⚠️');}
+}
+async function duplicarDoModelo(){
+  if(!vid)return;
+  const{data,error}=await sb.from('mala_template_itens').select('*').order('ordem');
+  if(error){toast('Erro ao carregar seu modelo ⚠️');return;}
+  if(!data||!data.length){toast('Você ainda não salvou um modelo de mala ⚠️');return;}
+  if(malaItens.length&&!confirm('Isso adiciona os itens do seu modelo à lista atual. Continuar?'))return;
+  let ordem=malaItens.length?Math.max(...malaItens.map(i=>i.ordem)):0;
+  const payload=data.map(t=>({viagem_id:vid,texto:t.texto,ordem:++ordem}));
+  const{data:ins,error:err2}=await sb.from('mala_itens').insert(payload).select();
+  if(err2){toast('Erro ao duplicar modelo ⚠️');return;}
+  malaItens=[...malaItens,...(ins||[])];drawMala();toast('Modelo aplicado ✓');
+}
+async function salvarComoModelo(){
+  if(!malaItens.length){toast('Adicione itens antes de salvar como modelo ⚠️');return;}
+  if(!confirm('Isso substitui seu modelo pessoal pela lista atual desta viagem. Continuar?'))return;
+  const{data:atuais,error:e0}=await sb.from('mala_template_itens').select('id');
+  if(e0){toast('Erro ao acessar seu modelo ⚠️');return;}
+  for(const t of(atuais||[]))await sb.from('mala_template_itens').delete().eq('id',t.id);
+  const payload=malaItens.map((i,idx)=>({texto:i.texto,ordem:idx+1}));
+  const{error}=await sb.from('mala_template_itens').insert(payload);
+  if(error){toast('Erro ao salvar modelo ⚠️');return;}
+  toast('Modelo salvo ✓');
+}
+
 // ── MAPA ──────────────────────────────────────────────
 let lastDiaId=null; // persiste o último dia selecionado no mapa
 let curTileLayer=null; // tile layer ativo no Leaflet — troca ao mudar de estilo
@@ -3104,9 +3466,10 @@ document.querySelectorAll('.tab').forEach(tab=>{
     }else{
       $('mapa-pg').classList.remove('on');
       document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
-      $(`pg-${t==='dash'?'dash':t==='lanc'?'lanc':'rot'}`).classList.add('on');
+      $(`pg-${t}`).classList.add('on');
       $('fab').classList.toggle('h',t!=='lanc');
       if(t==='rot'){await loadRot();drawRot();}
+      if(t==='mala'){await loadMala();drawMala();}
     }
   };
 });

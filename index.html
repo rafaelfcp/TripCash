@@ -318,9 +318,9 @@ html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'Plus Ja
 
 /* checklist de mala */
 #pg-mala{padding:14px 16px calc(var(--sb)+90px)}
-.mala-hdr{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.mala-hdr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
 .mala-prog-txt{font-size:12px;color:var(--mut2);font-weight:600}
-.mala-actions{display:flex;gap:8px}
+.mala-actions{display:flex;flex-wrap:wrap;gap:8px}
 .mala-actions button{background:var(--sur);border:1px solid var(--bor);border-radius:99px;color:var(--txt);font-size:11px;font-weight:600;padding:6px 12px;cursor:pointer;white-space:nowrap}
 .mala-actions button:active{opacity:.7}
 .mala-add{display:flex;gap:8px;margin-bottom:14px}
@@ -2724,6 +2724,16 @@ async function delPar(id){
 }
 
 // ── MALA (checklist de bagagem) ──────────────────────────
+// checklist padrão do app — serve de ponto de partida pra quem ainda não tem
+// um modelo pessoal salvo; genérico o suficiente pra qualquer viagem
+const MALA_PADRAO=[
+  'Documentos (RG, CNH ou passaporte)','Cartões e dinheiro','Celular e carregador',
+  'Fone de ouvido','Carregador portátil (power bank)','Escova e pasta de dente',
+  'Desodorante','Protetor solar','Remédios de uso contínuo','Necessaire de higiene',
+  'Roupas para os dias de viagem','Roupa íntima extra','Meias extras',
+  'Pijama ou roupa de dormir','Casaco ou blusa de frio','Calçado confortável',
+  'Chinelo','Óculos de sol','Adaptador de tomada','Guarda-chuva ou capa de chuva'
+];
 let malaItens=[];
 async function loadMala(){
   if(!vid){malaItens=[];return;}
@@ -2740,9 +2750,10 @@ function drawMala(){
   const hdr=document.createElement('div');hdr.className='mala-hdr';
   hdr.innerHTML=`<span class="mala-prog-txt">${malaProgresso()}</span>`;
   const actions=document.createElement('div');actions.className='mala-actions';
+  const bPad=document.createElement('button');bPad.type='button';bPad.textContent='✨ Usar checklist padrão';bPad.onclick=usarChecklistPadrao;
   const bDup=document.createElement('button');bDup.type='button';bDup.textContent='⤵ Duplicar do meu modelo';bDup.onclick=duplicarDoModelo;
   const bSave=document.createElement('button');bSave.type='button';bSave.textContent='💾 Salvar como modelo';bSave.onclick=salvarComoModelo;
-  actions.append(bDup,bSave);hdr.appendChild(actions);el.appendChild(hdr);
+  actions.append(bPad,bDup,bSave);hdr.appendChild(actions);el.appendChild(hdr);
 
   if(!vid){
     const e=document.createElement('div');e.className='mala-empty';e.textContent='Selecione uma viagem para montar a mala.';el.appendChild(e);return;
@@ -2757,7 +2768,7 @@ function drawMala(){
 
   if(!malaItens.length){
     const e=document.createElement('div');e.className='mala-empty';
-    e.innerHTML='Nenhum item na mala ainda.<br>Adicione um item acima ou duplique o seu modelo salvo.';
+    e.innerHTML='Nenhum item na mala ainda.<br>Comece pelo checklist padrão, adicione um item acima, ou duplique o seu modelo salvo.';
     el.appendChild(e);return;
   }
 
@@ -2789,6 +2800,15 @@ async function removerMalaItem(item){
   const bk=[...malaItens];malaItens=malaItens.filter(i=>i.id!==item.id);drawMala();
   const{error}=await sb.from('mala_itens').delete().eq('id',item.id);
   if(error){malaItens=bk;drawMala();toast('Erro ao remover item ⚠️');}
+}
+async function usarChecklistPadrao(){
+  if(!vid)return;
+  if(malaItens.length&&!confirm('Isso adiciona os itens do checklist padrão à lista atual. Continuar?'))return;
+  let ordem=malaItens.length?Math.max(...malaItens.map(i=>i.ordem)):0;
+  const payload=MALA_PADRAO.map(texto=>({viagem_id:vid,texto,ordem:++ordem}));
+  const{data:ins,error}=await sb.from('mala_itens').insert(payload).select();
+  if(error){toast('Erro ao aplicar checklist padrão ⚠️');return;}
+  malaItens=[...malaItens,...(ins||[])];drawMala();toast('Checklist padrão aplicado ✓');
 }
 async function duplicarDoModelo(){
   if(!vid)return;

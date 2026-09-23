@@ -1462,6 +1462,10 @@ async function initAuth(){
   // sem sessão: mostra a landing pública em vez de ir direto pro formulário de login
   if(session)await startAuthenticatedApp(session);else showAuth(true);
   sb.auth.onAuthStateChange(async(event,session)=>{
+    // o Supabase dispara INITIAL_SESSION assim que o listener é registrado —
+    // esse estado inicial já foi tratado acima via getSession(), então é ignorado
+    // aqui (senão ele sobrescreveria a landing pública logo depois de mostrá-la)
+    if(event==='INITIAL_SESSION')return;
     if(event==='SIGNED_OUT'||!session)showAuth(false);
     else{document.body.classList.remove('show-landing');await startAuthenticatedApp(session);}
   });

@@ -666,6 +666,12 @@ button{min-height:44px}
 .auth-terms{display:flex;align-items:flex-start;gap:8px;margin:4px 0 6px;font-size:12.5px;line-height:1.5;color:var(--mut2);cursor:pointer}
 .auth-terms input{margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--teal);cursor:pointer}
 .auth-terms a{color:var(--teal);font-weight:600}
+.auth-google-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;background:#fff;color:#1f1f1f;border:1px solid #dadce0;border-radius:10px;font:inherit;font-size:14px;font-weight:600;padding:11px 16px;cursor:pointer;min-height:44px;margin:6px 0}
+.auth-google-btn:hover:not(:disabled){background:#f7f7f8}
+.auth-google-btn:disabled{opacity:.45;cursor:default}
+.auth-google-btn .google-ic{width:18px;height:18px;flex-shrink:0}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:16px 0;font-size:12px;color:var(--mut2)}
+.auth-divider:before,.auth-divider:after{content:'';flex:1;height:1px;background:var(--bor)}
 #legal-screen{display:none;position:fixed;inset:0;z-index:3000;background:var(--bg);overflow-y:auto;-webkit-overflow-scrolling:touch}
 body.show-legal #legal-screen{display:block}
 .legal-wrap{max-width:640px;margin:0 auto;padding:24px 20px calc(48px + var(--sb))}
@@ -976,6 +982,8 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       <svg class="wf-logo" viewBox="-14 -14 582.0 188" role="img" aria-label="Wayfin"><use href="#wf-lockup"/></svg>
       <h1 id="auth-title">Sua viagem, só sua.</h1>
       <p>Entre para acessar suas viagens, gastos, roteiro e comprovantes com segurança.</p>
+      <button class="auth-google-btn" id="login-google-btn" type="button"><svg class="google-ic" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.4 0 10.3-2.1 14-5.5l-6.5-5.5C29.5 34.9 26.9 36 24 36c-5.3 0-9.7-3.1-11.3-7.6l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.3 5.7l6.5 5.5C40.6 36.5 44 30.9 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg> Continuar com o Google</button>
+      <div class="auth-divider"><span>ou entre com e-mail</span></div>
       <form id="auth-form">
         <label class="fl" for="auth-email">E-MAIL</label>
         <input class="fi" id="auth-email" type="email" autocomplete="email" required placeholder="voce@exemplo.com"/>
@@ -990,6 +998,12 @@ body.light .wf-logo{--wf-dot:var(--amber)}
       <svg class="wf-logo" viewBox="-14 -14 582.0 188" role="img" aria-label="Wayfin"><use href="#wf-lockup"/></svg>
       <h1 id="signup-title">Crie sua conta</h1>
       <p>Use seu e-mail para proteger os dados financeiros das suas viagens.</p>
+      <label class="auth-terms" for="signup-terms">
+        <input type="checkbox" id="signup-terms"/>
+        <span>Li e aceito os <a href="#" id="signup-terms-link">Termos de Uso</a> e a <a href="#" id="signup-privacy-link">Política de Privacidade</a></span>
+      </label>
+      <button class="auth-google-btn" id="signup-google-btn" type="button"><svg class="google-ic" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.5 6.1 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.4 0 10.3-2.1 14-5.5l-6.5-5.5C29.5 34.9 26.9 36 24 36c-5.3 0-9.7-3.1-11.3-7.6l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.3-4.3 5.7l6.5 5.5C40.6 36.5 44 30.9 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg> Inscrever-se com o Google</button>
+      <div class="auth-divider"><span>ou cadastre com e-mail</span></div>
       <form id="auth-signup-form">
         <label class="fl" for="signup-email">E-MAIL</label>
         <input class="fi" id="signup-email" type="email" autocomplete="email" required placeholder="voce@exemplo.com"/>
@@ -997,12 +1011,8 @@ body.light .wf-logo{--wf-dot:var(--amber)}
         <input class="fi" id="signup-password" type="password" autocomplete="new-password" required minlength="8" placeholder="Mínimo de 8 caracteres"/>
         <label class="fl" for="signup-password-confirm">CONFIRME A SENHA</label>
         <input class="fi" id="signup-password-confirm" type="password" autocomplete="new-password" required minlength="8" placeholder="Repita sua senha"/>
-        <label class="auth-terms" for="signup-terms">
-          <input type="checkbox" id="signup-terms" required/>
-          <span>Li e aceito os <a href="#" id="signup-terms-link">Termos de Uso</a> e a <a href="#" id="signup-privacy-link">Política de Privacidade</a></span>
-        </label>
         <div class="auth-status" id="signup-status" role="status" aria-live="polite"></div>
-        <button class="bok" id="auth-signup" type="submit" style="width:100%">Criar conta</button>
+        <button class="bok" id="auth-signup" type="submit" style="width:100%" disabled>Criar conta</button>
       </form>
       <button class="auth-link" id="auth-back-login" type="button">← Já tenho uma conta</button>
     </section>
@@ -1634,6 +1644,24 @@ $('signup-terms-link').onclick=e=>{e.preventDefault();openLegal('termos');};
 $('signup-privacy-link').onclick=e=>{e.preventDefault();openLegal('privacidade');};
 $('ld-terms-link').onclick=e=>{e.preventDefault();openLegal('termos');};
 $('ld-privacy-link').onclick=e=>{e.preventDefault();openLegal('privacidade');};
+function updateSignupGate(){
+  const aceitou=$('signup-terms').checked;
+  $('auth-signup').disabled=!aceitou;
+  $('signup-google-btn').disabled=!aceitou;
+}
+$('signup-terms').addEventListener('change',updateSignupGate);
+updateSignupGate();
+$('signup-google-btn').onclick=async()=>{
+  if(!$('signup-terms').checked)return;
+  authMessage('Abrindo o Google...',false,'signup-status');
+  const{error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin}});
+  if(error)authMessage(error.message,true,'signup-status');
+};
+$('login-google-btn').onclick=async()=>{
+  authMessage('Abrindo o Google...');
+  const{error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin}});
+  if(error)authMessage(error.message,true);
+};
 $('auth-signup-form').addEventListener('submit',async e=>{
   e.preventDefault();
   const email=$('signup-email').value.trim(),password=$('signup-password').value,confirmPassword=$('signup-password-confirm').value;
